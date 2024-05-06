@@ -308,7 +308,7 @@ namespace ZScript
 		bool err = false;
 		void caseLabel(LabelArgument &host, void *param)
 		{
-			host.setLineNo(check(host.getID(), *(map<int32_t, int32_t> *)param, &err));
+			host.setLineNo(check(host.getID(), *(map<int32_t, int32_t> *)param));
 		}
 		static int check(int lbl, map<int32_t, int32_t> const& labels, bool* error = nullptr)
 		{
@@ -321,7 +321,7 @@ namespace ZScript
 					*error = true;
 				return 0;
 			}
-
+			
 			return it->second;
 		}
 	};
@@ -329,9 +329,9 @@ namespace ZScript
 	{
 		vector<int> labels;
 		int targ_label;
-	public:
-		MergeLabels(int targ_label, vector<int> labels)
+		MergeLabels(int targ_label, vector<int> const& labels)
 			: labels(labels),targ_label(targ_label) {}
+	public:
 		void caseLabel(LabelArgument &host, void *param)
 		{
 			for(int lbl : labels)
@@ -339,6 +339,21 @@ namespace ZScript
 				{
 					host.setID(targ_label);
 					return;
+				}
+		}
+		static void merge(int targ_label, vector<int> const& labels, vector<std::shared_ptr<Opcode>> const& vec, void* param, vector<int32_t*> const* lblvec)
+		{
+			MergeLabels ml(targ_label, labels);
+			ml.execute(vec, param);
+			if(lblvec)
+				for(int32_t* ptr : *lblvec)
+				{
+					for(int lbl : labels)
+						if(lbl == *ptr)
+						{
+							*ptr = targ_label;
+							break;
+						}
 				}
 		}
 	};

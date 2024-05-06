@@ -14,6 +14,7 @@ Compile finished with exit code '0' (success)
   "symbols": 2,
   "identifiers": 2
 }
+QUIT; void run() Body
 PUSHARGSV 0 0.0003; void run() Body Start
 SETR D4 SP2
 STOREV 123 0.0001
@@ -30,6 +31,3 @@ LOAD D3 0
 DEALLOCATEMEMR D3
 POPARGS D5 0.0003
 QUIT; void run() Body End
-
-
-QUIT; void run() Body

@@ -1272,6 +1272,13 @@ void pop_ri()
 	ret_stack = ret_stack_cache.back(); ret_stack_cache.pop_back();
 }
 
+dword pc_calc(dword pc)
+{
+	if(curscript->meta.ffscript_v < 24)
+		return pc + curscript->pc;
+	return pc;
+}
+
 //START HELPER FUNCTIONS
 ///-------------------------------------//
 //           Helper Functions           //
@@ -2347,6 +2354,11 @@ static bool set_current_script_engine_data(ScriptType type, int script, int inde
 		case ScriptType::Global:
 		{
 			curscript = globalscripts[script];
+			if (!data.initialized)
+			{
+				got_initialized = true;
+				data.initialized = 1;
+			}
 		}
 		break;
 		
@@ -2382,6 +2394,11 @@ static bool set_current_script_engine_data(ScriptType type, int script, int inde
 		case ScriptType::Player:
 		{
 			curscript = playerscripts[script];
+			if (!data.initialized)
+			{
+				got_initialized = true;
+				data.initialized = 1;
+			}
 		}
 		break;
 		
@@ -2504,7 +2521,10 @@ static bool set_current_script_engine_data(ScriptType type, int script, int inde
 			break;
 		}
 	}
-
+	
+	if(got_initialized)
+		ri->pc = curscript->pc;
+	
 	return got_initialized;
 }
 
@@ -36082,7 +36102,7 @@ void do_constructclass(ScriptType type, word script, int32_t i)
 	
 	size_t num_vars = sargvec->at(0);
 	size_t total_vars = num_vars + sargvec->size()-1;
-	auto destr_pc = ri->d[rEXP1];
+	auto destr_pc = pc_calc(ri->d[rEXP1]);
 
 	if (auto obj = user_objects.create())
 	{
@@ -36253,6 +36273,128 @@ void goto_err(char const* opname)
 	}
 }
 
+static void script_exit_cleanup(bool no_dealloc)
+{
+	ScriptType type = curScriptType;
+	word script = curScriptNum;
+	int32_t i = curScriptIndex;
+	switch(type)
+	{
+		case ScriptType::FFC:
+		{
+			tmpscr->ffcs[i].script = 0;
+			auto& data = get_script_engine_data(type, i);
+			data.doscript = false;
+		}
+		break;
+
+		case ScriptType::Screen:
+			tmpscr->script = 0;
+		case ScriptType::Global:
+		case ScriptType::Player:
+		case ScriptType::DMap:
+		case ScriptType::OnMap:
+		case ScriptType::ScriptedActiveSubscreen:
+		case ScriptType::ScriptedPassiveSubscreen:
+		case ScriptType::EngineSubscreen:
+		case ScriptType::Combo:
+		{
+			auto& data = get_script_engine_data(type, i);
+			data.doscript = false;
+		}
+		break;
+		case ScriptType::NPC:
+		{
+			auto& data = get_script_engine_data(type, i);
+			data.doscript = false;
+			data.initialized = false;
+			auto index = GuyH::getNPCIndex(i);
+			if (index != -1)
+				guys.spr(index)->weaponscript = 0;
+		}
+		break;
+		case ScriptType::Lwpn:
+		{
+			auto& data = get_script_engine_data(type, i);
+			data.doscript = false;
+			data.initialized = false;
+			auto index = LwpnH::getLWeaponIndex(i);
+			if (index != -1)
+				Lwpns.spr(index)->weaponscript = 0;
+		}
+		break;
+		case ScriptType::Ewpn:
+		{
+			auto& data = get_script_engine_data(type, i);
+			data.doscript = false;
+			data.initialized = false;
+			auto index = EwpnH::getEWeaponIndex(i);
+			if (index != -1)
+				Ewpns.spr(index)->weaponscript = 0;
+		}
+		break;
+		case ScriptType::ItemSprite:
+		{
+			auto& data = get_script_engine_data(type, i);
+			data.doscript = false;
+			data.initialized = false;
+			auto index = ItemH::getItemIndex(i);
+			if (index != -1)
+				items.spr(index)->script = 0;
+		}
+		break;
+		
+		case ScriptType::Generic:
+			user_genscript::get(script).quit();
+			break;
+		
+		case ScriptType::GenericFrozen:
+			FFCore.doscript(ScriptType::GenericFrozen, gen_frozen_index-1) = false;
+			break;
+
+		case ScriptType::Item:
+		{
+			bool collect = ( ( i < 1 ) || (i == COLLECT_SCRIPT_ITEM_ZERO) );
+			int new_i = ( collect ) ? (( i != COLLECT_SCRIPT_ITEM_ZERO ) ? (i * -1) : 0) : i;
+			auto& data = get_script_engine_data(ScriptType::Item, i);
+			if ( !collect )
+			{
+				if ( (itemsbuf[i].flags&ITEM_PASSIVESCRIPT) && game->item[i] ) itemsbuf[i].script = 0; //Quit perpetual scripts, too.
+				data.doscript = 0;
+				data.ref.Clear();
+			}
+			else
+			{
+				data.doscript = 0;
+				data.ref.Clear();
+			}
+			data.initialized = false;
+			break;
+		}
+	}
+	if(!no_dealloc)
+		switch(type)
+		{
+			case ScriptType::Item:
+			{
+				bool collect = ( ( i < 1 ) || (i == COLLECT_SCRIPT_ITEM_ZERO) );
+				int new_i = ( collect ) ? (( i != COLLECT_SCRIPT_ITEM_ZERO ) ? (i * -1) : 0) : i;
+				FFScript::deallocateAllScriptOwned(ScriptType::Item, new_i);
+				break;
+			}
+			
+			case ScriptType::Screen:
+			{
+				FFScript::deallocateAllScriptOwned(ScriptType::Screen, 0);
+				break;
+			} 
+			
+			default:
+				FFScript::deallocateAllScriptOwned(type, i);
+				break;
+		}
+}
+
 int32_t run_script(ScriptType type, const word script, const int32_t i)
 {
 	if(Quit==qRESET || Quit==qEXIT) // In case an earlier script hung
@@ -36307,13 +36449,12 @@ int32_t run_script(ScriptType type, const word script, const int32_t i)
 	// Because qst.cpp likes to write script_data without setting this.
 	curscript->meta.script_type = type;
 
-	// No need to do anything if the script is not valid.
-	// An example of this is found in `playground.qst` player scripts, which have scripts with
-	// a single 0xFFFF command.
-	// Can't actually do this because we must unset `doscript` via the `scommand == 0xFFFF` handling in run_script_int.
-	// Otherwise can get freeze, like in ending.cpp
-	// if (!curscript->valid())
-	// 	return RUNSCRIPT_OK;
+	// If script isn't valid, we don't have a `pc` to start from... just exit.
+	if(!curscript->valid())
+	{
+		script_exit_cleanup(false);
+		return RUNSCRIPT_OK;
+	}
 
 	script_funcrun = false;
 
@@ -36411,8 +36552,24 @@ int32_t run_script(ScriptType type, const word script, const int32_t i)
 	return result;
 }
 
+bool pc_overflow(dword pc, bool print_err)
+{
+	if(pc >= curscript->zasm_script->size)
+	{
+		if(print_err)
+			Z_scripterrlog("Script PC out of bounds (over or underflow). Terminating.\n");
+		return true;
+	}
+	return false;
+}
+
 int32_t run_script_int(bool is_jitted)
 {
+	if(pc_overflow(ri->pc))
+	{
+		script_exit_cleanup(false);
+		return RUNSCRIPT_ERROR;
+	}
 	ScriptType type = curScriptType;
 	word script = curScriptNum;
 	int32_t i = curScriptIndex;
@@ -36465,6 +36622,11 @@ int32_t run_script_int(bool is_jitted)
 	bool no_dealloc = false;
 	while(scommand != 0xFFFF)
 	{
+		if(pc_overflow(ri->pc))
+		{
+			script_exit_cleanup(false);
+			return RUNSCRIPT_ERROR;
+		}
 		const auto& op = zasm[ri->pc];
 		scommand = op.command;
 		sarg1 = op.arg1;
@@ -36673,8 +36835,7 @@ int32_t run_script_int(bool is_jitted)
 				// No need to do a bounds check - the last command should always be 0xFFFF.
 				if (is_debugging)
 					break;
-
-				while (zasm[ri->pc + 1].command == NOP)
+				while (!pc_overflow(ri->pc+1, false) && zasm[ri->pc + 1].command == NOP)
 					ri->pc++;
 				break;
 			}
@@ -36686,7 +36847,7 @@ int32_t run_script_int(bool is_jitted)
 					scommand = 0xFFFF;
 					break;
 				}
-				ri->pc = sarg1;
+				ri->pc = pc_calc(sarg1);
 				increment = false;
 				break;
 			}
@@ -36698,7 +36859,7 @@ int32_t run_script_int(bool is_jitted)
 					scommand = 0xFFFF;
 					break;
 				}
-				ri->pc = (get_register(sarg1) / 10000) - 1;
+				ri->pc = pc_calc((get_register(sarg1) / 10000) - 1);
 				increment = false;
 			}
 			break;
@@ -36712,7 +36873,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = sarg1;
+					ri->pc = pc_calc(sarg1);
 					increment = false;
 				}
 				break;
@@ -36726,7 +36887,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = sarg1;
+					ri->pc = pc_calc(sarg1);
 					increment = false;
 				}
 				break;
@@ -36740,7 +36901,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = sarg1;
+					ri->pc = pc_calc(sarg1);
 					increment = false;
 				}
 				break;
@@ -36754,7 +36915,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = sarg1;
+					ri->pc = pc_calc(sarg1);
 					increment = false;
 				}
 				break;
@@ -36770,7 +36931,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = sarg1;
+					ri->pc = pc_calc(sarg1);
 					increment = false;
 				}
 				break;
@@ -36792,7 +36953,7 @@ int32_t run_script_int(bool is_jitted)
 					scommand = 0xFFFF;
 					break;
 				}
-				ri->pc = sarg1;
+				ri->pc = pc_calc(sarg1);
 				increment = false;
 				break;
 			}
@@ -36820,7 +36981,7 @@ int32_t run_script_int(bool is_jitted)
 			{
 				if(get_register(sarg2) > 0)
 				{
-					ri->pc = sarg1;
+					ri->pc = pc_calc(sarg1);
 					increment = false;
 				}
 				else
@@ -36834,7 +36995,7 @@ int32_t run_script_int(bool is_jitted)
 			{
 				if (script_funcrun)
 					break; //handled below, poorly. 'RETURNFUNC' does this better now.
-				ri->pc = SH::read_stack(ri->sp) - 1;
+				ri->pc = pc_calc(SH::read_stack(ri->sp) - 1);
 				++ri->sp;
 				ri->sp &= MASK_SP;
 				increment = false;
@@ -41227,122 +41388,7 @@ int32_t run_script_int(bool is_jitted)
 	
 	if(scommand == 0xFFFF) //Quit/command list end reached/bad command
 	{
-		switch(type)
-		{
-			case ScriptType::FFC:
-			{
-				tmpscr->ffcs[i].script = 0;
-				auto& data = get_script_engine_data(type, i);
-				data.doscript = false;
-			}
-			break;
-
-			case ScriptType::Screen:
-				tmpscr->script = 0;
-			case ScriptType::Global:
-			case ScriptType::Player:
-			case ScriptType::DMap:
-			case ScriptType::OnMap:
-			case ScriptType::ScriptedActiveSubscreen:
-			case ScriptType::ScriptedPassiveSubscreen:
-			case ScriptType::EngineSubscreen:
-			case ScriptType::Combo:
-			{
-				auto& data = get_script_engine_data(type, i);
-				data.doscript = false;
-			}
-			break;
-			case ScriptType::NPC:
-			{
-				auto& data = get_script_engine_data(type, i);
-				data.doscript = false;
-				data.initialized = false;
-				int index = GuyH::getNPCIndex(i);
-				if (index != -1)
-					guys.spr(index)->weaponscript = 0;
-			}
-			break;
-			case ScriptType::Lwpn:
-			{
-				auto& data = get_script_engine_data(type, i);
-				data.doscript = false;
-				data.initialized = false;
-				int index = LwpnH::getLWeaponIndex(i);
-				if (index != -1)
-					Lwpns.spr(index)->weaponscript = 0;
-			}
-			break;
-			case ScriptType::Ewpn:
-			{
-				auto& data = get_script_engine_data(type, i);
-				data.doscript = false;
-				data.initialized = false;
-				int index = ItemH::getItemIndex(i);
-				if (index != -1)
-					Ewpns.spr(index)->weaponscript = 0;
-			}
-			break;
-			case ScriptType::ItemSprite:
-			{
-				auto& data = get_script_engine_data(type, i);
-				data.doscript = false;
-				data.initialized = false;
-				int index = ItemH::getItemIndex(i);
-				if (index != -1)
-					items.spr(index)->script = 0;
-			}
-			break;
-			
-			case ScriptType::Generic:
-				user_genscript::get(script).quit();
-				break;
-			
-			case ScriptType::GenericFrozen:
-				FFCore.doscript(ScriptType::GenericFrozen, gen_frozen_index-1) = false;
-				break;
-
-			case ScriptType::Item:
-			{
-				bool collect = ( ( i < 1 ) || (i == COLLECT_SCRIPT_ITEM_ZERO) );
-				int new_i = ( collect ) ? (( i != COLLECT_SCRIPT_ITEM_ZERO ) ? (i * -1) : 0) : i;
-				auto& data = get_script_engine_data(ScriptType::Item, i);
-				if ( !collect )
-				{
-					if ( (itemsbuf[i].flags&ITEM_PASSIVESCRIPT) && game->item[i] ) itemsbuf[i].script = 0; //Quit perpetual scripts, too.
-					data.doscript = 0;
-					data.ref.Clear();
-				}
-				else
-				{
-					data.doscript = 0;
-					data.ref.Clear();
-				}
-				data.initialized = false;
-				break;
-			}
-		}
-		if(!no_dealloc)
-			switch(type)
-			{
-				case ScriptType::Item:
-				{
-					bool collect = ( ( i < 1 ) || (i == COLLECT_SCRIPT_ITEM_ZERO) );
-					int new_i = ( collect ) ? (( i != COLLECT_SCRIPT_ITEM_ZERO ) ? (i * -1) : 0) : i;
-					FFScript::deallocateAllScriptOwned(ScriptType::Item, new_i);
-					break;
-				}
-				
-				case ScriptType::Screen:
-				{
-					FFScript::deallocateAllScriptOwned(ScriptType::Screen, 0);
-					break;
-				} 
-				
-				default:
-					FFScript::deallocateAllScriptOwned(type, i);
-					break;
-			}
-
+		script_exit_cleanup(no_dealloc);
 		return RUNSCRIPT_STOPPED;
 	}
 	else

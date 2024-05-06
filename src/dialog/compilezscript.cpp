@@ -7,7 +7,6 @@
 #include "headerdlg.h"
 #include "zc/ffscript.h"
 #include "qst.h"
-#include "zq/ffasmexport.h"
 #include "zscrdata.h"
 #include "info.h"
 #include <fmt/format.h>
@@ -23,8 +22,8 @@ using std::string;
 
 void doEditZScript();
 void clear_map_states();
-void do_script_disassembly(map<string, disassembled_script_data>& scripts, bool fromCompile);
-bool do_slots(map<string, disassembled_script_data> &scripts, int assign_mode);
+bool do_slots(vector<shared_ptr<ZScript::Opcode>> const& zasm,
+	map<string, disassembled_script_data> &scripts, int assign_mode);
 int32_t onZScriptCompilerSettings();
 
 extern string zScript;
@@ -123,10 +122,9 @@ bool do_compile_and_slots(int assign_mode, bool delay)
 	fwrite(zScript.c_str(), sizeof(char), zScript.size(), tempfile);
 	fclose(tempfile);
 	
-	script_data old_init_script(*globalscripts[0]);
-	uint32_t lastInitSize = old_init_script.zasm_script->size;
 	map<string, ZScript::ScriptTypeID> stypes;
 	map<string, disassembled_script_data> scripts;
+	vector<shared_ptr<ZScript::Opcode>> zasm;
 	
 	std::string quest_rules_hex = get_qr_hexstr();
 	auto start_compile_time = std::chrono::steady_clock::now();
@@ -262,7 +260,7 @@ bool do_compile_and_slots(int assign_mode, bool delay)
 	
 	if(!code)
 	{
-		read_compile_data(stypes, scripts);
+		read_compile_data(zasm, stypes, scripts);
 		if (!(DisableCompileConsole || hasWarnErr)) 
 		{
 			parser_console.kill();
@@ -408,31 +406,9 @@ bool do_compile_and_slots(int assign_mode, bool delay)
 	QMisc.zscript_last_compiled_version = V_FFSCRIPT;
 	FFCore.quest_format[vLastCompile] = V_FFSCRIPT;
 	zprint2("Compiled scripts in version: %d\n", QMisc.zscript_last_compiled_version);
-				
-	do_script_disassembly(scripts, true);
 	
 	//assign scripts to slots
-	do_slots(scripts, assign_mode);
-	
-	if(WarnOnInitChanged && noquick_compile)
-	{
-		script_data const& new_init_script = *globalscripts[0];
-		if(new_init_script.zasm_script->zasm != old_init_script.zasm_script->zasm) //Global init changed
-		{
-			AlertFuncDialog("Init Script Changed",
-				"Either global variables, or your global script Init, have changed. ("+to_string(lastInitSize)+"->"+to_string(new_init_script.zasm_script->size)+")\n\n"
-				"This can break existing save files of your quest. To prevent users "
-				"from loading save files that would break, you can raise the \"Quest "
-				"Ver\" and \"Min. Ver\" in the Header menu (Quest>>Options>>Header)\n\n"
-				"Ensure that both versions are higher than \"Quest Ver\" was previously, "
-				"and that \"Quest Ver\" is the same or higher than \"Min. Ver\"",
-				"",
-				2, 1, //2 buttons, where buttons[1] is focused
-				{ "Header", "OK" },
-				{ doCompileOpenHeaderDlg, nullptr }
-			).show();
-		}
-	}
+	do_slots(zasm, scripts, assign_mode);
 
 	return true;
 }

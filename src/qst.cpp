@@ -112,8 +112,6 @@ bool fixpolsvoice=false;
 
 const std::string script_slot_data::DEFAULT_FORMAT = "%s %s";
 const std::string script_slot_data::INVALID_FORMAT = "%s --%s";
-const std::string script_slot_data::DISASSEMBLED_FORMAT = "%s ++%s";
-const std::string script_slot_data::ZASM_FORMAT = "%s ==%s";
 
 char qstdat_string[2048] = { 0 };
 
@@ -11956,6 +11954,13 @@ int32_t readffscript(PACKFILE *f, zquestheader *Header)
 	if ( FFCore.quest_format[vLastCompile] < 13 ) FFCore.quest_format[vLastCompile] = s_version;
 	al_trace("Loaded scripts last compiled in ZScript version: %d\n", (FFCore.quest_format[vLastCompile]));
 	
+	if(s_version >= 26)
+	{
+		ret = read_quest_zasm(f, s_version);
+		if(ret)
+			return qe_invalid;
+	}
+	
 	//finally...  section data
 	for(int32_t i = 0; i < ((s_version < 2) ? NUMSCRIPTFFCOLD : NUMSCRIPTFFC); i++)
 	{
@@ -12731,11 +12736,176 @@ void reset_scripts()
 	}
 }
 
+int32_t read_quest_zasm(PACKFILE *f, word s_version)
+{
+	int32_t num_commands;
+	if(!p_igetl(&num_commands,f))
+		return qe_invalid;
+#ifdef ZC_FUZZ
+	const int32_t command_limit = 300000;
+#else
+	const int32_t command_limit = 10000000;
+#endif
+	if (num_commands < 0 || num_commands > command_limit)
+		return qe_invalid;
+
+	std::vector<ffscript> zasm;
+	zasm.reserve(num_commands);
+	for(int32_t j=0; j<num_commands; j++)
+	{
+		ffscript temp_script;
+		if(!p_igetw(&(temp_script.command),f))
+			return qe_invalid;
+		
+		if(!p_igetl(&(temp_script.arg1),f))
+			return qe_invalid;
+		
+		if(!p_igetl(&(temp_script.arg2),f))
+			return qe_invalid;
+		
+		if(!p_igetl(&(temp_script.arg3),f))
+			return qe_invalid;
+		
+		uint32_t sz = 0;
+		if(!p_igetl(&sz,f))
+			return qe_invalid;
+		if(sz) //string found
+		{
+			temp_script.strptr = new std::string();
+			char dummy;
+			for(size_t q = 0; q < sz; ++q)
+			{
+				if(!p_getc(&dummy,f))
+					return qe_invalid;
+				temp_script.strptr->push_back(dummy);
+			}
+		}
+		if(!p_igetl(&sz,f))
+			return qe_invalid;
+		if(sz) //vector found
+		{
+			temp_script.vecptr = new std::vector<int32_t>();
+			int32_t dummy;
+			for(size_t q = 0; q < sz; ++q)
+			{
+				if(!p_igetl(&dummy,f))
+					return qe_invalid;
+				temp_script.vecptr->push_back(dummy);
+			}
+		}
+		zasm.emplace_back(std::move(temp_script));
+	}
+
+	assert(zasm_scripts.empty());
+	zasm_script_id id = zasm_scripts.size();
+	zasm_scripts.emplace_back(std::make_shared<zasm_script>(id, "single-slot", std::move(zasm)));
+
+	return 0;
+}
 int32_t read_one_ffscript(PACKFILE *f, zquestheader *, int32_t script_index, word s_version, word , script_data **script, word zmeta_version)
 {
 	// TODO: refactor to just take a script_data*
 	ASSERT(*script);
+	if(s_version < 26)
+		return read_old_ffscript(f, script_index, s_version, script, zmeta_version);
 
+	char b33[34] = { 0 };
+	b33[33] = 0;
+	//Read meta
+	{
+		zasm_meta temp_meta;
+		
+		if(!p_igetw(&(temp_meta.zasm_v),f))
+			return qe_invalid;
+		if(!p_igetw(&(temp_meta.meta_v),f))
+			return qe_invalid;
+		if(!p_igetw(&(temp_meta.ffscript_v),f))
+			return qe_invalid;
+		if(!p_getc(&(temp_meta.script_type),f))
+			return qe_invalid;
+		
+		for(int32_t q = 0; q < 8; ++q)
+		{
+			if(!p_getcstr(&temp_meta.run_idens[q],f))
+				return qe_invalid;
+		}
+		
+		for(int32_t q = 0; q < 8; ++q)
+			if(!p_getc(&(temp_meta.run_types[q]),f))
+				return qe_invalid;
+		
+		if(!p_getc(&(temp_meta.flags),f))
+			return qe_invalid;
+		
+		if(!p_igetw(&(temp_meta.compiler_v1),f))
+			return qe_invalid;
+		if(!p_igetw(&(temp_meta.compiler_v2),f))
+			return qe_invalid;
+		if(!p_igetw(&(temp_meta.compiler_v3),f))
+			return qe_invalid;
+		if(!p_igetw(&(temp_meta.compiler_v4),f))
+			return qe_invalid;
+		
+		if(!p_getcstr(&temp_meta.script_name,f))
+			return qe_invalid;
+		if(!p_getcstr(&temp_meta.author,f))
+			return qe_invalid;
+		auto num_meta_attrib = 10;
+		for(auto q = 0; q < num_meta_attrib; ++q)
+		{
+			if(!p_getcstr(&temp_meta.attributes[q],f))
+				return qe_invalid;
+			if(!p_getwstr(&temp_meta.attributes_help[q],f))
+				return qe_invalid;
+		}
+		for(auto q = 0; q < 8; ++q)
+		{
+			if(!p_getcstr(&temp_meta.attribytes[q],f))
+				return qe_invalid;
+			if(!p_getwstr(&temp_meta.attribytes_help[q],f))
+				return qe_invalid;
+		}
+		for(auto q = 0; q < 8; ++q)
+		{
+			if(!p_getcstr(&temp_meta.attrishorts[q],f))
+				return qe_invalid;
+			if(!p_getwstr(&temp_meta.attrishorts_help[q],f))
+				return qe_invalid;
+		}
+		for(auto q = 0; q < 16; ++q)
+		{
+			if(!p_getcstr(&temp_meta.usrflags[q],f))
+				return qe_invalid;
+			if(!p_getwstr(&temp_meta.usrflags_help[q],f))
+				return qe_invalid;
+		}
+		for(auto q = 0; q < 8; ++q)
+		{
+			if(!p_getcstr(&temp_meta.initd[q],f))
+				return qe_invalid;
+			if(!p_getwstr(&temp_meta.initd_help[q],f))
+				return qe_invalid;
+		}
+		for(auto q = 0; q < 8; ++q)
+		{
+			if(!p_getc(&temp_meta.initd_type[q],f))
+				return qe_invalid;
+		}
+		
+		(*script)->meta = temp_meta;
+	}
+	if(!p_igetl(&(*script)->pc, f))
+		return qe_invalid;
+	//! TODO ZASM MERGE init_script.end_pc is not set ... zquest gets end_pc but never writes in write_one_ffscript. so this break getNumGlobalArrays
+
+	assert(zasm_scripts.size() == 1);
+	auto& zs = zasm_scripts[0];
+	(*script)->zasm_script = zs;
+
+	return 0;
+}
+int32_t read_old_ffscript(PACKFILE *f, int32_t script_index, word s_version, script_data **script, word zmeta_version)
+{
 	//Please also update loadquest() when modifying this method -DD
 	char b33[34] = {0};
 	b33[33] = 0;
@@ -12932,59 +13102,59 @@ int32_t read_one_ffscript(PACKFILE *f, zquestheader *, int32_t script_index, wor
 		}
 		
 		if(sc.command == 0xFFFF)
-		{
 			break;
-		}
-
-		if(!p_igetl(&sc.arg1,f))
+		else
 		{
-			return qe_invalid;
-		}
-		
-		if(!p_igetl(&sc.arg2,f))
-		{
-			return qe_invalid;
-		}
-		
-		if(s_version >= 24)
-			if(!p_igetl(&sc.arg3,f))
-				return qe_invalid;
-		
-		if(s_version >= 21)
-		{
-			uint32_t sz = 0;
-			if(!p_igetl(&sz,f))
+			if(!p_igetl(&sc.arg1,f))
 			{
 				return qe_invalid;
 			}
-			if(sz) //string found
+			
+			if(!p_igetl(&sc.arg2,f))
 			{
-				sc.strptr = new std::string();
-				char dummy;
-				for(size_t q = 0; q < sz; ++q)
+				return qe_invalid;
+			}
+			
+			if(s_version >= 24)
+				if(!p_igetl(&sc.arg3,f))
+					return qe_invalid;
+			
+			if(s_version >= 21)
+			{
+				uint32_t sz = 0;
+				if(!p_igetl(&sz,f))
 				{
-					if(!p_getc(&dummy,f))
-					{
-						return qe_invalid;
-					}
-					sc.strptr->push_back(dummy);
+					return qe_invalid;
 				}
-			}
-			if(!p_igetl(&sz,f))
-			{
-				return qe_invalid;
-			}
-			if(sz) //vector found
-			{
-				sc.vecptr = new std::vector<int32_t>();
-				int32_t dummy;
-				for(size_t q = 0; q < sz; ++q)
+				if(sz) //string found
 				{
-					if(!p_igetl(&dummy,f))
+					sc.strptr = new std::string();
+					char dummy;
+					for(size_t q = 0; q < sz; ++q)
 					{
-						return qe_invalid;
+						if(!p_getc(&dummy,f))
+						{
+							return qe_invalid;
+						}
+						sc.strptr->push_back(dummy);
 					}
-					sc.vecptr->push_back(dummy);
+				}
+				if(!p_igetl(&sz,f))
+				{
+					return qe_invalid;
+				}
+				if(sz) //vector found
+				{
+					sc.vecptr = new std::vector<int32_t>();
+					int32_t dummy;
+					for(size_t q = 0; q < sz; ++q)
+					{
+						if(!p_igetl(&dummy,f))
+						{
+							return qe_invalid;
+						}
+						sc.vecptr->push_back(dummy);
+					}
 				}
 			}
 		}
@@ -13001,6 +13171,8 @@ int32_t read_one_ffscript(PACKFILE *f, zquestheader *, int32_t script_index, wor
 	zasm_script_id id = zasm_scripts.size();
 	auto& zs = zasm_scripts.emplace_back(std::make_shared<zasm_script>(id, (*script)->name(), std::move(zasm)));
 	(*script)->zasm_script = zs;
+	(*script)->pc = 0;
+	(*script)->end_pc = zs->size;
 
 	return 0;
 }

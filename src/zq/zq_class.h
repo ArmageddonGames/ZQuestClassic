@@ -449,6 +449,7 @@ int32_t writegameicons(PACKFILE *f, zquestheader *Header);
 int32_t writedoorcombosets(PACKFILE *f, zquestheader *Header);
 int32_t write_one_subscreen(PACKFILE *f, zquestheader *Header, int32_t i);
 int32_t writeffscript(PACKFILE *f, zquestheader *Header);
+int32_t write_quest_zasm(PACKFILE *f);
 int32_t write_one_ffscript(PACKFILE *f, zquestheader *Header, int32_t i, script_data **script);
 int32_t writeitemdropsets(PACKFILE *f, zquestheader *Header);
 int32_t writefavorites(PACKFILE *f, zquestheader *Header);

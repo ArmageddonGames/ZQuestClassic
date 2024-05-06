@@ -3,6 +3,7 @@
 
 #include "base/zdefs.h"
 #include "base/headers.h"
+using std::shared_ptr;
 #undef TEXT
 #undef VOID
 

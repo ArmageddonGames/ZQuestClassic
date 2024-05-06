@@ -14,6 +14,7 @@ Compile finished with exit code '0' (success)
   "symbols": 34,
   "identifiers": 56
 }
+QUIT; void run() Body
 PUSHR REFFFC; void run() Body Start
 PUSHARGSV 0 0.0016
 SETR D4 SP2
@@ -44,7 +45,7 @@ WRITEPODARRAYVR 2 D2
 PUSHR D4
 LOAD D2 0.0008; UsrFunc[void print(int[][])] Params Start
 PUSHR D2; UsrFunc[void print(int[][])] Params End
-CALLFUNC 0.0129; UsrFunc[void print(int[][])] Call
+CALLFUNC 0.0130; UsrFunc[void print(int[][])] Call
 POP D4
 ALLOCATEMEMV D2 0 0
 STORE D2 0.0007
@@ -56,7 +57,7 @@ LOAD D0 0.0005; for(each) #1 EndArrayCheck
 ARRAYSIZE D0
 LOAD D3 0.0006
 COMPARER D3 D2
-GOTOCMP 56 >=; for(each) #1 to Else
+GOTOCMP 57 >=; for(each) #1 to Else
 READPODARRAYR D2 D3; for(each) #1 Next Index
 STORE D2 0.0004
 ADDV D3 1
@@ -66,13 +67,13 @@ LOAD D2 0.0007; UsrFunc[void arraycat(int[], int[])] Params Start
 PUSHR D2
 LOAD D2 0.0004
 PUSHR D2; UsrFunc[void arraycat(int[], int[])] Params End
-CALLFUNC 0.0144; UsrFunc[void arraycat(int[], int[])] Call
+CALLFUNC 0.0145; UsrFunc[void arraycat(int[], int[])] Call
 POP D4; for(each) #1 Body End
-GOTO 39; for(each) #1 End
+GOTO 40; for(each) #1 End
 PUSHR D4
 LOAD D2 0.0007; UsrFunc[void print(int[])] Params Start
 PUSHR D2; UsrFunc[void print(int[])] Params End
-CALLFUNC 0.0189; UsrFunc[void print(int[])] Call
+CALLFUNC 0.0190; UsrFunc[void print(int[])] Call
 POP D4
 STOREV -1 0.0006; loop() #1 ValDecl
 PUSHR D4; loop() #1 Body Start
@@ -80,18 +81,18 @@ LOAD D2 0.0007; UsrFunc[void append(int[], int)] Params Start
 PUSHR D2
 LOAD D2 0.0006
 PUSHR D2; UsrFunc[void append(int[], int)] Params End
-CALLFUNC 0.0204; UsrFunc[void append(int[], int)] Call
+CALLFUNC 0.0205; UsrFunc[void append(int[], int)] Call
 POP D4; loop() #1 Body End
 LOAD D3 0.0006; loop() #1 Incr
 ADDV D3 -1
 STORE D3 0.0006
 COMPAREV D3 -9.9999; loop() #1 Test
-GOTOCMP 62 >=; >= start, keep looping
+GOTOCMP 63 >=; >= start, keep looping
 POPARGS D5 0
 PUSHR D4
 LOAD D2 0.0007; UsrFunc[void print(int[])] Params Start
 PUSHR D2; UsrFunc[void print(int[])] Params End
-CALLFUNC 0.0189; UsrFunc[void print(int[])] Call
+CALLFUNC 0.0190; UsrFunc[void print(int[])] Call
 POP D4
 ALLOCATEMEMV D2 3 0
 STORE D2 0.0005
@@ -102,11 +103,11 @@ LOAD D2 0.0008; UsrFunc[void append(int[][], int[])] Params Start
 PUSHR D2
 LOAD D2 0.0005
 PUSHR D2; UsrFunc[void append(int[][], int[])] Params End
-CALLFUNC 0.0214; UsrFunc[void append(int[][], int[])] Call
+CALLFUNC 0.0215; UsrFunc[void append(int[][], int[])] Call
 PEEK D4
 LOAD D2 0.0008; UsrFunc[void print(int[][])] Params Start
 PUSHR D2; UsrFunc[void print(int[][])] Params End
-CALLFUNC 0.0129; UsrFunc[void print(int[][])] Call
+CALLFUNC 0.0130; UsrFunc[void print(int[][])] Call
 POP D4
 ALLOCATEMEMV D2 3 0
 STORE D2 0.0003
@@ -181,7 +182,7 @@ LOAD D0 0.0001; for(each) #2 EndArrayCheck
 ARRAYSIZE D0
 LOAD D3 0.0002
 COMPARER D3 D2
-GOTOCMP 187 >=; for(each) #2 to Else
+GOTOCMP 188 >=; for(each) #2 to Else
 READPODARRAYR D2 D3; for(each) #2 Next Index
 STORE D2 0
 ADDV D3 1
@@ -199,7 +200,7 @@ SETR D3 D2
 POP D0
 POP D2
 WRITEPODARRAYRR D3 D2; for(each) #2 Body End
-GOTO 164; for(each) #2 End
+GOTO 165; for(each) #2 End
 POPARGS D5 0.0006
 RETURNFUNC; Func[void arraycat(int[], int[])] Body End
 PUSHV 0; Func[void print(int[])] Body Start
@@ -237,6 +238,3 @@ ARRAYPUSH
 POPARGS D5 0.0003; InlineFunc[bool ArrayPushBack(int[][], int[])] Body End
 POPARGS D5 0.0002
 RETURNFUNC; Func[void append(int[][], int[])] Body End
-
-
-QUIT; void run() Body

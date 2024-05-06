@@ -1958,6 +1958,7 @@ int32_t combopos_ref_to_pos(int32_t combopos_ref);
 int32_t combopos_ref_to_layer(int32_t combopos_ref);
 
 void init_script_objects();
+bool pc_overflow(dword pc, bool print_err = true);
 
 #endif
 

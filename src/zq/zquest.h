@@ -152,7 +152,7 @@ extern bool zoomed_minimap;
 extern int32_t alignment_arrow_timer;
 extern int32_t  Flip,Combo,CSet;
 extern int32_t  Flags,Flag,menutype;
-extern int32_t MouseScroll, SavePaths, CycleOn, NoScreenPreview,WarnOnInitChanged,DisableLPalShortcuts,DisableCompileConsole,skipLayerWarning,numericalFlags;
+extern int32_t MouseScroll, SavePaths, CycleOn, NoScreenPreview,DisableLPalShortcuts,DisableCompileConsole,skipLayerWarning,numericalFlags;
 extern uint8_t InvalidBG;
 extern int32_t Frameskip, RequestedFPS, zqColorDepth, zqUseWin32Proc;
 extern bool ShowFPS, SaveDragResize, DragAspect, SaveWinPos;
@@ -499,8 +499,6 @@ int32_t onImportEWPNScript();
 int32_t onImportGScript();
 int32_t onCompileScript();
 int32_t onSlotPreview();
-int32_t onSlotAssign();
-int32_t onImportZASM();
 
 
 typedef struct item_struct

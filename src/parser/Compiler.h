@@ -6,7 +6,6 @@
 #include "parserDefs.h"
 #include "base/headers.h"
 #include <fmt/format.h>
-#include "zq/ffasmexport.h"
 #include "zq/ffasm.h"
 
 #include <cstdio>
@@ -33,6 +32,7 @@ namespace ZScript
 	// ZScript.h
 	class Program;
 	class FunctionSignature;
+	class Script;
 
 	// DataStructs.h
 	struct FunctionData;
@@ -124,81 +124,49 @@ namespace ZScript
 
 	struct disassembled_script_data
 	{
-		zasm_meta first;
-		std::vector<std::shared_ptr<ZScript::Opcode>> second;
+		zasm_meta meta;
+		int32_t pc, end_pc;
 		byte format;
 		std::string formatName(std::string name)
 		{
-			char buf[64];
-			std::string fmt = "%s";
-			switch(format)
-			{
-				case SCRIPT_FORMAT_DISASSEMBLED:
-					fmt = "++%s";
-					break;
-				case SCRIPT_FORMAT_ZASM:
-					fmt = "==%s";
-					break;
-			}
-			sprintf(buf, fmt.c_str(), name.c_str());
-			return std::string(buf);
+			return name;
 		}
 		disassembled_script_data() : format(SCRIPT_FORMAT_DEFAULT)
 		{}
-		void write(FILE* dest, bool al = false, bool spaced = false, bool commented = false, bool skipmeta = false) const
-		{
-			string str;
-			if(!skipmeta)
-			{
-				if(spaced) fwrite("\n\n", sizeof(char), 2, dest);
-				str = first.get_meta();
-				fwrite(str.c_str(), sizeof(char), str.size(), dest);
-				if(al)
-				{
-					al_trace("\n\n");
-					safe_al_trace(str);
-					al_trace("\n");
-				}
-			}
-			for(auto& line : second)
-			{
-				str = line->printLine(false, commented);
-				if(al)
-					safe_al_trace(str);
-				fwrite(str.c_str(), sizeof(char), str.size(), dest);
-			}
-		}
-		void write(string& dest, bool al = false, bool spaced = false, bool commented = false, bool skipmeta = false) const
-		{
-			std::ostringstream output;
-			string str;
-			if(!skipmeta)
-			{
-				if(spaced) output << "\n\n";
-				str = first.get_meta();
-				output << str;
-				if(al)
-				{
-					al_trace("\n\n");
-					safe_al_trace(str);
-					al_trace("\n");
-				}
-			}
-			for(auto& line : second)
-			{
-				str = line->printLine(false, commented);
-				if(al)
-					safe_al_trace(str);
-				output << str;
-			}
-			dest += output.str();
-		}
 	};
 
+	class ScriptAssembler
+	{
+	public:
+		Program& program;
+		
+		ScriptAssembler(IntermediateData& id);
+		void assemble();
+		vector<shared_ptr<Opcode>>& getCode() {return rval;}
+		map<Script*,std::pair<int32_t,int32_t>>& getLabelMap() {return runlabels;}
+		bool assemble_err;
+	private:
+		vector<shared_ptr<Opcode>>& ginit;
+		
+		vector<shared_ptr<Opcode>> rval;
+		map<Script*,std::pair<int32_t,int32_t>> runlabels;
+		vector<int32_t*> runlbl_ptrs;
+		
+		void assemble_init();
+		void assemble_script(Script* scr, vector<shared_ptr<Opcode>> runCode,
+			int numparams, string const& runsig);
+		void assemble_scripts();
+		void gather_labels();
+		void link_functions();
+		void optimize_output();
+		void finalize_labels();
+	};
+	
 	class ScriptsData
 	{
 	public:
-		ScriptsData(Program&);
+		ScriptsData(ScriptAssembler&);
+		vector<shared_ptr<Opcode>> zasm;
 		std::map<std::string, disassembled_script_data> theScripts;
 		std::map<std::string, ParserScriptType> scriptTypes;
 		std::string metadata;
@@ -228,13 +196,11 @@ namespace ZScript
 		static bool preprocess_one(ASTImportDecl& decl, int32_t reclevel);
 		static bool preprocess(ASTFile* root, int32_t reclevel);
 		static unique_ptr<IntermediateData> generateOCode(FunctionData& fdata);
-		static void assemble(IntermediateData* id);
 		static void initialize(bool has_qrs);
 		static std::pair<int32_t,bool> parseLong(
 				std::pair<std::string,std::string> parts, Scope* scope);
 
 		static int32_t const recursionLimit = 30;
-		static bool assemble_err;
 	private:
 		static bool valid_include(ASTImportDecl& decl, std::string& ret_fname);
 		static std::string prepareFilename(std::string const& filename);
@@ -248,7 +214,7 @@ namespace ZScript
 		static int32_t lid;
 		static std::vector<std::string> includePaths;
 	};
-
+	
 	class compile_exception : public std::exception
 	{
 	public:

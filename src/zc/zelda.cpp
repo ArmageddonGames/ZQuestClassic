@@ -1,3 +1,4 @@
+#include <_types/_uint32_t.h>
 #include <memory>
 #include <filesystem>
 #include <stdio.h>
@@ -452,19 +453,23 @@ void initZScriptGlobalScript(int32_t ID)
 
 dword getNumGlobalArrays()
 {
-	word ret = 0;
-
-	auto script = globalscripts[GLOBAL_SCRIPT_INIT]->zasm_script;
-	if (!script)
+    word scommand, ret = 0;
+	auto& init_script = *globalscripts[GLOBAL_SCRIPT_INIT];
+	if (!init_script.valid())
 		return 0;
 
-	for (const auto& sc : script->zasm)
-	{
-		if (sc.command == ALLOCATEGMEMV || sc.command == ALLOCATEGMEMR)
-			ret++;
-	}
+	auto& zasm = init_script.zasm_script->zasm;
+	uint32_t start_pc = init_script.pc, end_pc = init_script.end_pc;
 
-	return ret;
+	for (auto pc = start_pc; pc < end_pc; pc++)
+    {
+        scommand = zasm[pc].command;
+        
+        if(scommand == ALLOCATEGMEMV || scommand == ALLOCATEGMEMR)
+            ret++;
+    }
+
+    return ret;
 }
 
 //movingblock mblock2; //mblock[4]?

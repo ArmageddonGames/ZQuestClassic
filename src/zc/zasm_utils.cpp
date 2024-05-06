@@ -136,6 +136,7 @@ StructuredZasm zasm_construct_structured(const zasm_script* script)
 			function_final_pcs.push_back(function_start_pc - 1);
 			start_pc_to_function[function_start_pc] = next_fn_id++;
 		}
+
 		// Don't include 0xFFFF as part of the last function.
 		function_final_pcs.push_back(script->size - 2);
 
@@ -254,6 +255,7 @@ ZasmCFG zasm_construct_cfg(const zasm_script* script, std::vector<std::pair<pc_t
 	}
 
 	std::map<pc_t, pc_t> start_pc_to_block_id;
+
 	std::vector<pc_t> block_starts_vec(block_starts.begin(), block_starts.end());
 	for (pc_t j = 0; j < block_starts_vec.size(); j++)
 	{
@@ -261,6 +263,7 @@ ZasmCFG zasm_construct_cfg(const zasm_script* script, std::vector<std::pair<pc_t
 	}
 
 	std::vector<std::vector<pc_t>> block_edges;
+
 	block_edges.resize(block_starts.size());
 	for (pc_t j = 1; j < block_starts_vec.size(); j++)
 	{
@@ -335,6 +338,7 @@ static std::string zasm_to_string(const zasm_script* script, const StructuredZas
 std::string zasm_to_string(const zasm_script* script, bool top_functions, bool generate_yielder)
 {
 	std::stringstream ss;
+
 	auto structured_zasm = zasm_construct_structured(script);
 
 	std::vector<std::pair<pc_t, size_t>> fn_lengths;

@@ -14,6 +14,9 @@ Compile finished with exit code '0' (success)
   "symbols": 18,
   "identifiers": 43
 }
+ALLOCATEGMEMV D2 4096 0; void run() Body Start
+SETR GD1 D2
+QUIT; void run() Body End
 PUSHR D0; void run(int, int) Params
 PUSHR D1
 PUSHARGSV 0 0.0002; void run(int, int) Body Start
@@ -30,7 +33,7 @@ PUSHR D2
 SETR D2 LINKY
 ADDV D2 8
 PUSHR D2; UsrFunc[int ComboAt(int, int)] Params End
-CALLFUNC 0.0076; UsrFunc[int ComboAt(int, int)] Call
+CALLFUNC 0.0079; UsrFunc[int ComboAt(int, int)] Call
 POP D4
 STORE D2 0
 LOAD D2 0; if() #448 Test
@@ -43,7 +46,7 @@ POP D3
 COMPARER D3 D2
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 44 ==; Test 'if'
+GOTOCMP 47 ==; Test 'if'
 LOAD D2 0; if() #448 Body Start
 PUSHR D2
 POP D0
@@ -88,14 +91,14 @@ PUSHV 128; InlineFunc[void screendata::DrawTile(int, int, int, int, int, int, in
 DRAWTILE; InlineFunc[void screendata::DrawTile(int, int, int, int, int, int, int, int, int, int, int, int, int, bool, int)] Body Start
 POPARGS D5 0.0015; InlineFunc[void screendata::DrawTile(int, int, int, int, int, int, int, int, int, int, int, int, int, bool, int)] Body End
 WAITFRAME; InlineFunc[void Waitframe()] Body AND while(true) #2 Body [Opt:AlwaysOn] End
-GOTO 10; while() #2 End AND [Opt:NeverRet] AND void run(int, int) Body End
+GOTO 13; while() #2 End AND [Opt:NeverRet] AND void run(int, int) Body End
 SETR D4 SP2; Func[int ComboAt(int, int)] Body Start
 PUSHR D4
 LOAD D2 0.0001; UsrFunc[int VBound(int, int, int)] Params Start
 PUSHR D2
 PUSHV 255
 PUSHV 0; UsrFunc[int VBound(int, int, int)] Params End
-CALLFUNC 0.0102; UsrFunc[int VBound(int, int, int)] Call
+CALLFUNC 0.0105; UsrFunc[int VBound(int, int, int)] Call
 POP D4
 STORE D2 0.0001
 PUSHR D4
@@ -103,7 +106,7 @@ LOAD D2 0; UsrFunc[int VBound(int, int, int)] Params Start
 PUSHR D2
 PUSHV 175
 PUSHV 0; UsrFunc[int VBound(int, int, int)] Params End
-CALLFUNC 0.0102; UsrFunc[int VBound(int, int, int)] Call
+CALLFUNC 0.0105; UsrFunc[int VBound(int, int, int)] Call
 POP D4
 STORE D2 0
 LOAD D2 0; return Start
@@ -123,10 +126,10 @@ POP D3
 COMPARER D3 D2
 SETCMP D2 I<
 COMPAREV D2 0
-GOTOCMP 114 ==; Test 'if'
+GOTOCMP 117 ==; Test 'if'
 LOAD D2 0; if() #133 Body Start
 STORE D2 0.0002
-GOTO 124; if() #133 Body End
+GOTO 127; if() #133 Body End
 LOAD D2 0.0002; if() #355 Test AND if() #133 Else Start
 PUSHR D2
 LOAD D2 0.0001
@@ -134,14 +137,9 @@ POP D3
 COMPARER D3 D2
 SETCMP D2 I>
 COMPAREV D2 0
-GOTOCMP 124 ==; Test 'if'
+GOTOCMP 127 ==; Test 'if'
 LOAD D2 0.0001; if() #355 Body Start
 STORE D2 0.0002; if() #355 Body End
 LOAD D2 0.0002; if() #133 Else End AND return Start
 POPARGS D5 0.0003; return End
 RETURNFUNC; Func[int VBound(int, int, int)] Body End
-
-
-ALLOCATEGMEMV D2 4096 0; void run() Body Start
-SETR GD1 D2
-QUIT; void run() Body End

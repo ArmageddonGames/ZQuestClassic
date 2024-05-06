@@ -14,6 +14,7 @@ Compile finished with exit code '0' (success)
   "symbols": 7,
   "identifiers": 15
 }
+QUIT; void run() Body
 PUSHR D0; void run(int) Params
 PUSHR REFFFC; void run(int) Body Start
 PUSHV 0
@@ -26,7 +27,7 @@ POP D3
 COMPARER D3 D2
 SETCMP D2 I<=
 COMPAREV D2 0
-GOTOCMP 37 ==; for() #2 TestFail?
+GOTOCMP 38 ==; for() #2 TestFail?
 LOAD D2 0.0002; if() #2 Test AND for() #2 Body Start
 PUSHR D2
 LOAD D2 0
@@ -36,22 +37,22 @@ SETR D2 D3
 COMPAREV D2 0
 SETCMP D2 I!=
 COMPAREV D2 0
-GOTOCMP 33 !=; Test 'if' AND continue 1; AND if() #2 Body
+GOTOCMP 34 !=; Test 'if' AND continue 1; AND if() #2 Body
 PUSHR D4; if() #3 Test
 LOAD D2 0; UsrFunc[bool is_prime(int)] Params Start
 PUSHR D2; UsrFunc[bool is_prime(int)] Params End
-CALLFUNC 0.0039; UsrFunc[bool is_prime(int)] Call
+CALLFUNC 0.0040; UsrFunc[bool is_prime(int)] Call
 POP D4
 COMPAREV D2 0
-GOTOCMP 33 ==; Test 'if'
+GOTOCMP 34 ==; Test 'if'
 LOAD D2 0; InlineFunc[void Trace(untyped)] Params AND if() #3 Body Start
 TRACER D2; InlineFunc[void Trace(untyped)] Body AND if() #3 Body End
 LOAD D2 0; for() #2 Body End AND for() #2 LoopIncrement
 ADDV D2 1
 STORE D2 0
-GOTO 6; for() #2 End
+GOTO 7; for() #2 End
 WAITFRAME; InlineFunc[void Waitframe()] Body AND while(true) #1 Body [Opt:AlwaysOn] End
-GOTO 5; while() #1 End AND [Opt:NeverRet] AND void run(int) Body End
+GOTO 6; while() #1 End AND [Opt:NeverRet] AND void run(int) Body End
 PUSHV 0; Func[bool is_prime(int)] Body Start
 SETR D4 SP2
 STOREV 2 0; for() #1 setup
@@ -63,7 +64,7 @@ POP D3
 COMPARER D3 D2
 SETCMP D2 I<=
 COMPAREV D2 0
-GOTOCMP 67 ==; for() #1 TestFail?
+GOTOCMP 68 ==; for() #1 TestFail?
 LOAD D2 0.0001; if() #1 Test AND for() #1 Body Start
 PUSHR D2
 LOAD D2 0
@@ -73,16 +74,13 @@ SETR D2 D3
 COMPAREV D2 0
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 63 ==; Test 'if'
+GOTOCMP 64 ==; Test 'if'
 SETV D2 0; return Start AND if() #1 Body Start
-GOTO 68; return End AND if() #1 Body End
+GOTO 69; return End AND if() #1 Body End
 LOAD D2 0; for() #1 Body End AND for() #1 LoopIncrement
 ADDV D2 1
 STORE D2 0
-GOTO 42; for() #1 End
+GOTO 43; for() #1 End
 SETV D2 1; return Start
 POPARGS D5 0.0002; return End
 RETURNFUNC; Func[bool is_prime(int)] Body End
-
-
-QUIT; void run() Body

@@ -14,6 +14,9 @@ Compile finished with exit code '0' (success)
   "symbols": 21,
   "identifiers": 106
 }
+ALLOCATEGMEMV D2 4096 0; void run() Body Start
+SETR GD1 D2
+QUIT; void run() Body End
 PUSHR REFDMAPDATA; void run() Body Start
 PUSHARGSV 0 0.0006
 SETR D4 SP2
@@ -151,7 +154,7 @@ SETR D2 GAMESCROLLING
 COMPAREV D2 -1
 SETCMP D2 I!=
 COMPAREV D2 0
-GOTOCMP 223 ==; Test 'if'
+GOTOCMP 226 ==; Test 'if'
 SETR D2 LINKX; if() #448 Body Start
 PUSHR D2
 SETV D2 1
@@ -237,9 +240,4 @@ PUSHV 128; InlineFunc[void screendata::DrawCombo(int, int, int, int, int, int, i
 DRAWCOMBO; InlineFunc[void screendata::DrawCombo(int, int, int, int, int, int, int, int, int, int, int, int, int, int, bool, int)] Body Start
 POPARGS D5 0.0016; InlineFunc[void screendata::DrawCombo(int, int, int, int, int, int, int, int, int, int, int, int, int, int, bool, int)] Body End AND if() #448 Body End
 WAITFRAME; InlineFunc[void Waitframe()] Body AND while(true) #2 Body [Opt:AlwaysOn] End
-GOTO 4; while() #2 End AND [Opt:NeverRet] AND void run() Body End
-
-
-ALLOCATEGMEMV D2 4096 0; void run() Body Start
-SETR GD1 D2
-QUIT; void run() Body End
+GOTO 7; while() #2 End AND [Opt:NeverRet] AND void run() Body End

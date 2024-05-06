@@ -14,12 +14,19 @@ Compile finished with exit code '0' (success)
   "symbols": 14,
   "identifiers": 72
 }
+MARK_TYPE_REG GD2 0.0008; void run() Body Start
+SETV GD2 0
+MARK_TYPE_REG GD3 0.0008
+SETV GD3 0
+ALLOCATEGMEMV D2 4096 0
+SETR GD1 D2
+QUIT; void run() Body End
 PUSHR REFFFC; void run() Body Start
 PUSHARGSV 0 0.0005
 SETR D4 SP2
 SETR D2 GD2; unless() #448 Test
 COMPAREV D2 0
-GOTOCMP 81 !=; Test 'unless'
+GOTOCMP 88 !=; Test 'unless'
 SETV D2 0; ProtoFunc[Thing Thing::Thing()] Set Destructor AND unless() #448 Body Start
 ZCLASS_CONSTRUCT D2 {0.0003,0.0005}
 ZCLASS_MARK_TYPE {0.0001,0.0001,0.0002,0.0008,0,0.0008,0.0003,0.0008}; ProtoFunc[Thing Thing::Thing()] Default Construct
@@ -170,9 +177,9 @@ SETR D2 GD2; InlineFunc[bool bitmap::isAllocated()] Params Start
 ZCLASS_READ D2 0.0001; InlineFunc[bool bitmap::isAllocated()] Params End
 ISALLOCATEDBITMAP D2; InlineFunc[bool bitmap::isAllocated()] Body
 COMPAREV D2 0
-GOTOCMP 160 ==
+GOTOCMP 167 ==
 SETV D2 1
-GOTO 161
+GOTO 168
 SETV D2 0
 PUSHVARGR D2; InlineFunc[void printf(char32[])] Params End
 PRINTFVARG; InlineFunc[void printf(char32[])] Body Start
@@ -187,11 +194,11 @@ PUSHR D2
 SETR D2 GD2
 ZCLASS_READ D2 0.0002
 COMPAREV D2 0
-GOTOCMP 179 ==
+GOTOCMP 186 ==
 SETR D2 GD2
 ZCLASS_READ D2 0.0002
 ZCLASS_READ D2 0
-GOTO 180
+GOTO 187
 SETV D2 0
 PUSHVARGR D2; InlineFunc[void printf(char32[])] Params End
 PRINTFVARG; InlineFunc[void printf(char32[])] Body Start
@@ -205,9 +212,9 @@ LOAD D2 0; InlineFunc[void printf(char32[])] Params Start
 PUSHR D2
 SETR D2 GD3
 COMPAREV D2 0
-GOTOCMP 195 ==
+GOTOCMP 202 ==
 SETV D2 1
-GOTO 196
+GOTO 203
 SETV D2 0
 PUSHVARGR D2; InlineFunc[void printf(char32[])] Params End
 PRINTFVARG; InlineFunc[void printf(char32[])] Body Start
@@ -215,13 +222,4 @@ POP D5; InlineFunc[void printf(char32[])] Body End
 LOAD D3 0
 DEALLOCATEMEMR D3
 POPARGS D5 0.0006
-QUIT; void run() Body End
-
-
-MARK_TYPE_REG GD2 0.0008; void run() Body Start
-SETV GD2 0
-MARK_TYPE_REG GD3 0.0008
-SETV GD3 0
-ALLOCATEGMEMV D2 4096 0
-SETR GD1 D2
 QUIT; void run() Body End

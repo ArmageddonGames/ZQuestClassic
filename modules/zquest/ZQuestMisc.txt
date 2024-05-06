@@ -12,7 +12,6 @@ src/zq/package.cpp
 src/zq/render.cpp
 src/tab_ctl.cpp
 src/tiles.cpp
-src/zq/ffasmexport.cpp
 src/drawing.cpp
 src/zq/colorname.cpp
 src/zq/zq_hotkey.cpp

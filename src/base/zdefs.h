@@ -229,7 +229,7 @@ enum {ENC_METHOD_192B104=0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD_2
 #define V_HEROSPRITES      16
 #define V_SUBSCREEN        11
 #define V_ITEMDROPSETS     2
-#define V_FFSCRIPT         25
+#define V_FFSCRIPT         26
 #define V_SFX              8
 #define V_FAVORITES        4
 
@@ -1828,19 +1828,31 @@ struct ffscript
 	int32_t arg1, arg2, arg3;
 	std::vector<int32_t> *vecptr;
 	std::string *strptr;
-	ffscript()
+	ffscript() : vecptr(), strptr()
 	{
-		command = 0xFFFF;
-		arg1 = 0;
-		arg2 = 0;
-		arg3 = 0;
-		vecptr = nullptr;
-		strptr = nullptr;
+		clear();
 	}
-	ffscript(word command, int32_t arg1 = 0, int32_t arg2 = 0, int32_t arg3 = 0): command(command), arg1(arg1), arg2(arg2), arg3(arg3)
+	ffscript(word command, int32_t arg1 = 0, int32_t arg2 = 0, int32_t arg3 = 0)
+		: command(command), arg1(arg1), arg2(arg2), arg3(arg3),
+		vecptr(nullptr), strptr(nullptr)
+	{}
+	ffscript(ffscript const& other) : vecptr(), strptr()
 	{
-		vecptr = nullptr;
-		strptr = nullptr;
+		other.copy(*this);
+	}
+	ffscript(ffscript&& other) : vecptr(), strptr()
+	{
+		other.give(*this);
+	}
+	ffscript& operator=(ffscript const& other)
+	{
+		other.copy(*this);
+		return *this;
+	}
+	ffscript& operator=(ffscript&& other)
+	{
+		other.give(*this);
+		return *this;
 	}
 	~ffscript()
 	{
@@ -1855,6 +1867,7 @@ struct ffscript
 			strptr = nullptr;
 		}
 	}
+	
 	void give(ffscript& other)
 	{
 		other.command = command;
@@ -1884,7 +1897,7 @@ struct ffscript
 			strptr = nullptr;
 		}
 	}
-	void copy(ffscript& other)
+	void copy(ffscript& other) const
 	{
 		other.clear();
 		other.command = command;
@@ -1970,6 +1983,10 @@ struct script_data
 	std::shared_ptr<zasm_script> zasm_script = nullptr;
 	zasm_meta meta;
 	script_id id;
+	// Start of script within `zasm_script`.
+	uint32_t pc;
+	// Exclusive.
+	uint32_t end_pc;
 
 	script_data(ScriptType type, int index) : id({type, index}) {}
 
@@ -1989,6 +2006,8 @@ struct script_data
 	void disable()
 	{
 		zasm_script = nullptr;
+		pc = 0;
+		end_pc = 0;
 	}
 };
 

@@ -1320,6 +1320,13 @@ Compile finished with exit code '0' (success)
     }
   ]
 }
+SETV GD1 1; void run() Body Start
+SETV GD2 1
+SETV GD3 1
+SETV GD4 0
+SETV GD5 2
+SETV GD6 0
+QUIT; void run() Body End
 PUSHR D0; void run(int, int, int, int, int) Params
 PUSHR D1
 PUSHR D2
@@ -1350,7 +1357,7 @@ DEALLOCATEMEMR D3
 PUSHR CLASS_THISKEY
 PUSHR D4
 PUSHV 2; ClassFunc[Car Car::Car(int)] Params
-CALLFUNC 0.0102; ClassFunc[Car Car::Car(int)] Constructor Call
+CALLFUNC 0.0109; ClassFunc[Car Car::Car(int)] Constructor Call
 POP D4
 POP CLASS_THISKEY
 STORE_OBJECT D2 0.0009
@@ -1386,7 +1393,7 @@ STORE_OBJECT D2 0.0007
 PUSHR CLASS_THISKEY
 PUSHR D4
 PUSHV 2; ClassFunc[Car Car::Car(int)] Params
-CALLFUNC 0.0102; ClassFunc[Car Car::Car(int)] Constructor Call
+CALLFUNC 0.0109; ClassFunc[Car Car::Car(int)] Constructor Call
 POP D4
 POP CLASS_THISKEY
 STORE_OBJECT D2 0.0006
@@ -1406,14 +1413,14 @@ LOAD D0 0.0001; for(each) #1 EndArrayCheck
 ARRAYSIZE D0
 LOAD D3 0.0002
 COMPARER D3 D2
-GOTOCMP 95 >=; for(each) #1 to Else
+GOTOCMP 102 >=; for(each) #1 to Else
 READPODARRAYR D2 D3; for(each) #1 Next Index
 STORE D2 0
 ADDV D3 1
 STORE D3 0.0002
 LOAD D2 0; InlineFunc[void Trace(untyped)] Params AND for(each) #1 Body Start
 TRACER D2; InlineFunc[void Trace(untyped)] Body AND for(each) #1 Body End
-GOTO 83; for(each) #1 End
+GOTO 90; for(each) #1 End
 LOAD D3 0.0003
 DEALLOCATEMEMR D3
 REF_REMOVE 0.0009
@@ -1436,12 +1443,3 @@ POP D5
 SETR D2 CLASS_THISKEY
 POP CLASS_THISKEY
 RETURNFUNC; Func[Car Car::Car(int)] Body End
-
-
-SETV GD1 1; void run() Body Start
-SETV GD2 1
-SETV GD3 1
-SETV GD4 0
-SETV GD5 2
-SETV GD6 0
-QUIT; void run() Body End

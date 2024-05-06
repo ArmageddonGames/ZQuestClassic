@@ -14,6 +14,9 @@ Compile finished with exit code '0' (success)
   "symbols": 24,
   "identifiers": 57
 }
+ALLOCATEGMEMV D2 4096 0; void run() Body Start
+SETR GD1 D2
+QUIT; void run() Body End
 PUSHR REFGENERICDATA; void run() Body Start
 PUSHARGSV 0 0.0010
 SETR D4 SP2
@@ -45,10 +48,10 @@ SETR D2 WEBSOCKET_STATE
 COMPAREV D2 0
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 36 ==; Test 'if'
+GOTOCMP 39 ==; Test 'if'
 WAITFRAME; InlineFunc[void Waitframe()] Body AND if() #160 Body Start
-GOTO 25; continue 1;
-GOTO 67; if() #160 Body End
+GOTO 28; continue 1;
+GOTO 70; if() #160 Body End
 LOAD D2 0.0007; if() #448 Test AND if() #160 Else Start
 PUSHR D2
 POP REFWEBSOCKET
@@ -56,7 +59,7 @@ SETR D2 WEBSOCKET_STATE
 COMPAREV D2 0.0003
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 67 ==; Test 'if'
+GOTOCMP 70 ==; Test 'if'
 ALLOCATEMEMV D2 0 0; if() #448 Body Start
 STORE D2 0.0005
 LOAD D2 0.0007; InlineFunc[void websocket::GetError(char32[])] Params Start
@@ -77,7 +80,7 @@ LOAD D3 0.0004
 DEALLOCATEMEMR D3
 LOAD D3 0.0005
 DEALLOCATEMEMR D3
-GOTO 225; break 1;
+GOTO 228; break 1;
 LOAD D3 0.0005
 DEALLOCATEMEMR D3; if() #448 Body End
 LOAD D2 0.0007; if() #160 Else End AND if() #449 Test
@@ -87,7 +90,7 @@ SETR D2 WEBSOCKET_STATE
 COMPAREV D2 0.0001
 SETCMP D2 I!=
 COMPAREV D2 0
-GOTOCMP 89 ==; Test 'if'
+GOTOCMP 92 ==; Test 'if'
 ALLOCATEMEMV D2 23 0; if() #449 Body Start
 STORE D2 0.0005
 WRITEPODSTRING D2 "Failed to connect: %l\n"
@@ -101,10 +104,10 @@ PRINTFVARG; InlineFunc[void printf(char32[])] Body Start
 POP D5; InlineFunc[void printf(char32[])] Body End
 LOAD D3 0.0005
 DEALLOCATEMEMR D3
-GOTO 225; break 1; AND if() #449 Body End
+GOTO 228; break 1; AND if() #449 Body End
 LOAD D2 0.0006; unless() #450 Test
 COMPAREV D2 0
-GOTOCMP 129 !=; Test 'unless'
+GOTOCMP 132 !=; Test 'unless'
 ALLOCATEMEMV D2 12 0; unless() #450 Body Start
 STORE D2 0.0005
 WRITEPODSTRING D2 "Connected!\n"
@@ -147,7 +150,7 @@ PUSHR D2
 POP REFWEBSOCKET
 SETR D2 WEBSOCKET_HAS_MESSAGE
 COMPAREV D2 0
-GOTOCMP 223 ==; Test 'while'
+GOTOCMP 226 ==; Test 'while'
 LOAD D2 0.0007; InlineFunc[untyped[] websocket::Receive()] Params Start AND while() #3 Body Start
 SETR REFWEBSOCKET D2; InlineFunc[untyped[] websocket::Receive()] Params End
 WEBSOCKET_RECEIVE D2; InlineFunc[untyped[] websocket::Receive()] Body
@@ -161,7 +164,7 @@ LOAD D2 0.0004; if() #161 Test
 COMPAREV D2 0.0001
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 161 ==; Test 'if'
+GOTOCMP 164 ==; Test 'if'
 ALLOCATEMEMV D2 22 0; if() #161 Body Start
 STORE D2 0.0003
 WRITEPODSTRING D2 "got text message: %s\n"
@@ -173,12 +176,12 @@ PRINTFVARG; InlineFunc[void printf(char32[])] Body Start
 POP D5; InlineFunc[void printf(char32[])] Body End
 LOAD D3 0.0003
 DEALLOCATEMEMR D3
-GOTO 129; if() #161 Body End
+GOTO 132; if() #161 Body End
 LOAD D2 0.0004; if() #162 Test AND if() #161 Else Start
 COMPAREV D2 0.0002
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 211 ==; Test 'if'
+GOTOCMP 214 ==; Test 'if'
 LOAD D2 0.0005; InlineFunc[int SizeOfArray(untyped[])] Params AND if() #162 Body Start
 ARRAYSIZE D2; InlineFunc[int SizeOfArray(untyped[])] Body
 STORE D2 0.0003
@@ -201,7 +204,7 @@ POP D3
 COMPARER D3 D2
 SETCMP D2 I<
 COMPAREV D2 0
-GOTOCMP 129 ==; for() #160 TestFail?
+GOTOCMP 132 ==; for() #160 TestFail?
 ALLOCATEMEMV D2 8 0; for() #160 Body Start
 STORE D2 0
 WRITEPODSTRING D2 "%d: %l\n"
@@ -222,8 +225,8 @@ DEALLOCATEMEMR D3; for() #160 Body End
 LOAD D2 0.0001; for() #160 LoopIncrement
 ADDV D2 1
 STORE D2 0.0001
-GOTO 181; for() #160 End
-GOTO 129; if() #162 Body End
+GOTO 184; for() #160 End
+GOTO 132; if() #162 Body End
 ALLOCATEMEMV D2 40 0; if() #162 Else Start
 STORE D2 0.0003
 WRITEPODSTRING D2 "got message, but with unknown type: %l\n"
@@ -235,14 +238,9 @@ PRINTFVARG; InlineFunc[void printf(char32[])] Body Start
 POP D5; InlineFunc[void printf(char32[])] Body End
 LOAD D3 0.0003
 DEALLOCATEMEMR D3; if() #162 Else End
-GOTO 129; if() #161 Else End AND while() #3 Body End AND while() #3 End
+GOTO 132; if() #161 Else End AND while() #3 Body End AND while() #3 End
 WAITFRAME; InlineFunc[void Waitframe()] Body AND while(true) #2 Body [Opt:AlwaysOn] End
-GOTO 25; while() #2 End
+GOTO 28; while() #2 End
 REF_REMOVE 0.0007
 POPARGS D5 0.0011
-QUIT; void run() Body End
-
-
-ALLOCATEGMEMV D2 4096 0; void run() Body Start
-SETR GD1 D2
 QUIT; void run() Body End

@@ -2553,6 +2553,7 @@ OptimizeResults zasm_optimize(zasm_script* script)
 	}
 
 	script->optimized = true;
+
 	return results;
 }
 

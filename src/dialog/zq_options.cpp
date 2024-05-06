@@ -50,7 +50,6 @@ void OptionsDialog::loadOptions()
 	opts[OPT_INVALID_BG] = InvalidBG;
 	opts[OPT_PATTERNSEARCH] = abc_patternmatch ? 1 : 0;
 	opts[OPT_NEXTPREVIEW] = NoScreenPreview ? 1 : 0;
-	opts[OPT_INITSCR_WARN] = WarnOnInitChanged ? 1 : 0;
 	opts[OPT_ABRETENTION] = AutoBackupRetention;
 	opts[OPT_ASINTERVAL] = AutoSaveInterval;
 	opts[OPT_ASRETENTION] = AutoSaveRetention;
@@ -155,10 +154,6 @@ void OptionsDialog::saveOption(int ind)
 		case OPT_DISABLE_COMPILE_CONSOLE:
 			DisableCompileConsole = v;
 			zc_set_config("zquest", "internal_compile_console", v);
-			break;
-		case OPT_INITSCR_WARN:
-			WarnOnInitChanged = v;
-			zc_set_config("zquest", "warn_initscript_changes", v);
 			break;
 		case OPT_NUMERICAL_FLAG_LIST:
 			numericalFlags = v;
@@ -849,7 +844,6 @@ std::shared_ptr<GUI::Widget> OptionsDialog::view()
 					ROW_CHECK(OPT_TOOLTIPS, "Enable Tooltips"),
 					ROW_CHECK(OPT_TOOLTIP_HIGHLIGHT, "Tooltips Highlight Target"),
 					ROW_CHECK(OPT_NEXTPREVIEW, "No Next-Screen Preview"),
-					ROW_CHECK(OPT_INITSCR_WARN, "Warn on ~Init Script Update"),
 					ROW_CHECK(OPT_DISABLE_LPAL_SHORTCUT, "Disable Level Palette Shortcuts"),
 					ROW_CHECK(OPT_DISABLE_COMPILE_CONSOLE, "Internal Compile Window")
 				),

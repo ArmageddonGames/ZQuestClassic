@@ -14,6 +14,7 @@ Compile finished with exit code '0' (success)
   "symbols": 13,
   "identifiers": 53
 }
+QUIT; void run() Body
 PUSHR D0; void run(int, int, int, int, int) Params
 PUSHR D1
 PUSHR D2
@@ -26,14 +27,14 @@ LOAD D2 0.0004; if() #1 Test
 COMPAREV D2 0
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 16 ==; Test 'if'
+GOTOCMP 17 ==; Test 'if'
 LOAD D2 0.0007; if() #1 Body Start
 STORE D2 0.0004; if() #1 Body End
 LOAD D2 0.0005; if() #2 Test
 COMPAREV D2 0
 SETCMP D2 I<
 COMPAREV D2 0
-GOTOCMP 24 ==; Test 'if'
+GOTOCMP 25 ==; Test 'if'
 SETV D3 360; InlineFunc[int Rand(int)] Params AND if() #2 Body Start
 RNDR D2 D3; InlineFunc[int Rand(int)] Body
 STORE D2 0.0005; if() #2 Body End
@@ -57,16 +58,16 @@ LOAD D2 0.0005; if() #1 Test
 COMPAREV D2 -360
 SETCMP D2 I<
 COMPAREV D2 0
-GOTOCMP 49 ==; Test 'if'
+GOTOCMP 50 ==; Test 'if'
 LOAD D2 0.0005; if() #1 Body Start
 ADDV D2 360
 STORE D2 0.0005
-GOTO 57; if() #1 Body End
+GOTO 58; if() #1 Body End
 LOAD D2 0.0005; if() #3 Test AND if() #1 Else Start
 COMPAREV D2 360
 SETCMP D2 I>
 COMPAREV D2 0
-GOTOCMP 57 ==; Test 'if'
+GOTOCMP 58 ==; Test 'if'
 LOAD D2 0.0005; if() #3 Body Start
 SUBV D2 360
 STORE D2 0.0005; if() #3 Body End
@@ -74,7 +75,7 @@ LOAD D2 0.0003; if() #1 Else End AND if() #2 Test
 COMPAREV D2 0
 SETCMP D2 I==
 COMPAREV D2 0
-GOTOCMP 101 ==; Test 'if'
+GOTOCMP 102 ==; Test 'if'
 LOAD D2 0.0001; if() #2 Body Start
 PUSHR D2
 LOAD D2 0.0007
@@ -113,7 +114,7 @@ PUSHR D3
 POP D2
 POP REFFFC
 SETR Y D2
-GOTO 184; if() #2 Body End
+GOTO 185; if() #2 Body End
 LOAD D2 0.0001; if() #2 Else Start
 PUSHR D2
 LOAD D2 0.0007
@@ -198,7 +199,4 @@ POP D2
 POP REFFFC
 SETR Y D2; if() #2 Else End
 WAITFRAME; InlineFunc[void Waitframe()] Body AND while(true) #1 Body [Opt:AlwaysOn] End
-GOTO 34; while() #1 End AND [Opt:NeverRet] AND void run(int, int, int, int, int) Body End
-
-
-QUIT; void run() Body
+GOTO 35; while() #1 End AND [Opt:NeverRet] AND void run(int, int, int, int, int) Body End

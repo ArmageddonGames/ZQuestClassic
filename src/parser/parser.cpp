@@ -414,7 +414,7 @@ int32_t main(int32_t argc, char **argv)
 	{
 		if(!res)
 		{
-			write_compile_data(result->scriptTypes, result->theScripts);
+			write_compile_data(result->zasm, result->scriptTypes, result->theScripts);
 		}
 		int32_t errorcode = ZC_CONSOLE_TERM_CODE;
 		cph->write(&errorcode, sizeof(int32_t));
@@ -447,11 +447,9 @@ int32_t main(int32_t argc, char **argv)
 	if(!zasm_out.empty() && result)
 	{
 		FILE *outfile = fopen(zasm_out.c_str(), zasm_out_append ? "a" : "w");
-		for(auto& p : result->theScripts)
-		{
-			disassembled_script_data const& data = p.second;
-			data.write(outfile,false,true,zasm_commented);
-		}
+		string str;
+		write_script(result->zasm, str, zasm_commented, &result->theScripts);
+		fwrite(str.c_str(), sizeof(char), str.size(), outfile);
 		fclose(outfile);
 	}
 	
