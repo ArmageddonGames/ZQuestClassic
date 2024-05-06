@@ -1272,13 +1272,6 @@ void pop_ri()
 	ret_stack = ret_stack_cache.back(); ret_stack_cache.pop_back();
 }
 
-dword pc_calc(dword pc)
-{
-	if(curscript->meta.ffscript_v < 24)
-		return pc + curscript->pc;
-	return pc;
-}
-
 //START HELPER FUNCTIONS
 ///-------------------------------------//
 //           Helper Functions           //
@@ -36102,7 +36095,7 @@ void do_constructclass(ScriptType type, word script, int32_t i)
 	
 	size_t num_vars = sargvec->at(0);
 	size_t total_vars = num_vars + sargvec->size()-1;
-	auto destr_pc = pc_calc(ri->d[rEXP1]);
+	auto destr_pc = ri->d[rEXP1];
 
 	if (auto obj = user_objects.create())
 	{
@@ -36847,7 +36840,7 @@ int32_t run_script_int(bool is_jitted)
 					scommand = 0xFFFF;
 					break;
 				}
-				ri->pc = pc_calc(sarg1);
+				ri->pc = sarg1;
 				increment = false;
 				break;
 			}
@@ -36859,7 +36852,7 @@ int32_t run_script_int(bool is_jitted)
 					scommand = 0xFFFF;
 					break;
 				}
-				ri->pc = pc_calc((get_register(sarg1) / 10000) - 1);
+				ri->pc = (get_register(sarg1) / 10000) - 1;
 				increment = false;
 			}
 			break;
@@ -36873,7 +36866,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = pc_calc(sarg1);
+					ri->pc = sarg1;
 					increment = false;
 				}
 				break;
@@ -36887,7 +36880,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = pc_calc(sarg1);
+					ri->pc = sarg1;
 					increment = false;
 				}
 				break;
@@ -36901,7 +36894,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = pc_calc(sarg1);
+					ri->pc = sarg1;
 					increment = false;
 				}
 				break;
@@ -36915,7 +36908,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = pc_calc(sarg1);
+					ri->pc = sarg1;
 					increment = false;
 				}
 				break;
@@ -36931,7 +36924,7 @@ int32_t run_script_int(bool is_jitted)
 						scommand = 0xFFFF;
 						break;
 					}
-					ri->pc = pc_calc(sarg1);
+					ri->pc = sarg1;
 					increment = false;
 				}
 				break;
@@ -36953,7 +36946,7 @@ int32_t run_script_int(bool is_jitted)
 					scommand = 0xFFFF;
 					break;
 				}
-				ri->pc = pc_calc(sarg1);
+				ri->pc = sarg1;
 				increment = false;
 				break;
 			}
@@ -36981,7 +36974,7 @@ int32_t run_script_int(bool is_jitted)
 			{
 				if(get_register(sarg2) > 0)
 				{
-					ri->pc = pc_calc(sarg1);
+					ri->pc = sarg1;
 					increment = false;
 				}
 				else
@@ -36995,7 +36988,7 @@ int32_t run_script_int(bool is_jitted)
 			{
 				if (script_funcrun)
 					break; //handled below, poorly. 'RETURNFUNC' does this better now.
-				ri->pc = pc_calc(SH::read_stack(ri->sp) - 1);
+				ri->pc = SH::read_stack(ri->sp) - 1;
 				++ri->sp;
 				ri->sp &= MASK_SP;
 				increment = false;

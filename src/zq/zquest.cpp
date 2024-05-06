@@ -22196,7 +22196,7 @@ bool handle_slot(script_slot_data& slotdata, script_data* scriptdata)
 	else if(scriptdata)
 	{
 		scriptdata->meta.zero();
-		scriptdata->pc = -1;
+		scriptdata->pc = 0;
 	}
 	return true;
 }

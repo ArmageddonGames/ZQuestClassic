@@ -125,7 +125,7 @@ namespace ZScript
 	struct disassembled_script_data
 	{
 		zasm_meta meta;
-		int32_t pc, end_pc;
+		uint32_t pc, end_pc;
 		byte format;
 		std::string formatName(std::string name)
 		{
