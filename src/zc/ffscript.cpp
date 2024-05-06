@@ -36545,24 +36545,8 @@ int32_t run_script(ScriptType type, const word script, const int32_t i)
 	return result;
 }
 
-bool pc_overflow(dword pc, bool print_err)
-{
-	if(pc >= curscript->zasm_script->size)
-	{
-		if(print_err)
-			Z_scripterrlog("Script PC out of bounds (over or underflow). Terminating.\n");
-		return true;
-	}
-	return false;
-}
-
 int32_t run_script_int(bool is_jitted)
 {
-	if(pc_overflow(ri->pc))
-	{
-		script_exit_cleanup(false);
-		return RUNSCRIPT_ERROR;
-	}
 	ScriptType type = curScriptType;
 	word script = curScriptNum;
 	int32_t i = curScriptIndex;
@@ -36615,11 +36599,6 @@ int32_t run_script_int(bool is_jitted)
 	bool no_dealloc = false;
 	while(scommand != 0xFFFF)
 	{
-		if(pc_overflow(ri->pc))
-		{
-			script_exit_cleanup(false);
-			return RUNSCRIPT_ERROR;
-		}
 		const auto& op = zasm[ri->pc];
 		scommand = op.command;
 		sarg1 = op.arg1;
@@ -36828,7 +36807,7 @@ int32_t run_script_int(bool is_jitted)
 				// No need to do a bounds check - the last command should always be 0xFFFF.
 				if (is_debugging)
 					break;
-				while (!pc_overflow(ri->pc+1, false) && zasm[ri->pc + 1].command == NOP)
+				while (zasm[ri->pc + 1].command == NOP)
 					ri->pc++;
 				break;
 			}
