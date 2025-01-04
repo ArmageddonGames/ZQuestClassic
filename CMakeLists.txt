@@ -540,6 +540,7 @@ set(zcbase_sources
 	src/base/random.cpp
 	src/base/render.cpp
 	src/base/sin1.cpp
+	src/base/status_fx.cpp
 	src/base/util.cpp
 	src/base/version.cpp
 	src/base/win32.cpp

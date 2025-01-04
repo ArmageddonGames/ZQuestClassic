@@ -1194,12 +1194,13 @@ static NewMenu misc_menu
 {
 	{ "S&ubscreens", onEditSubscreens },
 	{ "&Shop Types", onShopTypes },
+	{ "Status &Effects", onStatusEffects },
 	{ "&Bottle Types", onBottleTypes },
 	{ "Bottle S&hop Types", onBottleShopTypes },
 	{ "&Info Types", onInfoTypes },
 	{ "&Warp Rings", onWarpRings },
 	{ "&Triforce Pieces", onTriPieces },
-	{ "&End String", onEndString },
+	{ "E&nd String", onEndString },
 	{ "Item &Drop Sets", onItemDropSets },
 };
 
@@ -16751,6 +16752,13 @@ int32_t onShopTypes()
     }
     
     return D_O_K;
+}
+
+int32_t onStatusEffects()
+{
+	//!TODO_STATUS info_lister for statuses, with edit buttons
+	// Edit button for default and hero separately?
+	return D_O_K;
 }
 
 void call_bottle_dlg(int32_t index);

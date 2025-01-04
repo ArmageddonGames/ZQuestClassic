@@ -698,8 +698,8 @@ int32_t onInfoTypes();
 void EditShopType(int32_t index);
 int32_t onShopTypes();
 
+int32_t onStatusEffects();
 int32_t onBottleTypes();
-
 int32_t onBottleShopTypes();
 
 int32_t count_item_drop_sets();

@@ -62,6 +62,7 @@ src/dialog/alertfunc.cpp
 src/dialog/zq_options.cpp
 src/dialog/bottletype.cpp
 src/dialog/bottleshop.cpp
+src/dialog/status_fx_dlg.cpp
 src/dialog/spritedata.cpp
 src/dialog/comboeditor.cpp
 src/dialog/combowizard.cpp
