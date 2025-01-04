@@ -329,6 +329,7 @@ public:
 	int sliding;
 	byte ice_entry_count, ice_entry_mcount;
 
+	StatusData status;
 private:
 	ffcdata const* platform_ffc;
 	bool lamp_paid;
@@ -640,6 +641,8 @@ public:
 	bool on_ffc_platform();
 	void check_platform_ffc();
 	void clear_platform_ffc();
+	
+	void update_status(EntityStatus const& stat, word clk, int32_t dur, word indx);
 };
 
 bool usingActiveShield(int32_t itmid = -1);

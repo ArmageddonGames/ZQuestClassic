@@ -25,6 +25,9 @@ extern byte newconveyorclk;
 
 extern byte sprite_flicker_color;
 extern byte sprite_flicker_transp_passes;
+extern byte sprite_mask_color;
+void sprite_push_flicker();
+void sprite_pop_flicker();
 
 //Sprite Offscreen Bits
 #define SPRITE_MOVESOFFSCREEN 0x01

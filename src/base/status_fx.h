@@ -3,15 +3,16 @@
 #include "base/ints.h"
 #include "base/general.h"
 #include "base/containers.h"
-#include <set>
 
 #define NUM_STATUSES 256
+
+class statusSprite;
 
 struct EntityStatus
 {
 	// Damage or Healing over time
 	int32_t damage;
-	uint16_t damage_rate = 30;
+	word damage_rate = 30;
 	bool damage_iframes = false;
 	bool ignore_iframes = true;
 	
@@ -57,22 +58,23 @@ struct StatusData
 	bool stun, bunny;
 	
 	int32_t status_timers[NUM_STATUSES];
+	word status_clks[NUM_STATUSES];
 	bounded_map<word, optional<EntityStatus>> overrides {NUM_STATUSES, nullopt};
 	
 	~StatusData();
 	
 	
-	void run_frame(std::function<void(EntityStatus const&, int32_t, word)>& proc,
+	void run_frame(std::function<void(EntityStatus const&, word, int32_t, word)>& proc,
 		sprite* parent);
 	
 	EntityStatus const& get_status(word idx) const;
-	
+	void clear();
+	void reset();
 	
 private:
 	void check_cures();
-	void tick_timers(std::function<void(EntityStatus const&, int32_t, word)>& proc, sprite* parent);
+	void tick_timers(std::function<void(EntityStatus const&, word, int32_t, word)>& proc,
+		sprite* parent);
 	void clear_frame_specific();
 }
-
-//void update_status(EntityStatus const& stat, int32_t clk, word indx);
 

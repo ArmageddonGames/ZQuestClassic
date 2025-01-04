@@ -1,4 +1,7 @@
 #include "status_fx.h"
+#include <set>
+
+using std::set;
 
 bool EntityStatus::is_empty() const
 {
@@ -19,7 +22,7 @@ StatusData::~StatusData()
 	}
 }
 
-void StatusData::run_frame(std::function<void(EntityStatus const&, int32_t, word)>& proc,
+void StatusData::run_frame(std::function<void(EntityStatus const&, word, int32_t, word)>& proc,
 	sprite* parent)
 {
 	check_cures();
@@ -34,9 +37,34 @@ EntityStatus const& StatusData::get_status(word idx) const
 	return QMisc.status_effects[idx];
 }
 
+void StatusData::clear()
+{
+	reset();
+	overrides.clear();
+}
+void StatusData::reset()
+{
+	clear_frame_specific();
+	for(auto [stat_idx,spr_ptr] : underlay.mut_inner())
+	{
+		if(spr_ptr)
+			delete spr_ptr;
+	}
+	for(auto [stat_idx,spr_ptr] : overlay.mut_inner())
+	{
+		if(spr_ptr)
+			delete spr_ptr;
+	}
+	for(word q = 0; q < NUM_STATUSES; ++q)
+	{
+		status_timers[q] = 0;
+		status_clks[q] = 0;
+	}
+}
+
 void StatusData::check_cures()
 {
-	std::set<word> cures;
+	set<word> cures;
 	for(word q = 0; q < NUM_STATUSES; ++q)
 	{
 		if(status_timers[q])
@@ -52,7 +80,7 @@ void StatusData::check_cures()
 	for(word idx : cures)
 		status_timers[idx] = 0;
 }
-void StatusData::tick_timers(std::function<void(EntityStatus const&, int32_t, word)>& proc, sprite* parent)
+void StatusData::tick_timers(std::function<void(EntityStatus const&, word, int32_t, word)>& proc, sprite* parent)
 {
 	clear_frame_specific();
 	
@@ -108,6 +136,7 @@ void StatusData::tick_timers(std::function<void(EntityStatus const&, int32_t, wo
 				{
 					spr->x = visual_x;
 					spr->y = visual_y;
+					spr->animate(0);
 				}
 				spr->tile_width = visual_tilewidth;
 				spr->tile_height = visual_tileheight;
@@ -128,10 +157,11 @@ void StatusData::tick_timers(std::function<void(EntityStatus const&, int32_t, wo
 				}
 			}
 			
-			proc(stat, status_timers[q], q);
+			proc(stat, status_clks[q]++, status_timers[q], q);
 		}
 		else
 		{
+			status_clks[q] = 0;
 			if(underlay[q])
 			{
 				delete underlay[q];

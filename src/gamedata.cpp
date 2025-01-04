@@ -282,9 +282,6 @@ void gamedata::set_life(word l)
 void gamedata::change_life(int16_t l)
 {
     change_counter(l, 0);
-    
-    if(_dcounter[0] <= 0) _dcounter[0] = 0;
-    
     return;
 }
 

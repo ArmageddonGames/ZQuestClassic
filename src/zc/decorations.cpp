@@ -261,8 +261,8 @@ void statusSprite::draw(BITMAP *dest)
 	zfix ox = x, oy = y;
 	if(target)
 	{
-		x += target->x;
-		y += target->y;
+		x += target->x + target->xofs;
+		y += target->y + target->yofs;
 	}
 	decoration::draw(dest);
 	x = ox; y = oy;

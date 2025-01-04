@@ -1634,6 +1634,7 @@ void HeroClass::init()
 		delete lift_wpn;
 		lift_wpn = nullptr;
 	}
+	status.reset();
 	clear_platform_ffc();
 	liftclk = 0;
 	tliftclk = 0;
@@ -3189,8 +3190,8 @@ herodraw_end:
 
 void HeroClass::masked_draw(BITMAP* dest)
 {
-	// The first sprite::draw in this function uses sprite_flicker_color
-	// This is intended to be the player, handle this if this changes. -Moosh
+	sprite_mask_color = status.mask_color;
+	sprite_push_flicker(); //store the sprite_flicker_color and etc, meant for the player sprite
 	zfix lz, lfz;
 	if(lift_wpn)
 	{
@@ -3207,7 +3208,20 @@ void HeroClass::masked_draw(BITMAP* dest)
 		{
 			yofs -= (playing_field_offset+16);
 			xofs -= 16;
-			sprite::draw(sub);
+			for(auto [idx,spr] : status.underlay.inner())
+			{
+				if(!spr) continue;
+				spr->draw(sub);
+			}
+			sprite_pop_flicker();
+			if(status.main_spr_hidden)
+				sprite_clear_flicker();
+			else sprite::draw(sub);
+			for(auto [idx,spr] : status.overlay.inner())
+			{
+				if(!spr) continue;
+				spr->draw(sub);
+			}
 			if(lift_wpn)
 			{
 				handle_lift(false);
@@ -3226,7 +3240,20 @@ void HeroClass::masked_draw(BITMAP* dest)
 	}
 	else
 	{
-		sprite::draw(dest);
+		for(auto [idx,spr] : status.underlay.inner())
+		{
+			if(!spr) continue;
+			spr->draw(dest);
+		}
+		sprite_pop_flicker();
+		if(status.main_spr_hidden)
+			sprite_clear_flicker();
+		else sprite::draw(dest);
+		for(auto [idx,spr] : status.overlay.inner())
+		{
+			if(!spr) continue;
+			spr->draw(dest);
+		}
 		if(lift_wpn)
 		{
 			handle_lift(false);
@@ -7975,6 +8002,8 @@ bool HeroClass::animate(int32_t)
 		}
 heroanimate_skip_liftwpn:;
 	}
+	
+	status.run_frame(update_status, this);
 	
 	if(cheats_execute_goto)
 	{
@@ -32852,7 +32881,7 @@ bool HeroClass::CanSideSwim()
 
 int32_t HeroClass::getTileModifier()
 {
-	return item_tile_mod() + bunny_tile_mod();
+	return item_tile_mod() + bunny_tile_mod() + status.sum_tile_mod;
 }
 void HeroClass::setImmortal(int32_t nimmortal)
 {
@@ -32870,3 +32899,27 @@ bool HeroClass::is_unpushable() const
 {
 	return toogam;
 }
+
+void HeroClass::update_status(EntityStatus const& stat,
+	word clk, int32_t dur, word indx)
+{
+	// Each status 'stat' passed in, is active
+	// if(dur == 0) // the status just ended
+	do // Damage setting ticking
+	{
+		if(stat.damage && !(clk % stat.damage_rate))
+		{
+			if(stat.damage > 0)
+			{
+				if(superman || (hclk && !ignore_iframes))
+					break;
+				//!TODO_STATUS generic event for being hit here?
+				if(damage_iframes)
+					doHit(-1, 48);
+			}
+			game->change_life(-stat.damage);
+		}
+	}
+	while(false);
+}
+
