@@ -8003,8 +8003,11 @@ bool HeroClass::animate(int32_t)
 heroanimate_skip_liftwpn:;
 	}
 	
-	status.run_frame(update_status, this);
-	
+	{ //handle statuses
+		using namespace std::placeholders;
+		status.run_frame(std::bind(&HeroClass::update_status, this, _1, _2, _3, _4), this);
+	}
+
 	if(cheats_execute_goto)
 	{
 		didpit=true;
@@ -32911,10 +32914,10 @@ void HeroClass::update_status(EntityStatus const& stat,
 		{
 			if(stat.damage > 0)
 			{
-				if(superman || (hclk && !ignore_iframes))
+				if(superman || (hclk && !stat.ignore_iframes))
 					break;
 				//!TODO_STATUS generic event for being hit here?
-				if(damage_iframes)
+				if(stat.damage_iframes)
 					doHit(-1, 48);
 			}
 			game->change_life(-stat.damage);

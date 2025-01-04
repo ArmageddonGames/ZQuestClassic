@@ -1,24 +1,25 @@
-#include "headerdlg.h"
+#include "status_fx_dlg.h"
 #include "info.h"
 #include "set_password.h"
+#include "base/misctypes.h"
 #include <gui/builder.h>
 
 extern bool saved;
 StatusFXDialog::StatusFXDialog(stat_mode m, EntityStatus& ref,
 	int idx, bool* is_active)
 	: mode(m), source_ref(ref), local_ref(ref),
-	idx(idx), name(QMisc.status_names[idx]),
+	idx(idx), stat_name(QMisc.status_names[idx]),
 	active(is_active), active_ptr(is_active)
 {}
 
 void StatusFXDialog::update_title()
 {
-	window->setTitle(fmt::format("Edit Status Effect ({}): {}", idx, name));
+	window->setTitle(fmt::format("Edit Status Effect ({}): {}", idx, stat_name));
 }
 
 void StatusFXDialog::update_active()
 {
-	tabs->setDisabled(mode != MODE_MAIN && active_ptr && !active);
+	tab_cont->setDisabled(mode != MODE_MAIN && active_ptr && !active);
 }
 
 static size_t tabptr = 0;
@@ -27,7 +28,7 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 	using namespace GUI::Builder;
 	using namespace GUI::Props;
 	
-	auto name_inf = "The name of this status effect.";
+	std::string name_inf = "The name of this status effect.";
 	if(mode != MODE_MAIN)
 		name_inf += "\nStatus overrides share the name of the main status.";
 	
@@ -35,10 +36,10 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 		TextField(
 			maxwidth = 15_em,
 			maxLength = 255,
-			text = name,
+			text = stat_name,
 			onValChangedFunc = [&](GUI::TextField::type,std::string_view str,int32_t)
 			{
-				name = str;
+				stat_name = str;
 				update_title();
 			}),
 		INFOBTN(name_inf)
@@ -62,49 +63,51 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 		onClose = message::CANCEL,
 		Column(
 			top_box,
-			tabs = TabPanel(
-				ptr = &tabptr,
-				TabRef(name = "Damage",
-					//int32_t damage, negatives but no decimals
-					//word damage_rate, minimum 1 (avoid div/0)
-					//bool damage_iframes (Gives you iframes)
-					//bool ignore_iframes (Bypasses iframes)
-					_d
-				),
-				TabRef(name = "Visual",
-					//byte visual_sprite, a wpnspr
-					//int32_t visual_tile, a tile
-					// I forgot to implement a cset?
-					// Only sprite OR tile can be set
-					//zfix x, zfix y
-					//byte visual_tilewidth, byte visual_tileheight
-					//bool visual_relative, is relative to sprite
-					//bool visual_under, is underneath the sprite
-					//bool visual_hide_sprite, make the main sprite invis
-					//
-					//int32_t sprite_tile_mod, a tile modiifer
-					//byte sprite_color_mask, a color picker that masks the main sprite
-					_d
-				),
-				TabRef(name = "Cures",
-					//bool cures[NUM_STATUSES]
-					// Fancy GUI; allow a button to "add status" to a list
-					_d
-				),
-				TabRef(name = "Defenses",
-					//More fancy GUI, allow "add defense" to a list
-					//Each defense added, needs new UI elements, notably a ddl
-					// for defense resolution that is being overriden to that defense.
-					// No need for -1 handling, have an X to remove instead.
-					_d
-				),
-				TabRef(name = "Engine FX",
-					// bool jinx_melee
-					// bool jinx_item
-					// bool jinx_shield
-					// bool stun
-					// bool bunny
-					_d
+			tab_cont = Column(
+				TabPanel(
+					ptr = &tabptr,
+					TabRef(name = "Damage",
+						//int32_t damage, negatives but no decimals
+						//word damage_rate, minimum 1 (avoid div/0)
+						//bool damage_iframes (Gives you iframes)
+						//bool ignore_iframes (Bypasses iframes)
+						_d
+					),
+					TabRef(name = "Visual",
+						//byte visual_sprite, a wpnspr
+						//int32_t visual_tile, a tile
+						// I forgot to implement a cset?
+						// Only sprite OR tile can be set
+						//zfix x, zfix y
+						//byte visual_tilewidth, byte visual_tileheight
+						//bool visual_relative, is relative to sprite
+						//bool visual_under, is underneath the sprite
+						//bool visual_hide_sprite, make the main sprite invis
+						//
+						//int32_t sprite_tile_mod, a tile modiifer
+						//byte sprite_color_mask, a color picker that masks the main sprite
+						_d
+					),
+					TabRef(name = "Cures",
+						//bool cures[NUM_STATUSES]
+						// Fancy GUI; allow a button to "add status" to a list
+						_d
+					),
+					TabRef(name = "Defenses",
+						//More fancy GUI, allow "add defense" to a list
+						//Each defense added, needs new UI elements, notably a ddl
+						// for defense resolution that is being overriden to that defense.
+						// No need for -1 handling, have an X to remove instead.
+						_d
+					),
+					TabRef(name = "Engine FX",
+						// bool jinx_melee
+						// bool jinx_item
+						// bool jinx_shield
+						// bool stun
+						// bool bunny
+						_d
+					)
 				)
 			),
 			Row(
@@ -134,7 +137,7 @@ bool StatusFXDialog::handleMessage(const GUI::DialogMessage<message>& msg)
 		case message::OK:
 			if(mode != MODE_MAIN && active_ptr)
 				*active_ptr = active;
-			QMisc.status_names[idx] = name;
+			QMisc.status_names[idx] = stat_name;
 			if(mode == MODE_MAIN || !active_ptr || active)
 				source_ref = local_ref;
 			else

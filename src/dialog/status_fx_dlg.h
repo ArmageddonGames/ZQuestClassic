@@ -6,14 +6,17 @@
 #include <gui/label.h>
 #include <gui/text_field.h>
 #include <gui/tabpanel.h>
+#include <gui/grid.h>
+#include <gui/window.h>
 #include <functional>
 #include <string_view>
+#include "status_fx.h"
 
 class StatusFXDialog: public GUI::Dialog<StatusFXDialog>
 {
 public:
 	enum class message { REFR_INFO, OK, CANCEL };
-	enum class stat_mode { MODE_MAIN, MODE_HERO, MODE_ENEMY };
+	enum stat_mode { MODE_MAIN, MODE_HERO, MODE_ENEMY };
 	
 	StatusFXDialog(stat_mode m, EntityStatus& ref, int idx,
 		bool* active = nullptr);
@@ -25,13 +28,14 @@ public:
 	void update_active();
 
 private:
-	std::shared_ptr<GUI::TabPanel> tabs;
+	std::shared_ptr<GUI::Grid> tab_cont;
+	std::shared_ptr<GUI::Window> window;
 	
 	stat_mode mode;
 	EntityStatus& source_ref;
 	EntityStatus local_ref;
 	int idx;
-	std::string name;
+	std::string stat_name;
 	bool* active_ptr;
 	bool active;
 };

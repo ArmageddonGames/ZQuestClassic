@@ -1049,43 +1049,6 @@ enum {  e9tMOLDORM=1, e9tVLANMOLA, e9tVMOLDORM, e9tZ3MOLDORM, //restricted to wa
      };
 */
 
-          //Preparation for new defences. -Z
-     
-     
-enum
-{
-	edefBRANG, edefBOMB, edefSBOMB, edefARROW, edefFIRE, //04
-	edefWAND, edefMAGIC, edefHOOKSHOT, edefHAMMER, edefSWORD, //09
-	edefBEAM, edefREFBEAM, edefREFMAGIC, edefREFBALL, edefREFROCK, //14
-	edefSTOMP, edefBYRNA, edefSCRIPT, edefLAST250, edefQUAKE, //19
-	edefSCRIPT01, edefSCRIPT02, edefSCRIPT03, edefSCRIPT04, edefSCRIPT05, //24
-	edefSCRIPT06, edefSCRIPT07, edefSCRIPT08, edefSCRIPT09, edefSCRIPT10, //29
-	edefICE, edefBAIT, edefWIND, edefSPARKLE, edefSONIC, //34
-	edefWhistle, edefSwitchHook, edefTHROWN, edefREFARROW, edefREFFIRE, //39
-	edefREFFIRE2, //x40
-	edefLAST255 //41
-	/*
-	edef42,	edefETHER, 	edefBOMBOS,	edefPOT,	edefTHROWNROCK,	//46
-	edefELECTRIC,	edefSHIELD,	edefTROWEL,	edefSPINATTK,	edefZ3SWORD,	//51
-	edefLASWORD,	//x52
-	edefLASTEND  //53*/
-    // Reserved for future use.
-	 //edefSCRIPT used to be unused edefSPIN
-
-}; 
-
-#define edefLAST 19 
-#define edefSCRIPTDEFS_MAX 9 //for 2.future compatibility
-
-//Old 2.future compat rubbish for quest loading. -Z
-enum
-{
-	scriptDEF1, scriptDEF2, scriptDEF3, scriptDEF4, scriptDEF5, scriptDEF6, scriptDEF7,
-	scriptDEF8, scriptDEF9, scriptDEF10, scriptDEFLAST
-};
-
-//2.50.x last defense, used for filepack loading. 
-
 // New defence outcomes. 
 enum
 {

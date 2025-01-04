@@ -1,12 +1,9 @@
 #include "status_fx.h"
+#include "base/misctypes.h"
+#include "zc/decorations.h" // why is decorations.h in "/zc"?
 #include <set>
 
 using std::set;
-
-bool EntityStatus::is_empty() const
-{
-	return *this == EntityStatus();
-}
 
 StatusData::~StatusData()
 {
@@ -22,7 +19,7 @@ StatusData::~StatusData()
 	}
 }
 
-void StatusData::run_frame(std::function<void(EntityStatus const&, word, int32_t, word)>& proc,
+void StatusData::run_frame(std::function<void(EntityStatus const&, word, int32_t, word)>&& proc,
 	sprite* parent)
 {
 	check_cures();
@@ -114,10 +111,10 @@ void StatusData::tick_timers(std::function<void(EntityStatus const&, word, int32
 			if(stat.bunny)
 				bunny = true;
 			
-			if(status_timers[q] && (visual_sprite || visual_tile))
+			if(status_timers[q] && (stat.visual_sprite || stat.visual_tile))
 			{
-				auto& cur_spr_map = visual_under ? underlay : overlay;
-				auto& other_spr_map = visual_under ? overlay : underlay;
+				auto& cur_spr_map = stat.visual_under ? underlay : overlay;
+				auto& other_spr_map = stat.visual_under ? overlay : underlay;
 				
 				if(other_spr_map[q])
 				{
@@ -125,22 +122,22 @@ void StatusData::tick_timers(std::function<void(EntityStatus const&, word, int32
 					other_spr_map.erase(q);
 				}
 				statusSprite* spr = cur_spr_map[q];
-				if(spr && (spr->the_deco_sprite != visual_sprite || spr->plain_tile != visual_tile))
+				if(spr && (spr->the_deco_sprite != stat.visual_sprite || spr->plain_tile != stat.visual_tile))
 				{
 					delete spr;
 					spr = nullptr;
 				}
 				if(!spr)
-					cur_spr_map[q] = spr = new statusSprite(visual_x, visual_y, visual_sprite, visual_tile);
+					cur_spr_map[q] = spr = new statusSprite(stat.visual_x, stat.visual_y, stat.visual_sprite, stat.visual_tile);
 				else
 				{
-					spr->x = visual_x;
-					spr->y = visual_y;
+					spr->x = stat.visual_x;
+					spr->y = stat.visual_y;
 					spr->animate(0);
 				}
-				spr->tile_width = visual_tilewidth;
-				spr->tile_height = visual_tileheight;
-				if(visual_relative)
+				spr->tile_width = stat.visual_tilewidth;
+				spr->tile_height = stat.visual_tileheight;
+				if(stat.visual_relative)
 					spr->target = parent;
 			}
 			else

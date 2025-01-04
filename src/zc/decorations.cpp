@@ -247,7 +247,7 @@ void statusSprite::draw(BITMAP *dest)
 		tile = plain_tile;
 	else if(the_deco_sprite >= 0 && the_deco_sprite < MAXWPNS)
 	{
-		auto const& wpn = wpsnbuf[the_deco_sprite];
+		auto const& wpn = wpnsbuf[the_deco_sprite];
 		int32_t t=wpn.tile;
 		int32_t fr=zc_max(1,wpn.frames);
 		int32_t spd=zc_max(1,wpn.speed);

@@ -345,6 +345,34 @@ enum class ScriptType {
 	Last = EngineSubscreen,
 };
 
+enum
+{
+	edefBRANG, edefBOMB, edefSBOMB, edefARROW, edefFIRE, //04
+	edefWAND, edefMAGIC, edefHOOKSHOT, edefHAMMER, edefSWORD, //09
+	edefBEAM, edefREFBEAM, edefREFMAGIC, edefREFBALL, edefREFROCK, //14
+	edefSTOMP, edefBYRNA, edefSCRIPT, edefLAST250, edefQUAKE, //19
+	edefSCRIPT01, edefSCRIPT02, edefSCRIPT03, edefSCRIPT04, edefSCRIPT05, //24
+	edefSCRIPT06, edefSCRIPT07, edefSCRIPT08, edefSCRIPT09, edefSCRIPT10, //29
+	edefICE, edefBAIT, edefWIND, edefSPARKLE, edefSONIC, //34
+	edefWhistle, edefSwitchHook, edefTHROWN, edefREFARROW, edefREFFIRE, //39
+	edefREFFIRE2, //x40
+	edefLAST255 //41
+	/*
+	edef42,	edefETHER, 	edefBOMBOS,	edefPOT,	edefTHROWNROCK,	//46
+	edefELECTRIC,	edefSHIELD,	edefTROWEL,	edefSPINATTK,	edefZ3SWORD,	//51
+	edefLASWORD,	//x52
+	edefLASTEND  //53*/
+    // Reserved for future use.
+	 //edefSCRIPT used to be unused edefSPIN
+};
+#define edefLAST 19 //2.50.x last defense, used for filepack loading.
+#define edefSCRIPTDEFS_MAX 9 //for 2.future compatibility
+enum //Old 2.future compat rubbish for quest loading. -Z
+{
+	scriptDEF1, scriptDEF2, scriptDEF3, scriptDEF4, scriptDEF5, scriptDEF6, scriptDEF7,
+	scriptDEF8, scriptDEF9, scriptDEF10, scriptDEFLAST
+};
+
 // directions
 enum direction { dir_invalid = -1, up, down, left, right, l_up, r_up, l_down, r_down };
 static const char* dirstr[] = {"up","down","left","right","up-left","up-right","down-left","down-right"};

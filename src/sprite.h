@@ -28,6 +28,7 @@ extern byte sprite_flicker_transp_passes;
 extern byte sprite_mask_color;
 void sprite_push_flicker();
 void sprite_pop_flicker();
+void sprite_clear_flicker();
 
 //Sprite Offscreen Bits
 #define SPRITE_MOVESOFFSCREEN 0x01
