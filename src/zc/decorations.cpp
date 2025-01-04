@@ -184,8 +184,6 @@ comboSprite::comboSprite(zfix X,zfix Y,int32_t Id,int32_t Clk, int32_t wpnSpr) :
 	clk=Clk;
 	
 	the_deco_sprite = vbound(wpnSpr,0,255);
-	tframes = wpnsbuf[the_deco_sprite].frames;
-	spd = wpnsbuf[the_deco_sprite].speed;
 }
 
 bool comboSprite::animate(int32_t)
@@ -219,6 +217,55 @@ void comboSprite::draw(BITMAP *dest)
 void comboSprite::draw2(BITMAP *dest)
 {
 	realdraw(dest,1);
+}
+
+
+statusSprite::statusSprite(zfix X,zfix Y, int32_t spr, int32_t tile) :
+	decoration(X,Y,dSTATUSSPRITE,0)
+{
+	id=dSTATUSSPRITE;
+	clk=0;
+	
+	the_deco_sprite = vbound(spr,0,255);
+	plain_tile = spr ? 0 : tile;
+}
+
+bool statusSprite::animate(int32_t)
+{
+	if(plain_tile <= 0 && the_deco_sprite >= 0 && the_deco_sprite < MAXWPNS)
+	{
+		int32_t dur = zc_max(1,wpnsbuf[the_deco_sprite].frames) * zc_max(1,wpnsbuf[the_deco_sprite].speed);
+		if(clk++ >= dur)
+			clk = 1; //animation completed
+	}
+	return false;
+}
+
+void statusSprite::draw(BITMAP *dest)
+{
+	if(plain_tile > 0)
+		tile = plain_tile;
+	else if(the_deco_sprite >= 0 && the_deco_sprite < MAXWPNS)
+	{
+		auto const& wpn = wpsnbuf[the_deco_sprite];
+		int32_t t=wpn.tile;
+		int32_t fr=zc_max(1,wpn.frames);
+		int32_t spd=zc_max(1,wpn.speed);
+		
+		tile = t+(((clk-1)/spd)%fr);
+		cs=wpn.csets&15;
+		flip = ((wpn.misc & WF_HFLIP) ? 1 : 0) | ((wpn.misc & WF_VFLIP) ? 2 : 0);
+	}
+	else return;
+	
+	zfix ox = x, oy = y;
+	if(target)
+	{
+		x += target->x;
+		y += target->y;
+	}
+	decoration::draw(dest);
+	x = ox; y = oy;
 }
 
 dFlowerClippings::dFlowerClippings(zfix X,zfix Y,int32_t Id,int32_t Clk, int32_t wpnSpr) : decoration(X,Y,Id,Clk)
