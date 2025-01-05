@@ -97,7 +97,7 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 								{
 									local_ref.damage_iframes = state;
 								}),
-							INFOBTN("If each damage tick should give the player invincibility frames, and count as 'being hit'."
+							INFOBTN("If each damage tick should give the player invincibility frames."
 								"\nOnly works if 'Damage > 0'."),
 							//
 							Checkbox(text = "Ignore Invincibility Frames",

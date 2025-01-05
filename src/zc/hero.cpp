@@ -32918,8 +32918,7 @@ void HeroClass::update_status(EntityStatus const& stat,
 				if(superman || (hclk && !stat.ignore_iframes))
 					break;
 				//!TODO_STATUS generic event for being hit here?
-				if(stat.damage_iframes)
-					doHit(-1, 48);
+				doHit(-1, stat.damage_iframes ? 48 : 0);
 			}
 			game->change_life(-stat.damage);
 		}
