@@ -8280,6 +8280,17 @@ int32_t writemisc(PACKFILE *f, zquestheader *Header)
 				new_return(27);
 		}
 		
+		for(int q = 0; q < NUM_STATUSES; ++q)
+		{
+			if(!p_putcstr(QMisc.status_names[q], f))
+				new_return(27);
+			auto ret = QMisc.status_effects[q].write(f);
+			fake_pack_writing=(writecycle==0);
+			
+			if(ret)
+				new_return(ret);
+		}
+		
 		if(writecycle==0)
 		{
 			section_size=writesize;

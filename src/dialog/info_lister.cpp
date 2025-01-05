@@ -95,7 +95,7 @@ std::shared_ptr<GUI::Widget> BasicListerDialog::view()
 		},
 		Column(
 			hPadding = 0_px,
-			Rows<2>(
+			g = Rows<2>(
 				Row(vPadding = 0_px, fitParent = true,
 					Checkbox(text = "Alphabetized",
 						hAlign = 0.0,
@@ -110,7 +110,7 @@ std::shared_ptr<GUI::Widget> BasicListerDialog::view()
 				copyInfo = Label(text = ""),
 				widgList = List(data = lister, isABC = true,
 					selectedValue = selected_val,
-					fitParent = true,
+					fitParent = true, rowSpan = 2,
 					onSelectFunc = [&](int32_t val)
 					{
 						if(selected_val == val)
@@ -128,8 +128,7 @@ std::shared_ptr<GUI::Widget> BasicListerDialog::view()
 						forceDraw();
 						rclick(x,y);
 					},
-					onDClick = message::CONFIRM),
-				g = Column(fitParent = true)
+					onDClick = message::CONFIRM)
 			),
 			btnrow = Row(padding = 0_px)
 		)
@@ -140,7 +139,7 @@ std::shared_ptr<GUI::Widget> BasicListerDialog::view()
 	
 	if(use_preview)
 		g->add(widgPrev = TileFrame(visible = false));
-	g->add(widgInfo = Label(text = "", fitParent = true));
+	g->add(widgInfo = Label(text = "", fitParent = true, rowSpan = use_preview ? 1 : 2));
 	
 	resort();
 	postinit();
@@ -824,7 +823,7 @@ void SFXListerDialog::edit()
 StatusListerDialog::StatusListerDialog(int stat_id, bool selecting):
 	BasicListerDialog("Select Status","statusdata",stat_id,selecting)
 {
-	alphabetized = get_config("alphabetized", true);
+	alphabetized = get_config("alphabetized", false);
 }
 void StatusListerDialog::preinit()
 {
@@ -848,8 +847,8 @@ void StatusListerDialog::postinit()
 		if(tlen > len)
 			len = tlen;
 	}
-	widgInfo->minWidth(Size::pixels(len+8));
-	copyInfo->minWidth(Size::pixels(len+8));
+	widgInfo->minWidth(Size::pixels(len+8) + 10_em);
+	copyInfo->minWidth(Size::pixels(len+8) + 10_em);
 	widgList->minHeight(Size::pixels(320));
 	window->setHelp(get_info(selecting, true));
 }
@@ -874,7 +873,9 @@ void StatusListerDialog::update()
 				oss << "\nDamage: " << stat.damage;
 			else
 				oss << "\nHealing: " << -stat.damage;
-			oss << "\n  every " << stat.damage_rate << " frames";
+			if(stat.damage_rate == 0)
+				oss << "\n  every frame";
+			else oss << "\n  every " << (stat.damage_rate+1) << " frames";
 			if(stat.damage > 0)
 			{
 				if(stat.damage_iframes)
@@ -948,6 +949,7 @@ void StatusListerDialog::update()
 				oss << "Bunny, ";
 			oss.seekp(int(oss.tellp())-2); //erase trailing comma+space
 		}
+		oss << "\n";
 		
 		widgInfo->setText(oss.str());
 	}

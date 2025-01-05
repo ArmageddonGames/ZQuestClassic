@@ -32910,7 +32910,8 @@ void HeroClass::update_status(EntityStatus const& stat,
 	// if(dur == 0) // the status just ended
 	do // Damage setting ticking
 	{
-		if(stat.damage && !(clk % stat.damage_rate))
+		// damage_rate+1 means 0 = every frame, instead of 0 = mod by 0 error
+		if(stat.damage && !(clk % (stat.damage_rate+1)))
 		{
 			if(stat.damage > 0)
 			{

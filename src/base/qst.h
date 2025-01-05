@@ -107,13 +107,6 @@ extern bool bad_version(int32_t ver);
 
 enum
 {
-    qe_OK, qe_notfound, qe_invalid, qe_version, qe_obsolete,
-    qe_missing, qe_internal, qe_pwd, qe_match, qe_minver,
-    qe_nomem, qe_debug, qe_cancel, qe_silenterr, qe_no_qst
-};
-
-enum
-{
     zgp_tiles, zgp_combos, zgp_pals, zgp_items, zgp_wpns, zgp_misc,
     zgp_maps, zgp_doors
 };

@@ -181,6 +181,8 @@ int wrap(int x,int low,int high);
 #define NUM_BOTTLE_TYPES           64
 #define NUM_BOTTLE_SHOPS           256
 
+#define MAX_COUNTER_VAL            65535
+
 #define QSTPWD_LEN                 256
 
 enum controls //Args for 'getInput()'
@@ -371,6 +373,13 @@ enum //Old 2.future compat rubbish for quest loading. -Z
 {
 	scriptDEF1, scriptDEF2, scriptDEF3, scriptDEF4, scriptDEF5, scriptDEF6, scriptDEF7,
 	scriptDEF8, scriptDEF9, scriptDEF10, scriptDEFLAST
+};
+
+enum
+{
+    qe_OK, qe_notfound, qe_invalid, qe_version, qe_obsolete,
+    qe_missing, qe_internal, qe_pwd, qe_match, qe_minver,
+    qe_nomem, qe_debug, qe_cancel, qe_silenterr, qe_no_qst
 };
 
 // directions

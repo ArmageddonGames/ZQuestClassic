@@ -6137,6 +6137,30 @@ int32_t readmisc(PACKFILE *f, zquestheader *Header, miscQdata *Misc)
 		temp_misc.miscsfx[sfxTAP_HOLLOW] = WAV_ZN1TAP2;
 	}
 	
+	if(s_version < 17)
+	{
+		temp_misc.status_names[STATUS_JINX_MELEE] = "Melee Jinx";
+		temp_misc.status_effects[STATUS_JINX_MELEE].jinx_melee = true;
+		temp_misc.status_names[STATUS_JINX_ITEM] = "Item Jinx";
+		temp_misc.status_effects[STATUS_JINX_ITEM].jinx_item = true;
+		temp_misc.status_names[STATUS_JINX_SHIELD] = "Shield Jinx";
+		temp_misc.status_effects[STATUS_JINX_SHIELD].jinx_shield = true;
+		temp_misc.status_names[STATUS_STUN] = "Stun";
+		temp_misc.status_effects[STATUS_STUN].stun = true;
+		temp_misc.status_names[STATUS_BUNNY] = "Bunny";
+		temp_misc.status_effects[STATUS_BUNNY].bunny = true;
+	}
+	else
+	{
+		for(int q = 0; q < NUM_STATUSES; ++q)
+		{
+			if(!p_getcstr(&temp_misc.status_names[q], f))
+				return qe_invalid;
+			if(auto ret = temp_misc.status_effects[q].read(f,s_version))
+				return ret;
+		}
+	}
+	
 	if (!should_skip)
 		*Misc = temp_misc;
 	

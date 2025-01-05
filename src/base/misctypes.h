@@ -6,6 +6,7 @@
 #include "base/ints.h"
 #include "base/general.h"
 #include "base/containers.h"
+struct PACKFILE;
 
 enum {dt_pass=0, dt_lock, dt_shut, dt_boss, dt_olck, dt_osht, dt_obos, dt_wall, dt_bomb, dt_walk, dt_max};
 enum {df_walktrans=0};
@@ -160,12 +161,21 @@ struct palcycle
 	byte first,count,speed;
 };
 
-#define NUM_STATUSES 256
+enum
+{
+	STATUS_JINX_MELEE,
+	STATUS_JINX_ITEM,
+	STATUS_JINX_SHIELD,
+	STATUS_STUN,
+	STATUS_BUNNY,
+	NUM_ENGINE_STATUSES,
+	NUM_STATUSES = 256
+};
 struct EntityStatus
 {
 	// Damage or Healing over time
 	int32_t damage;
-	word damage_rate = 30;
+	word damage_rate = 59;
 	bool damage_iframes = false;
 	bool ignore_iframes = true;
 	
@@ -197,6 +207,9 @@ struct EntityStatus
 	bool is_empty() const;
 	
 	void clear();
+	
+	int32_t read(PACKFILE *f, word s_version);
+	int32_t write(PACKFILE *f);
 	
 	EntityStatus& operator=(EntityStatus const& other) = default;
 	bool operator==(EntityStatus const& other) const = default;

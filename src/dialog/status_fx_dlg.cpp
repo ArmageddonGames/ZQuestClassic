@@ -67,11 +67,49 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 				TabPanel(
 					ptr = &tabptr,
 					TabRef(name = "Damage",
-						//int32_t damage, negatives but no decimals
-						//word damage_rate, minimum 1 (avoid div/0)
-						//bool damage_iframes (Gives you iframes)
-						//bool ignore_iframes (Bypasses iframes)
-						_d
+						Rows<3>(
+							Label(text = "Damage:", hAlign = 1.0),
+							TextField(fitParent = true,
+								type = GUI::TextField::type::INT_DECIMAL,
+								low = -MAX_COUNTER_VAL, high = MAX_COUNTER_VAL,
+								val = local_ref.damage,
+								onValChangedFunc = [&](GUI::TextField::type,std::string_view,int32_t val)
+								{
+									local_ref.damage = val;
+								}),
+							INFOBTN("Amount of damage to deal each damage tick. Negative values represent healing."),
+							//
+							Label(text = "Rate:", hAlign = 1.0),
+							TextField(fitParent = true,
+								type = GUI::TextField::type::INT_DECIMAL,
+								low = 0, high = 65535,
+								val = local_ref.damage_rate,
+								onValChangedFunc = [&](GUI::TextField::type,std::string_view,int32_t val)
+								{
+									local_ref.damage_rate = val;
+								}),
+							INFOBTN("Duration between each damage tick. 0 = damage every frame, 1 = every other, etc."),
+							//
+							Checkbox(text = "Gives Invincibility Frames",
+								hAlign = 1.0, boxPlacement = GUI::Checkbox::boxPlacement::RIGHT,
+								checked = local_ref.damage_iframes, colSpan = 2,
+								onToggleFunc = [&](bool state)
+								{
+									local_ref.damage_iframes = state;
+								}),
+							INFOBTN("If each damage tick should give the player invincibility frames, and count as 'being hit'."
+								"\nOnly works if 'Damage > 0'."),
+							//
+							Checkbox(text = "Ignore Invincibility Frames",
+								hAlign = 1.0, boxPlacement = GUI::Checkbox::boxPlacement::RIGHT,
+								checked = local_ref.ignore_iframes, colSpan = 2,
+								onToggleFunc = [&](bool state)
+								{
+									local_ref.ignore_iframes = state;
+								}),
+							INFOBTN("If damage from the status applies even while the player has invincibility frames."
+								"\nIf 'Damage < 0', invincibility frames are always ignored.")
+						)
 					),
 					TabRef(name = "Visual",
 						//byte visual_sprite, a wpnspr
