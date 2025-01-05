@@ -198,6 +198,7 @@ struct EntityStatus
 	
 	void clear();
 	
+	EntityStatus& operator=(EntityStatus const& other) = default;
 	bool operator==(EntityStatus const& other) const = default;
 };
 
@@ -249,6 +250,8 @@ struct miscQdata
 	
 	std::string status_names[NUM_STATUSES];
 	EntityStatus status_effects[NUM_STATUSES];
+	
+	miscQdata& operator=(miscQdata const& other) = default;
 };
 
 extern std::array<DoorComboSet, MAXDOORCOMBOSETS> DoorComboSets;
