@@ -17,6 +17,7 @@
 #include <fmt/format.h>
 #include <utility>
 #include <sstream>
+#include "dialog/status_fx_dlg.h"
 
 extern char *item_string[];
 extern char *weapon_string[];
@@ -35,6 +36,32 @@ static string get_info(bool sel, bool advpaste, bool saveload = true, bool copyp
 }
 
 int lister_sel_val = -1;
+
+void BasicListerDialog::add_buttons(std::shared_ptr<GUI::Grid>& cont)
+{
+	using namespace GUI::Builder;
+	using namespace GUI::Props;
+	bool okfocused = !editable;
+	if(!editable || selecting)
+		cont->add(Button(
+			text = "OK",
+			topPadding = 0.5_em,
+			minwidth = 90_px,
+			onClick = message::OK,
+			focused = okfocused));
+	if(editable)
+		cont->add(Button(
+			text = "Edit",
+			topPadding = 0.5_em,
+			minwidth = 90_px,
+			onClick = message::EDIT,
+			focused = true));
+	cont->add(Button(
+		text = selecting?"Cancel":"Done",
+		topPadding = 0.5_em,
+		minwidth = 90_px,
+		onClick = message::EXIT));
+}
 
 std::shared_ptr<GUI::Widget> BasicListerDialog::view()
 {
@@ -68,21 +95,22 @@ std::shared_ptr<GUI::Widget> BasicListerDialog::view()
 		},
 		Column(
 			hPadding = 0_px,
-			Row(vPadding = 0_px, fitParent = true,
-				Checkbox(text = "Alphabetized",
-					hAlign = 0.0,
-					checked = alphabetized,
-					onToggleFunc = [&](bool state)
-					{
-						alphabetized = state;
-						set_config("alphabetized", state);
-						resort();
-					})
-			),
-			g = Columns<2>(
+			Rows<2>(
+				Row(vPadding = 0_px, fitParent = true,
+					Checkbox(text = "Alphabetized",
+						hAlign = 0.0,
+						checked = alphabetized,
+						onToggleFunc = [&](bool state)
+						{
+							alphabetized = state;
+							set_config("alphabetized", state);
+							resort();
+						})
+				),
+				copyInfo = Label(text = ""),
 				widgList = List(data = lister, isABC = true,
 					selectedValue = selected_val,
-					rowSpan = 2, fitParent = true,
+					fitParent = true,
 					onSelectFunc = [&](int32_t val)
 					{
 						if(selected_val == val)
@@ -100,45 +128,19 @@ std::shared_ptr<GUI::Widget> BasicListerDialog::view()
 						forceDraw();
 						rclick(x,y);
 					},
-					onDClick = message::CONFIRM)
+					onDClick = message::CONFIRM),
+				g = Column(fitParent = true)
 			),
 			btnrow = Row(padding = 0_px)
 		)
 	);
 	
 	//Generate the btnrow
-	{
-		bool okfocused = !editable;
-		if(!editable || selecting)
-			btnrow->add(Button(
-				text = "OK",
-				topPadding = 0.5_em,
-				minwidth = 90_px,
-				onClick = message::OK,
-				focused = okfocused));
-		if(editable)
-			btnrow->add(Button(
-				text = "Edit",
-				topPadding = 0.5_em,
-				minwidth = 90_px,
-				onClick = message::EDIT,
-				focused = true));
-		btnrow->add(Button(
-			text = selecting?"Cancel":"Done",
-			topPadding = 0.5_em,
-			minwidth = 90_px,
-			onClick = message::EXIT));
-	}
-		
+	add_buttons(btnrow);
+	
 	if(use_preview)
-	{
 		g->add(widgPrev = TileFrame(visible = false));
-		g->add(widgInfo = Label(text = "", fitParent = true));
-	}
-	else
-	{
-		g->add(widgInfo = Label(text = "", fitParent = true, rowSpan = 2));
-	}
+	g->add(widgInfo = Label(text = "", fitParent = true));
 	
 	resort();
 	postinit();
@@ -269,18 +271,20 @@ void ItemListerDialog::postinit()
 			len = tlen;
 	}
 	widgInfo->minWidth(Size::pixels(len+8));
+	copyInfo->minWidth(Size::pixels(len+8));
 	window->setHelp(get_info(selecting, true));
 }
 static int copied_item_id = -1;
 void ItemListerDialog::update()
 {
-	std::string copied_name = "(None)\n";
+	std::string copied_name = "(None)";
 	if(unsigned(copied_item_id) < MAXITEMS)
 	{
 		itemdata const& copied_itm = itemsbuf[copied_item_id];
 		copied_name = fmt::format("{}\n{}",item_string[copied_item_id],
 			copied_itm.display_name[0] ? copied_itm.get_name(true) : "[No Display Name]");
 	}
+	copyInfo->setText(fmt::format("Copied:\n{}", copied_name));
 	if(unsigned(selected_val) < MAXITEMS)
 	{
 		itemdata const& itm = itemsbuf[selected_val];
@@ -289,11 +293,9 @@ void ItemListerDialog::update()
 			: "[No Display Name]";
 		widgInfo->setText(fmt::format(
 			"{}\n{}\n#{}\nPower: {}\nLevel: {}"
-			"\nType: {}\nCSet: {}\nScripts:\nAction: {}\nPickup: {}\nSprite: {}\nWeapon: {}"
-			"\n\nCopied:\n{}",
+			"\nType: {}\nCSet: {}\nScripts:\nAction: {}\nPickup: {}\nSprite: {}\nWeapon: {}\n\n",
 			item_string[selected_val], display_name, selected_val, itm.power, itm.fam_type,
-			itm.family, itm.csets&0xF, itm.script, itm.collect_script, itm.sprite_script, itm.weaponscript,
-			copied_name));
+			itm.family, itm.csets&0xF, itm.script, itm.collect_script, itm.sprite_script, itm.weaponscript));
 		widgPrev->setDisabled(false);
 		widgPrev->setTile(itm.tile);
 		widgPrev->setCSet(itm.csets&0xF);
@@ -308,11 +310,7 @@ void ItemListerDialog::update()
 	}
 	else
 	{
-		widgInfo->setText(fmt::format(
-			"\n\n\n\n"
-			"\n\n\n\n\n\n\n"
-			"\n\nCopied:\n{}",
-			copied_name));
+		widgInfo->setText("\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		widgPrev->setDisabled(true);
 		widgPrev->setTile(0);
 		widgPrev->setCSet(0);
@@ -469,17 +467,16 @@ void SpriteListerDialog::postinit()
 static int copied_sprite_id = -1;
 void SpriteListerDialog::update()
 {
-	std::string copied_name = "(None)\n";
+	std::string copied_name = "(None)";
 	if(unsigned(copied_sprite_id) < MAXWPNS)
 		copied_name = weapon_string[copied_sprite_id];
+	copyInfo->setText(fmt::format("Copied:\n{}", copied_name));
 	if(unsigned(selected_val) < MAXWPNS)
 	{
 		wpndata const& spr = wpnsbuf[selected_val];
 		widgInfo->setText(fmt::format(
-			"{}\nCSet: {}\nFlip: {}\nFrames: {}\nSpeed: {}"
-			"\n\nCopied:\n{}",
-			weapon_string[selected_val], spr.cs(), spr.flip(), spr.frames, spr.speed,
-			copied_name));
+			"{}\nCSet: {}\nFlip: {}\nFrames: {}\nSpeed: {}\n\n",
+			weapon_string[selected_val], spr.cs(), spr.flip(), spr.frames, spr.speed));
 		widgPrev->setDisabled(false);
 		widgPrev->setTile(spr.tile);
 		widgPrev->setCSet(spr.cs());
@@ -489,10 +486,7 @@ void SpriteListerDialog::update()
 	}
 	else
 	{
-		widgInfo->setText(fmt::format(
-			"\n\n\n\n"
-			"\n\nCopied:\n{}",
-			copied_name));
+		widgInfo->setText("\n\n\n\n\n\n");
 		widgPrev->setDisabled(true);
 		widgPrev->setTile(0);
 		widgPrev->setCSet(0);
@@ -624,27 +618,27 @@ void EnemyListerDialog::postinit()
 			len = tlen;
 	}
 	widgInfo->minWidth(Size::pixels(len + 8));
+	copyInfo->minWidth(Size::pixels(len + 8));
 	window->setHelp(get_info(selecting, true));
 }
 static int copied_enemy_id = -1;
 void EnemyListerDialog::update()
 {
-	std::string copied_name = "(None)\n";
+	std::string copied_name = "(None)";
 	if (unsigned(copied_enemy_id) < MAXGUYS)
 	{
 		guydata const& copied_enemy = guysbuf[copied_enemy_id];
 		copied_name = fmt::format("{}", guy_string[copied_enemy_id]);
 	}
+	copyInfo->setText(fmt::format("Copied:\n{}", copied_name));
 	if (unsigned(selected_val) < MAXGUYS)
 	{
 		guydata const& enemy = guysbuf[selected_val];
 		widgInfo->setText(fmt::format(
 			"#{}\nTile: {}\nsTile: {}"
-			"\neTile: {}\nHP: {}\nDamage: {}\nW. Damage: {}\nFamily: {}\nDrop: {}\nScript: {}\nW Script: {}"
-			"\n\nCopied:\n{}",
+			"\neTile: {}\nHP: {}\nDamage: {}\nW. Damage: {}\nFamily: {}\nDrop: {}\nScript: {}\nW Script: {}\n\n",
 			selected_val, enemy.tile, enemy.s_tile,
-			enemy.e_tile, enemy.hp, enemy.dp, enemy.wdp, enemy.family, enemy.item_set, enemy.script, enemy.weaponscript,
-			copied_name));
+			enemy.e_tile, enemy.hp, enemy.dp, enemy.wdp, enemy.family, enemy.item_set, enemy.script, enemy.weaponscript));
 		if(unsigned(selected_val) > 0)
 		{
 			widgPrev->setDisabled(false);
@@ -666,11 +660,7 @@ void EnemyListerDialog::update()
 	}
 	else
 	{
-		widgInfo->setText(fmt::format(
-			"\n\n\n\n"
-			"\n\n\n\n\n\n\n"
-			"\n\nCopied:\n{}",
-			copied_name));
+		widgInfo->setText("\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		widgPrev->setDisabled(true);
 		widgPrev->setTile(0);
 		widgPrev->setCSet(0);
@@ -830,3 +820,268 @@ void SFXListerDialog::edit()
 {
 	call_sfxdata_dialog(selected_val);
 }
+
+StatusListerDialog::StatusListerDialog(int stat_id, bool selecting):
+	BasicListerDialog("Select Status","statusdata",stat_id,selecting)
+{
+	alphabetized = get_config("alphabetized", true);
+}
+void StatusListerDialog::preinit()
+{
+	lister = GUI::ZCListData::statusnames(!selecting, true);
+	if(selecting)
+		frozen_inds = 1; // lock '(None)'
+	else
+	{
+		resort();
+		if(selected_val < 0)
+			selected_val = lister.getValue(0);
+	}
+	selected_val = vbound(selected_val, (selecting?-1:0), NUM_STATUSES-1);
+}
+void StatusListerDialog::postinit()
+{
+	size_t len = 16;
+	for(int q = 0; q < NUM_STATUSES; ++q)
+	{
+		size_t tlen = text_length(GUI_DEF_FONT,QMisc.status_names[q].c_str());
+		if(tlen > len)
+			len = tlen;
+	}
+	widgInfo->minWidth(Size::pixels(len+8));
+	copyInfo->minWidth(Size::pixels(len+8));
+	widgList->minHeight(Size::pixels(320));
+	window->setHelp(get_info(selecting, true));
+}
+static int copied_status_id = -1;
+void StatusListerDialog::update()
+{
+	std::string copied_name = "(None)";
+	if(unsigned(copied_status_id) < NUM_STATUSES)
+		copied_name = QMisc.status_names[copied_status_id];
+	copyInfo->setText(fmt::format("Copied:\n{}", copied_name));
+	if(unsigned(selected_val) < NUM_STATUSES)
+	{
+		EntityStatus const& stat = QMisc.status_effects[selected_val];
+		//!TODO_STATUS info on player override - maybe a button to toggle which info you look at?
+		std::ostringstream oss;
+		
+		oss << QMisc.status_names[selected_val];
+		
+		if(stat.damage)
+		{
+			if(stat.damage > 0)
+				oss << "\nDamage: " << stat.damage;
+			else
+				oss << "\nHealing: " << -stat.damage;
+			oss << "\n  every " << stat.damage_rate << " frames";
+			if(stat.damage > 0)
+			{
+				if(stat.damage_iframes)
+					oss << "\n  inflicts iframes";
+				if(stat.ignore_iframes)
+					oss << "\n  bypasses iframes";
+			}
+		}
+		
+		if(stat.visual_sprite || stat.visual_tile)
+		{
+			if(stat.visual_sprite)
+				oss << fmt::format("Draws sprite '{}' #{}", weapon_string[stat.visual_sprite], stat.visual_sprite);
+			else
+				oss << fmt::format("Draws tile {}", stat.visual_tile); //!TODO_STATUS cset??
+			
+			oss << fmt::format("\n  at '{},{}'", stat.visual_x, stat.visual_y);
+			if(stat.visual_relative)
+				oss << " (relative to entity)";
+			
+			if(stat.visual_tilewidth != 1 || stat.visual_tileheight != 1)
+				oss << fmt::format("\n  Sized '{}x{}'", stat.visual_tilewidth, stat.visual_tileheight);
+			
+			oss << fmt::format("\n  drawn {} the entity", stat.visual_under ? "under" : "over");
+		}
+		
+		if(stat.visual_hide_sprite)
+			oss << "\nEntity is invisible";
+		else if(stat.sprite_tile_mod)
+			oss << fmt::format("\nEntity tile mod: {:+}", stat.sprite_tile_mod);
+		
+		if(sprite_mask_color)
+			oss << fmt::format("\nEntity color mask: {}", stat.sprite_mask_color);
+		
+		int cure_count = 0;
+		int first_cure = -1;
+		for(int q = 0; q < NUM_STATUSES; ++q)
+		{
+			if(stat.cures[q])
+			{
+				++cure_count;
+				if(first_cure < 0)
+					first_cure = q;
+			}
+		}
+		if(cure_count == 1)
+			oss << fmt::format("\nCures '{}'", QMisc.status_names[first_cure]);
+		else if(cure_count > 1)
+			oss << fmt::format("\nCures '{}' +{} others", QMisc.status_names[first_cure], cure_count-1);
+		
+		if(!stat.defenses.inner_empty())
+			oss << fmt::format("\nChanges {} defense results", stat.defenses.capacity());
+		
+		if(stat.jinx_melee || stat.jinx_item || stat.jinx_shield)
+		{
+			oss << "\nJinxes: ";
+			if(stat.jinx_melee)
+				oss << "Melee, ";
+			if(stat.jinx_item)
+				oss << "Item, ";
+			if(stat.jinx_shield)
+				oss << "Shield, ";
+			oss.seekp(int(oss.tellp())-2); //erase trailing comma+space
+		}
+		if(stat.stun || stat.bunny)
+		{
+			oss << "\nMisc: ";
+			if(stat.stun)
+				oss << "Stun, ";
+			if(stat.bunny)
+				oss << "Bunny, ";
+			oss.seekp(int(oss.tellp())-2); //erase trailing comma+space
+		}
+		
+		widgInfo->setText(oss.str());
+	}
+	else
+	{
+		widgInfo->setText("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	}
+}
+void StatusListerDialog::edit()
+{
+	StatusFXDialog(StatusFXDialog::MODE_MAIN, QMisc.status_effects[selected_val], selected_val, nullptr).show();
+}
+void StatusListerDialog::editHero()
+{
+	//!TODO_STATUS hero override editing
+	//StatusFXDialog(StatusFXDialog::MODE_HERO, , selected_val, ).show();
+}
+void StatusListerDialog::rclick(int x, int y)
+{
+	NewMenu rcmenu {
+		{ "&Copy", [&](){copy(); update();} },
+		{ "Paste &Name", [&](){pasteName(); refresh_dlg();}, 0, copied_status_id < 0 },
+		{ "Paste Stat", "&v", [&](){paste(); update();}, 0, copied_status_id < 0 },
+		{ "Paste &Hero Override", [&](){pasteHero(); update();}, 0, copied_status_id < 0 },
+		//{ "&Save", [&](){save(); update();} },
+		//{ "&Load", [&](){load(); update();} },
+	};
+	rcmenu.pop(x, y);
+}
+void StatusListerDialog::copy()
+{
+	copied_status_id = selected_val;
+	update();
+}
+bool StatusListerDialog::paste()
+{
+	if(copied_status_id < 0 || selected_val < 0)
+		return false;
+	if(copied_status_id == selected_val)
+		return false;
+	QMisc.status_effects[selected_val] = QMisc.status_effects[copied_status_id];
+	saved = false;
+	return true;
+}
+bool StatusListerDialog::pasteHero()
+{
+	if(copied_status_id < 0 || selected_val < 0)
+		return false;
+	if(copied_status_id == selected_val)
+		return false;
+	//!TODO_STATUS copy the hero status override
+	//saved = false;
+	return true;
+}
+bool StatusListerDialog::pasteName()
+{
+	if(copied_status_id < 0 || selected_val < 0)
+		return false;
+	if(copied_status_id == selected_val)
+		return false;
+	QMisc.status_names[selected_val] = QMisc.status_names[copied_status_id];
+	return true;
+}
+void StatusListerDialog::save()
+{
+	if(selected_val < 0)
+		return;
+	//!TODO_STATUS save to file
+	/*if(!prompt_for_new_file_compat(fmt::format("Save Sprite '{}' #{} (.zwpnspr)",weapon_string[selected_val],selected_val).c_str(),"zwpnspr",NULL,datapath,false))
+		return;
+	
+	PACKFILE *f=pack_fopen_password(temppath,F_WRITE,"");
+	if(!f) return;
+	if (!writeoneweapon(f,selected_val))
+	{
+		Z_error("Could not write to .zwpnspr packfile %s\n", temppath);
+		InfoDialog("ZWpnSpr Error", "Could not save the specified sprite.").show();
+	}
+	pack_fclose(f);*/
+}
+bool StatusListerDialog::load()
+{
+	if(selected_val < 0)
+		return false;
+	//!TODO_STATUS load from file
+	/*if(!prompt_for_existing_file_compat(fmt::format("Load Sprite (replacing '{}' #{}) (.zwpnspr)",weapon_string[selected_val],selected_val).c_str(),"zwpnspr",NULL,datapath,false))
+		return false;
+	
+	PACKFILE *f=pack_fopen_password(temppath,F_READ,"");
+	if(!f) return false;
+	if (!readoneweapon(f,selected_val))
+	{
+		Z_error("Could not read from .zwpnspr packfile %s\n", temppath);
+		InfoDialog("ZWpnSpr Error", "Could not load the specified sprite.").show();
+	}
+	pack_fclose(f);
+	saved = false;
+	return true;*/return false;
+}
+
+void StatusListerDialog::add_buttons(std::shared_ptr<GUI::Grid>& cont)
+{
+	using namespace GUI::Builder;
+	using namespace GUI::Props;
+	bool okfocused = !editable;
+	if(!editable || selecting)
+		cont->add(Button(
+			text = "OK",
+			topPadding = 0.5_em,
+			minwidth = 90_px,
+			onClick = message::OK,
+			focused = okfocused));
+	if(editable)
+	{
+		cont->add(Button(
+			text = "Edit",
+			topPadding = 0.5_em,
+			minwidth = 90_px,
+			onClick = message::EDIT,
+			focused = true));
+		cont->add(Button(
+			text = "Edit Hero Override",
+			topPadding = 0.5_em,
+			minwidth = 90_px,
+			onPressFunc = [&]()
+			{
+				editHero();
+				refresh_dlg();
+			}));
+	}
+	cont->add(Button(
+		text = selecting?"Cancel":"Done",
+		topPadding = 0.5_em,
+		minwidth = 90_px,
+		onClick = message::EXIT));
+}
+

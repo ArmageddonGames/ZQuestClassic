@@ -501,6 +501,34 @@ GUI::ListData GUI::ZCListData::miscsprites(bool skipNone, bool inclNegSpecialVal
 	return ls;
 }
 
+GUI::ListData GUI::ZCListData::statusnames(bool skipNone, bool numbered)
+{
+	std::map<std::string, int32_t> ids;
+	std::set<std::string> statnames;
+	
+	for(int q = 0; q < NUM_STATUSES; ++q)
+	{
+		std::string name = QMisc.status_names[q];
+		if(name.empty())
+			name = fmt::format("zz{:03}", q);
+		
+		if(numbered)
+			name = fmt::format("{} ({:03})", name, q);
+		
+		ids[name] = q;
+		statnames.insert(name);
+	}
+	
+	GUI::ListData ls;
+	if(!skipNone)
+		ls.add("(None)", -1);
+	for(auto it = statnames.begin(); it != statnames.end(); ++it)
+	{
+		ls.add(*it, ids[*it]);
+	}
+	return ls;
+}
+
 GUI::ListData GUI::ZCListData::bottletype()
 {
 	GUI::ListData ls;

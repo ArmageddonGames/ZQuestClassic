@@ -16756,8 +16756,7 @@ int32_t onShopTypes()
 
 int32_t onStatusEffects()
 {
-	//!TODO_STATUS info_lister for statuses, with edit buttons
-	// Edit button for default and hero separately?
+	StatusListerDialog().show();
 	return D_O_K;
 }
 
