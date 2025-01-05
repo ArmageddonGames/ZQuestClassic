@@ -45,6 +45,7 @@ int32_t onLayer3BG();
 int32_t onRulesSearch();
 int32_t onQuickCompile();
 int32_t onSmartCompile();
+int32_t onStatusEffects();
 int toggleConsole();
 int showHotkeys();
 void cycle_compact_sqr(bool down);
@@ -274,6 +275,7 @@ char const* get_hotkey_name(uint hkey)
 		case ZQKEY_BIND_HOTKEYS: return "Rebind Hotkeys";
 		case ZQKEY_SCREEN_NOTES: return "Screen Notes";
 		case ZQKEY_BROWSE_SCREEN_NOTES: return "Browse Notes";
+		case ZQKEY_STATUS_EFFECTS: return "Status Effects";
 	}
 	return "ZQ_NIL_KEY";
 }
@@ -500,6 +502,7 @@ char const* get_hotkey_cfg_name(uint hkey)
 		case ZQKEY_BIND_HOTKEYS: return "ZQKEY_BIND_HOTKEYS";
 		case ZQKEY_SCREEN_NOTES: return "ZQKEY_SCREEN_NOTES";
 		case ZQKEY_BROWSE_SCREEN_NOTES: return "ZQKEY_BROWSE_SCREEN_NOTES";
+		case ZQKEY_STATUS_EFFECTS: return "ZQKEY_STATUS_EFFECTS";
 	}
 	return "ZQ_NIL_KEY";
 }
@@ -932,6 +935,8 @@ char const* get_hotkey_helptext(uint hkey)
 			return "Opens the notes for the current screen.";
 		case ZQKEY_BROWSE_SCREEN_NOTES:
 			return "Opens the notes browsing menu.";
+		case ZQKEY_STATUS_EFFECTS:
+			return "Opens the status effect data list.";
 	}
 	return "";
 }
@@ -1171,6 +1176,7 @@ void default_hotkeys()
 	zq_hotkeys[ZQKEY_BIND_HOTKEYS].setval(0, 0, 0, 0);
 	zq_hotkeys[ZQKEY_SCREEN_NOTES].setval(0, 0, 0, 0);
 	zq_hotkeys[ZQKEY_BROWSE_SCREEN_NOTES].setval(0, 0, 0, 0);
+	zq_hotkeys[ZQKEY_STATUS_EFFECTS].setval(0, 0, 0, 0);
 }
 
 void load_hotkeys()
@@ -1797,6 +1803,9 @@ int run_hotkey(uint hkey)
 			break;
 		case ZQKEY_BROWSE_SCREEN_NOTES:
 			browse_screen_notes();
+			break;
+		case ZQKEY_STATUS_EFFECTS:
+			onStatusEffects();
 			break;
 	}
 	return D_O_K;
