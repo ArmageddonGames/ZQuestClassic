@@ -6149,6 +6149,8 @@ int32_t readmisc(PACKFILE *f, zquestheader *Header, miscQdata *Misc)
 		temp_misc.status_effects[STATUS_STUN].stun = true;
 		temp_misc.status_names[STATUS_BUNNY] = "Bunny";
 		temp_misc.status_effects[STATUS_BUNNY].bunny = true;
+		for(int q = NUM_ENGINE_STATUSES; q < NUM_STATUSES; ++q)
+			temp_misc.status_names[q] = fmt::format("zz{:03}", q);
 	}
 	else
 	{

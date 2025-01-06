@@ -5,6 +5,7 @@
 #include "zc_list_data.h"
 #include <gui/builder.h>
 #include <dialog/alert.h>
+#include <dialog/info_lister.h>
 
 extern wpndata *wpnsbuf;
 extern bool saved;
@@ -86,6 +87,7 @@ void StatusFXDialog::update_sprite(optional<bool> use_sprite)
 }
 
 static size_t tabptr[2] = {0};
+static int32_t scrollptr = 0;
 std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 {
 	using namespace GUI::Builder;
@@ -329,9 +331,38 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 						)
 					),
 					TabRef(name = "Cures",
-						//bool cures[NUM_STATUSES]
-						// Fancy GUI; allow a button to "add status" to a list
-						_d
+						Column(
+							ScrollingPane(
+								ptr = &scrollptr,
+								fitParent = true,
+								minheight = 1.5_em * 10,
+								cure_grid = Rows<2>(vAlign = 0.0)
+							),
+							Row(
+								Button(text = "Add Cure",
+									onPressFunc = [&]()
+									{
+										StatusListerDialog(-1, true).filtered(
+											[&](GUI::ListItem& itm)
+											{
+												if(itm.value == -1) return true;
+												if(itm.value < -1 || itm.value >= NUM_STATUSES)
+													return false;
+												if(local_ref.cures[itm.value])
+													return false; //already cured
+												return true;
+											}).show();
+										if(lister_sel_val > -1 && lister_sel_val < NUM_STATUSES)
+										{
+											local_ref.cures[lister_sel_val] = true;
+											refresh_dlg();
+										}
+									}),
+								INFOBTN("The listed statuses will be removed if this status is inflicted."
+								"\nAll cures occur simultaneously, so two statuses that 'cure' each other, will"
+								" both be removed at any time both are in effect.")
+							)
+						)
 					),
 					TabRef(name = "Defenses",
 						//More fancy GUI, allow "add defense" to a list
@@ -369,6 +400,24 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 			)
 		)
 	);
+	
+	for(int q = 0; q < NUM_STATUSES; ++q)
+	{
+		if(local_ref.cures[q])
+		{
+			cure_grid->add(Label(hAlign = 1.0,
+				text = fmt::format("{} ({:03})", QMisc.status_names[q], q)
+			));
+			cure_grid->add(Button(text = "-",
+				forceFitH = true,
+				onPressFunc = [&,q]()
+				{
+					local_ref.cures[q] = false;
+					refresh_dlg();
+				}));
+		}
+	}
+	
 	update_title();
 	update_active();
 	update_sprite(!local_ref.visual_tile);

@@ -29,7 +29,7 @@ public:
 	
 
 private:
-	std::shared_ptr<GUI::Grid> tab_cont;
+	std::shared_ptr<GUI::Grid> tab_cont, cure_grid;
 	std::shared_ptr<GUI::Window> window;
 	
 	std::shared_ptr<GUI::DropDownList> spr_ddl;

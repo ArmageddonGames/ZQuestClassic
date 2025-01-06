@@ -509,8 +509,6 @@ GUI::ListData GUI::ZCListData::statusnames(bool skipNone, bool numbered)
 	for(int q = 0; q < NUM_STATUSES; ++q)
 	{
 		std::string name = QMisc.status_names[q];
-		if(name.empty())
-			name = fmt::format("zz{:03}", q);
 		
 		if(numbered)
 			name = fmt::format("{} ({:03})", name, q);

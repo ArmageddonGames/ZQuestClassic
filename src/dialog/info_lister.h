@@ -159,8 +159,13 @@ class StatusListerDialog : public BasicListerDialog
 {
 public:
 	StatusListerDialog(int stat_id = -1, bool selecting = false);
-	
+	StatusListerDialog& filtered(std::function<bool(GUI::ListItem&)>&& filter)
+	{
+		list_filter = filter; return *this;
+	}
 protected:
+	std::function<bool(GUI::ListItem&)> list_filter;
+	
 	void preinit() override;
 	void postinit() override;
 	void update() override;

@@ -829,15 +829,20 @@ StatusListerDialog::StatusListerDialog(int stat_id, bool selecting):
 void StatusListerDialog::preinit()
 {
 	lister = GUI::ZCListData::statusnames(!selecting, true);
+	if(list_filter) lister.filter(list_filter);
 	if(selecting)
+	{
+		assert(lister.getValue(0) == -1);
 		frozen_inds = 1; // lock '(None)'
+	}
 	else
 	{
-		resort();
 		if(selected_val < 0)
 			selected_val = lister.getValue(0);
 	}
+	resort();
 	selected_val = vbound(selected_val, (selecting?-1:0), NUM_STATUSES-1);
+	editable = !selecting;
 }
 void StatusListerDialog::postinit()
 {
@@ -907,11 +912,13 @@ void StatusListerDialog::update()
 		
 		if(stat.sprite_hide)
 			oss << "\nEntity is invisible";
-		else if(stat.sprite_tile_mod)
-			oss << fmt::format("\nEntity tile mod: {:+}", stat.sprite_tile_mod);
-		
-		if(sprite_mask_color)
-			oss << fmt::format("\nEntity color mask: {}", stat.sprite_mask_color);
+		else
+		{
+			if(stat.sprite_tile_mod)
+				oss << fmt::format("\nEntity tile mod: {:+}", stat.sprite_tile_mod);
+			if(stat.sprite_mask_color)
+				oss << fmt::format("\nEntity color mask: {}", stat.sprite_mask_color);
+		}
 		
 		int cure_count = 0;
 		int first_cure = -1;
@@ -958,7 +965,7 @@ void StatusListerDialog::update()
 	}
 	else
 	{
-		widgInfo->setText("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		widgInfo->setText("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 }
 void StatusListerDialog::edit()
