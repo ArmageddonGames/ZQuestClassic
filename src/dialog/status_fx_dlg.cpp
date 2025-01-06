@@ -398,12 +398,49 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 						)
 					),
 					TabRef(name = "Engine FX",
-						// bool jinx_melee
-						// bool jinx_item
-						// bool jinx_shield
-						// bool stun
-						// bool bunny
-						_d
+						Rows<2>(
+							Checkbox(text = "Jinx (Melee)",
+								hAlign = 1.0, boxPlacement = GUI::Checkbox::boxPlacement::RIGHT,
+								checked = local_ref.jinx_melee,
+								onToggleFunc = [&](bool state)
+								{
+									local_ref.jinx_melee = state;
+								}),
+							INFOBTN("Stops the Hero from using 'Sword' itemclass items, and enemies from dealing Contact Damage"),
+							Checkbox(text = "Jinx (Item)",
+								hAlign = 1.0, boxPlacement = GUI::Checkbox::boxPlacement::RIGHT,
+								checked = local_ref.jinx_item,
+								onToggleFunc = [&](bool state)
+								{
+									local_ref.jinx_item = state;
+								}),
+							INFOBTN("Stops the Hero from using non-'Sword' itemclass items, and enemies from dealing Weapon Damage"),
+							Checkbox(text = "Jinx (Shield)",
+								hAlign = 1.0, boxPlacement = GUI::Checkbox::boxPlacement::RIGHT,
+								checked = local_ref.jinx_shield,
+								onToggleFunc = [&](bool state)
+								{
+									local_ref.jinx_shield = state;
+								}),
+							INFOBTN("Stops the Hero's and/or enemies' Shield(s) from taking effect."),
+							Checkbox(text = "Stun",
+								hAlign = 1.0, boxPlacement = GUI::Checkbox::boxPlacement::RIGHT,
+								checked = local_ref.stun,
+								onToggleFunc = [&](bool state)
+								{
+									local_ref.stun = state;
+								}),
+							INFOBTN("Stops the afflicted entity from moving or acting."),
+							Checkbox(text = "Bunny",
+								hAlign = 1.0, boxPlacement = GUI::Checkbox::boxPlacement::RIGHT,
+								checked = local_ref.bunny,
+								onToggleFunc = [&](bool state)
+								{
+									local_ref.bunny = state;
+								}),
+							INFOBTN("Turns the Hero into a bunny, preventing them from using many items, and changing their sprite."
+								"\nNo effect on enemies.")
+						)
 					)
 				)
 			),

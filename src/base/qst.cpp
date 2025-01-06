@@ -5351,6 +5351,12 @@ int32_t readmisc(PACKFILE *f, zquestheader *Header, miscQdata *Misc)
 		memset(&temp_misc.info, 0, sizeof(infotype)*256);
 	}
 	
+	for(int q = 0; q < NUM_STATUSES; ++q)
+	{
+		temp_misc.status_names[q].clear();
+		temp_misc.status_effects[q].clear();
+	}
+	
 	if(Header->zelda_version > 0x192)
 	{
 		//section version info

@@ -211,9 +211,6 @@ public:
 		attackclk,//attack timeout.
 		attack,   //current attack wpnid.
 		attackid, //current attack itemid.
-		swordclk, //sword jinx timeout.
-		itemclk,  //item jinx timeout.
-		shieldjinxclk, //shield jinx timeout.
 		didstuff, //played the whistle? used the blue candle?
 		blowcnt,  //number of times whistle blown on this screen.
 		stepoutindex, // where to step out when in a passageway
@@ -238,8 +235,6 @@ public:
 		switchhookstyle, //the switchhook animation style
 		switchhookarg; //a parameter based on the switchhook style
 	int32_t shiftdir, // shift direction when walking into corners of solid combos
-		lstunclock, //scripted stun clock from weapons; possibly for later eweapon effects in the future. 
-		lbunnyclock,
 		sdir, // scrolling direction
 		sideswimdir,  //for forcing hero to face left or right in sideview
 		immortal; //Timer for being unable to die
@@ -483,9 +478,9 @@ public:
 	void checkitems(int32_t index = -1);
 	int32_t DrunkClock();
 	void setDrunkClock(int32_t newdrunkclk);
-	int32_t StunClock();
+	int32_t getStunClock();
 	void setStunClock(int32_t v);
-	int32_t BunnyClock();
+	int32_t getBunnyClock();
 	void setBunnyClock(int32_t v);
 	HeroClass();
 	void init();

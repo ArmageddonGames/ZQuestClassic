@@ -68,6 +68,11 @@ void StatusData::reset()
 	}
 }
 
+bool StatusData::is_jinxed() const
+{
+	return jinx_melee || jinx_item || jinx_shield;
+}
+
 void StatusData::check_cures()
 {
 	set<word> cures;

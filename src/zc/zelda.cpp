@@ -1152,34 +1152,6 @@ int32_t  HeroHoverClk()
 {
     return Hero.getHoverClk();
 }
-int32_t  HeroSwordClk()
-{
-    return Hero.getSwordClk();
-}
-int32_t  HeroItemClk()
-{
-    return Hero.getItemClk();
-}
-int32_t  HeroShieldClk()
-{
-	return Hero.getShieldClk();
-}
-void setSwordClk(int32_t newclk)
-{
-    Hero.setSwordClk(newclk);
-}
-void setItemClk(int32_t newclk)
-{
-    Hero.setItemClk(newclk);
-}
-void setShieldClk(int32_t newclk)
-{
-	Hero.setShieldClk(newclk);
-}
-bool HeroIsJinxed()
-{
-	return (HeroSwordClk() || HeroItemClk() || HeroShieldClk());
-}
 int32_t  HeroLStep()
 {
     return Hero.getLStep();

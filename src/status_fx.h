@@ -37,7 +37,7 @@ struct StatusData
 	byte get_defense(word idx, byte def_ret = 0) const;
 	void clear();
 	void reset();
-	
+	bool is_jinxed() const;
 private:
 	void check_cures();
 	void tick_timers(std::function<void(EntityStatus const&, word, int32_t, word)>& proc,
