@@ -183,12 +183,14 @@ struct EntityStatus
 	// EX: Static effect for electrified, flame effect for burning
 	uint8_t visual_sprite;
 	int32_t visual_tile;
+	byte visual_cset;
 	zfix visual_x, visual_y;
 	byte visual_tilewidth = 1, visual_tileheight = 1;
 	bool visual_relative = true;
 	bool visual_under;
-	bool visual_hide_sprite; // hide the enemy/hero sprite
 	
+	// hide the enemy/hero sprite
+	bool sprite_hide;
 	// A tile modifier to the sprite's tile
 	int32_t sprite_tile_mod;
 	// If non-zero, mask out the entire sprite with this color

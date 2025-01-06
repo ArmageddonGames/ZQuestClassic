@@ -52,6 +52,8 @@ void StatusData::reset()
 		if(spr_ptr)
 			delete spr_ptr;
 	}
+	underlay.clear();
+	overlay.clear();
 	for(word q = 0; q < NUM_STATUSES; ++q)
 	{
 		status_timers[q] = 0;
@@ -89,7 +91,7 @@ void StatusData::tick_timers(std::function<void(EntityStatus const&, word, int32
 			if(status_timers[q] > 0)
 				--status_timers[q];
 			
-			if(stat.visual_hide_sprite)
+			if(stat.sprite_hide)
 				main_spr_hidden = true;
 			if(stat.sprite_tile_mod)
 				sum_tile_mod += stat.sprite_tile_mod;
@@ -122,21 +124,23 @@ void StatusData::tick_timers(std::function<void(EntityStatus const&, word, int32
 					other_spr_map.erase(q);
 				}
 				statusSprite* spr = cur_spr_map[q];
-				if(spr && (spr->the_deco_sprite != stat.visual_sprite || spr->plain_tile != stat.visual_tile))
+				if(spr && (spr->the_deco_sprite != stat.visual_sprite
+					|| spr->plain_tile != stat.visual_tile
+					|| (spr->plain_tile && spr->cs != stat.visual_cset)))
 				{
 					delete spr;
 					spr = nullptr;
 				}
 				if(!spr)
-					cur_spr_map[q] = spr = new statusSprite(stat.visual_x, stat.visual_y, stat.visual_sprite, stat.visual_tile);
+					cur_spr_map[q] = spr = new statusSprite(stat.visual_x, stat.visual_y, stat.visual_sprite, stat.visual_tile, stat.visual_cset);
 				else
 				{
 					spr->x = stat.visual_x;
 					spr->y = stat.visual_y;
 					spr->animate(0);
 				}
-				spr->tile_width = stat.visual_tilewidth;
-				spr->tile_height = stat.visual_tileheight;
+				spr->txsz = stat.visual_tilewidth;
+				spr->tysz = stat.visual_tileheight;
 				if(stat.visual_relative)
 					spr->target = parent;
 			}

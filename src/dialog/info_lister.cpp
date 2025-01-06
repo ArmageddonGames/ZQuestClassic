@@ -481,6 +481,7 @@ void SpriteListerDialog::update()
 		widgPrev->setCSet(spr.cs());
 		widgPrev->setFrames(spr.frames);
 		widgPrev->setSpeed(spr.speed);
+		widgPrev->setFlip(spr.flip());
 		widgPrev->setFlashCS(-1);
 	}
 	else
@@ -840,15 +841,8 @@ void StatusListerDialog::preinit()
 }
 void StatusListerDialog::postinit()
 {
-	size_t len = 16;
-	for(int q = 0; q < NUM_STATUSES; ++q)
-	{
-		size_t tlen = text_length(GUI_DEF_FONT,QMisc.status_names[q].c_str());
-		if(tlen > len)
-			len = tlen;
-	}
-	widgInfo->minWidth(Size::pixels(len+8) + 10_em);
-	copyInfo->minWidth(Size::pixels(len+8) + 10_em);
+	widgInfo->minWidth(25_em);
+	copyInfo->minWidth(25_em);
 	widgList->minHeight(Size::pixels(320));
 	window->setHelp(get_info(selecting, true));
 }
@@ -888,11 +882,20 @@ void StatusListerDialog::update()
 		if(stat.visual_sprite || stat.visual_tile)
 		{
 			if(stat.visual_sprite)
-				oss << fmt::format("Draws sprite '{}' #{}", weapon_string[stat.visual_sprite], stat.visual_sprite);
+				oss << fmt::format("\nDraws sprite '{}' #{}", weapon_string[stat.visual_sprite], stat.visual_sprite);
 			else
-				oss << fmt::format("Draws tile {}", stat.visual_tile); //!TODO_STATUS cset??
+				oss << fmt::format("\nDraws tile {}, cs {}", stat.visual_tile, stat.visual_cset);
 			
-			oss << fmt::format("\n  at '{},{}'", stat.visual_x, stat.visual_y);
+			oss << "\n  at '";
+			if(stat.visual_x.getDPart()) //Don't show decimal places if they are all 0s
+				oss << stat.visual_x.str();
+			else oss << stat.visual_x.getTrunc();
+			oss << ",";
+			if(stat.visual_y.getDPart()) //Don't show decimal places if they are all 0s
+				oss << stat.visual_y.str();
+			else oss << stat.visual_y.getTrunc();
+			oss << "'";
+			
 			if(stat.visual_relative)
 				oss << " (relative to entity)";
 			
@@ -902,7 +905,7 @@ void StatusListerDialog::update()
 			oss << fmt::format("\n  drawn {} the entity", stat.visual_under ? "under" : "over");
 		}
 		
-		if(stat.visual_hide_sprite)
+		if(stat.sprite_hide)
 			oss << "\nEntity is invisible";
 		else if(stat.sprite_tile_mod)
 			oss << fmt::format("\nEntity tile mod: {:+}", stat.sprite_tile_mod);

@@ -32,11 +32,12 @@ class statusSprite : public decoration
 public:
 	sprite* target;
 	int32_t plain_tile;
-	byte tile_width, tile_height;
+	byte plain_cs;
 	
-	statusSprite(zfix X,zfix Y, int32_t spr, int32_t tile);
-	virtual bool animate(int32_t index);
-	virtual void draw(BITMAP *dest);
+	statusSprite(zfix X,zfix Y, int32_t spr, int32_t tile, int32_t cset);
+	virtual bool animate(int32_t index) override;
+	virtual void draw(BITMAP *dest) override;
+	virtual bool is_drawn_with_offset() override;
 };
 
 class dBushLeaves : public decoration

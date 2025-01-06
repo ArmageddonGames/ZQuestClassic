@@ -26,7 +26,7 @@ int32_t EntityStatus::read(PACKFILE *f, word s_version)
 	ignore_iframes = flags.get(1);
 	visual_relative = flags.get(2);
 	visual_under = flags.get(3);
-	visual_hide_sprite = flags.get(4);
+	sprite_hide = flags.get(4);
 	jinx_melee = flags.get(5);
 	jinx_item = flags.get(6);
 	jinx_shield = flags.get(7);
@@ -41,6 +41,8 @@ int32_t EntityStatus::read(PACKFILE *f, word s_version)
 	if(!p_getc(&visual_sprite, f))
 		return qe_invalid;
 	if(!p_igetl(&visual_tile, f))
+		return qe_invalid;
+	if(!p_getc(&visual_cset, f))
 		return qe_invalid;
 	if(!p_igetzf(&visual_x, f))
 		return qe_invalid;
@@ -74,7 +76,7 @@ int32_t EntityStatus::write(PACKFILE *f)
 	flags.set(1, ignore_iframes);
 	flags.set(2, visual_relative);
 	flags.set(3, visual_under);
-	flags.set(4, visual_hide_sprite);
+	flags.set(4, sprite_hide);
 	flags.set(5, jinx_melee);
 	flags.set(6, jinx_item);
 	flags.set(7, jinx_shield);
@@ -92,6 +94,8 @@ int32_t EntityStatus::write(PACKFILE *f)
 	if(!p_putc(visual_sprite, f))
 		new_return(1);
 	if(!p_iputl(visual_tile, f))
+		new_return(1);
+	if(!p_putc(visual_cset, f))
 		new_return(1);
 	if(!p_iputzf(visual_x, f))
 		new_return(1);

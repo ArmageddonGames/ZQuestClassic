@@ -38,6 +38,7 @@ void sprite_push_flicker()
 {
 	flicker_storage.emplace_back(sprite_flicker_color,
 		sprite_flicker_transp_passes, sprite_mask_color);
+	sprite_clear_flicker();
 }
 void sprite_pop_flicker()
 {
@@ -1085,6 +1086,7 @@ void sprite::draw(BITMAP* dest)
 	if(id<0)
 	{
 		yofs = tyoffs;
+		sprite_clear_flicker();
 		return;
 	}
 	int32_t e = extend>=3 ? 3 : extend;
