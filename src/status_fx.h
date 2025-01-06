@@ -18,7 +18,7 @@ struct StatusData
 	int32_t sum_tile_mod;
 	byte mask_color;
 	
-	bounded_map<word, int16_t> defenses {edefLAST255, -1};
+	bounded_map<word, int16_t> defenses {wMax, -1};
 	
 	bool jinx_melee, jinx_item, jinx_shield;
 	bool stun, bunny;
@@ -34,6 +34,7 @@ struct StatusData
 		sprite* parent);
 	
 	EntityStatus const& get_status(word idx) const;
+	byte get_defense(word idx, byte def_ret = 0) const;
 	void clear();
 	void reset();
 	

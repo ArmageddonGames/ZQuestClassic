@@ -181,5 +181,17 @@ protected:
 	void add_buttons(std::shared_ptr<GUI::Grid>& cont) override;
 };
 
+class DropDownListerDialog : public BasicListerDialog
+{
+public:
+	DropDownListerDialog(GUI::ListData const& lister,
+		std::string title, int sel = -1);
+	
+protected:
+	void preinit() override;
+	void postinit() override;
+	void update() override;
+};
+
 #endif
 

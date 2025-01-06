@@ -200,7 +200,7 @@ struct EntityStatus
 	bool cures[NUM_STATUSES];
 	
 	// Changes to defenses of the affected enemy/hero
-	bounded_map<word, int16_t> defenses {edefLAST255, -1};
+	bounded_map<word, int16_t> defenses {wMax, -1};
 	
 	// Basic engine effects
 	bool jinx_melee, jinx_item, jinx_shield;

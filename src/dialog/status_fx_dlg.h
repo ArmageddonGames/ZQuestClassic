@@ -29,7 +29,7 @@ public:
 	
 
 private:
-	std::shared_ptr<GUI::Grid> tab_cont, cure_grid;
+	std::shared_ptr<GUI::Grid> tab_cont, cure_grid, def_grid;
 	std::shared_ptr<GUI::Window> window;
 	
 	std::shared_ptr<GUI::DropDownList> spr_ddl;
@@ -44,7 +44,7 @@ private:
 	bool* active_ptr;
 	bool active;
 	
-	GUI::ListData list_sprites_0none;
+	GUI::ListData list_sprites_0none, list_defenses, list_deftypes;
 	
 	void update_title();
 	void update_active();

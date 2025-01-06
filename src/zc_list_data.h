@@ -24,7 +24,7 @@ namespace GUI::ZCListData
 	GUI::ListData lweaptypes(bool numbered = false);
 	GUI::ListData eweaptypes(bool numbered = false);
 	GUI::ListData weaptypes(bool numbered = false);
-	GUI::ListData defenses(byte first, byte last, bool enemy);
+	GUI::ListData defenses();
 	GUI::ListData sfxnames(bool numbered = false);
 	GUI::ListData midinames(bool numbered = false, bool incl_engine = false);
 	GUI::ListData lpals();

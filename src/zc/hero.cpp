@@ -5680,7 +5680,7 @@ void HeroClass::check_wand_block(weapon *w)
 // 1 Effects, weapon is not ignored or removed
 int32_t HeroClass::defend(weapon *w)
 {
-	int32_t def = conv_edef_unblockable(defence[w->id], w->unblockable);
+	int32_t def = conv_edef_unblockable(status.get_defense(w->id, defence[w->id]), w->unblockable);
 	switch(def)
 	{
 		case edNORMAL: return 1;

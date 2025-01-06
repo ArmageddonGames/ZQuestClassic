@@ -34,6 +34,13 @@ EntityStatus const& StatusData::get_status(word idx) const
 	return QMisc.status_effects[idx];
 }
 
+byte StatusData::get_defense(word idx, byte def_ret) const
+{
+	if(defenses.contains(idx))
+		return defenses[idx];
+	return def_ret;
+}
+
 void StatusData::clear()
 {
 	reset();

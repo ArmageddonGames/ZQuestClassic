@@ -461,7 +461,7 @@ void SpriteListerDialog::postinit()
 	}
 	widgInfo->minWidth(Size::pixels(len+8));
 	widgList->minHeight(Size::pixels(320));
-	window->setHelp(get_info(selecting, true));
+	window->setHelp(get_info(selecting, false));
 }
 static int copied_sprite_id = -1;
 void SpriteListerDialog::update()
@@ -582,6 +582,7 @@ void SubscrWidgListerDialog::postinit()
 	widgInfo->setMaxLines(15);
 	widgInfo->overrideWidth(150_px);
 	widgList->setSelectedIndex(0);
+	copyInfo->setText("");
 }
 void SubscrWidgListerDialog::update()
 {
@@ -768,6 +769,7 @@ void MidiListerDialog::postinit()
 	widgInfo->minWidth(Size::pixels(len + 8));
 	window->setHelp(get_info(selecting, false, false, false));
 	widgInfo->capWidth(10_em); // Midi titles can be long, want them to wrap instead of widen
+	copyInfo->setText("");
 }
 void MidiListerDialog::update()
 {
@@ -806,14 +808,8 @@ void SFXListerDialog::preinit()
 
 void SFXListerDialog::postinit()
 {
-	size_t len = 36;
-	for (int q = 0; q < sfxMAX; ++q)
-	{
-		size_t tlen = text_length(GUI_DEF_FONT, sfx_string[q]);
-		if (tlen > len)
-			len = tlen;
-	}
 	window->setHelp(get_info(selecting, false, false, false));
+	copyInfo->setText("");
 }
 
 void SFXListerDialog::edit()
@@ -834,13 +830,14 @@ void StatusListerDialog::preinit()
 	{
 		assert(lister.getValue(0) == -1);
 		frozen_inds = 1; // lock '(None)'
+		resort();
 	}
 	else
 	{
+		resort();
 		if(selected_val < 0)
 			selected_val = lister.getValue(0);
 	}
-	resort();
 	selected_val = vbound(selected_val, (selecting?-1:0), NUM_STATUSES-1);
 	editable = !selecting;
 }
@@ -849,7 +846,7 @@ void StatusListerDialog::postinit()
 	widgInfo->minWidth(25_em);
 	copyInfo->minWidth(25_em);
 	widgList->minHeight(Size::pixels(320));
-	window->setHelp(get_info(selecting, true));
+	window->setHelp(get_info(selecting, false, false));
 }
 static int copied_status_id = -1;
 void StatusListerDialog::update()
@@ -1095,5 +1092,54 @@ void StatusListerDialog::add_buttons(std::shared_ptr<GUI::Grid>& cont)
 		topPadding = 0.5_em,
 		minwidth = 90_px,
 		onClick = message::EXIT));
+}
+
+
+DropDownListerDialog::DropDownListerDialog(GUI::ListData const& list, std::string title, int sel):
+	BasicListerDialog(title,"miscddl_data",sel,true)
+{
+	alphabetized = get_config("alphabetized", false);
+	lister = list;
+}
+void DropDownListerDialog::preinit()
+{
+	if(lister.getValue(0) == -1)
+	{
+		frozen_inds = 1; // lock '(None)'
+		resort();
+	}
+	else
+	{
+		if(selected_val < 0)
+			selected_val = lister.getValue(0);
+	}
+	selected_val = vbound(selected_val, (selecting?-1:0), NUM_STATUSES-1);
+	editable = false;
+}
+void DropDownListerDialog::postinit()
+{
+	size_t len = 16;
+	for (int q = 0; q < lister.size(); ++q)
+	{
+		size_t tlen = text_length(GUI_DEF_FONT, lister.findInfo(selected_val).c_str());
+		if (tlen > len)
+		{
+			len = tlen;
+			if(len+8 >= 200)
+			{
+				len = 200-8;
+				break;
+			}
+		}
+	}
+	widgInfo->minWidth(Size::pixels(len + 8));
+	widgInfo->capWidth(Size::pixels(200));
+	widgList->minHeight(Size::pixels(320));
+	window->setHelp(get_info(true, false, false, false));
+	copyInfo->setText("");
+}
+void DropDownListerDialog::update()
+{
+	widgInfo->setText(lister.findInfo(selected_val));
 }
 

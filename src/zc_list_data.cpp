@@ -679,13 +679,25 @@ static string DefenseToWeaponName(byte def)
 	}
 }
 
-GUI::ListData GUI::ZCListData::defenses(byte first, byte last, bool enemy)
+GUI::ListData GUI::ZCListData::defenses()
 {
 	map<std::string, int32_t> vals;
 
 	GUI::ListData ls;
-	for (int32_t q = first; q < last; ++q)
+	for (int32_t q = 0; q < edefLAST255; ++q)
 	{
+		switch(q)
+		{
+			case edefSCRIPT:
+			case edefLAST250:
+			case edefQUAKE:
+			case edefICE:
+			case edefBAIT:
+			case edefWIND:
+			case edefSPARKLE:
+			case edefSONIC:
+				continue; // not implemented
+		}
 		std::string name = DefenseToWeaponName(q);
 		ls.add(name, q);
 	}

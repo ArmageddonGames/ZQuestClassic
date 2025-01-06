@@ -738,51 +738,6 @@ enum
 
 #define NUM_HIT_TYPES_USED 17
 
-// weapon types in game engine
-enum
-{
-    // 0
-    wNone,wSword,wBeam,wBrang,
-    wBomb,wSBomb,wLitBomb,wLitSBomb,
-    // 8
-    wArrow,wFire,wWhistle,wBait,
-    wWand,wMagic,wCatching,wWind,
-    // 16
-    wRefMagic,wRefFireball,wRefRock, wHammer,
-    wHookshot, wHSHandle, wHSChain, wSSparkle,
-    // 24
-    wFSparkle, wSmack, wPhantom, wCByrna,
-	//28
-    wRefBeam, wStomp,
-	//30
-    lwMax,
-    // Dummy weapons - must be between lwMax and wEnemyWeapons!
-	//31
-    wScript1, wScript2, wScript3, wScript4,
-	//35
-    wScript5, wScript6, wScript7, wScript8,
-	//39
-    wScript9, wScript10, wIce, wFlame, //ice rod, fire rod
-    wSound, // -Z: sound + defence split == digdogger, sound + one hit kill == pols voice -Z
-	wThrown, wPot, //Thrown pot or rock -Z //Just gonna use a single 'wThrown' -Em
-	wLit, //Lightning or Electric -Z
-	wBombos, wEther, wQuake,// -Z
-	wSword180, wSwordLA,
-	//52
-	wBugNet, wRefArrow, wRefFire, wRefFire2,
-    // Enemy weapons
-    wEnemyWeapons=128,
-    //129
-    ewFireball,ewArrow,ewBrang,ewSword,
-    ewRock,ewMagic,ewBomb,ewSBomb,
-    //137
-    ewLitBomb,ewLitSBomb,ewFireTrail,ewFlame,
-    ewWind,ewFlame2,ewFlame2Trail,
-    //145
-    ewIce,ewFireball2,
-    wMax
-};
-
 enum defWpnSprite
 {
 	//0

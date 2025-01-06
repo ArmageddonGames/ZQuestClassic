@@ -25,7 +25,9 @@ StatusFXDialog::StatusFXDialog(stat_mode m, EntityStatus& ref,
 				itm.text = "(None) (000)";
 			}
 			return true;
-		}))
+		})),
+	list_defenses(GUI::ZCListData::weaptypes()),
+	list_deftypes(GUI::ZCListData::deftypes())
 {}
 
 void StatusFXDialog::update_title()
@@ -87,7 +89,7 @@ void StatusFXDialog::update_sprite(optional<bool> use_sprite)
 }
 
 static size_t tabptr[2] = {0};
-static int32_t scrollptr = 0;
+static int32_t scrollptr[2] = {0};
 std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 {
 	using namespace GUI::Builder;
@@ -333,7 +335,7 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 					TabRef(name = "Cures",
 						Column(
 							ScrollingPane(
-								ptr = &scrollptr,
+								ptr = &scrollptr[0],
 								fitParent = true,
 								minheight = 1.5_em * 10,
 								cure_grid = Rows<2>(vAlign = 0.0)
@@ -365,11 +367,35 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 						)
 					),
 					TabRef(name = "Defenses",
-						//More fancy GUI, allow "add defense" to a list
-						//Each defense added, needs new UI elements, notably a ddl
-						// for defense resolution that is being overriden to that defense.
-						// No need for -1 handling, have an X to remove instead.
-						_d
+						Column(
+							ScrollingPane(
+								ptr = &scrollptr[1],
+								fitParent = true,
+								minheight = 1.5_em * 10,
+								def_grid = Rows<3>(vAlign = 0.0)
+							),
+							Row(
+								Button(text = "Add Defense Change",
+									onPressFunc = [&]()
+									{
+										GUI::ListData list = list_defenses.copy().filter(
+											[&](GUI::ListItem& itm)
+											{
+												if(local_ref.defenses.contains(itm.value))
+													return false;
+												return true;
+											});
+										DropDownListerDialog(list, "Select Defense", -1).show();
+										if(lister_sel_val > -1 && lister_sel_val < wMax)
+										{
+											local_ref.defenses[lister_sel_val] = 0;
+											refresh_dlg();
+										}
+									}),
+								INFOBTN("The listed defenses will be changed to the specified outcomes,"
+									" replacing the normal outcome for the afflicted entity.")
+							)
+						)
 					),
 					TabRef(name = "Engine FX",
 						// bool jinx_melee
@@ -401,6 +427,7 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 		)
 	);
 	
+	local_ref.defenses.normalize();
 	for(int q = 0; q < NUM_STATUSES; ++q)
 	{
 		if(local_ref.cures[q])
@@ -413,6 +440,29 @@ std::shared_ptr<GUI::Widget> StatusFXDialog::view()
 				onPressFunc = [&,q]()
 				{
 					local_ref.cures[q] = false;
+					refresh_dlg();
+				}));
+		}
+	}
+	for(int q = 0; q < wMax; ++q)
+	{
+		if(local_ref.defenses.contains(q))
+		{
+			def_grid->add(Label(hAlign = 1.0,
+				text = fmt::format("{}:", list_defenses.findText(q))
+			));
+			def_grid->add(DropDownList(data = list_deftypes,
+				fitParent = true,
+				selectedValue = local_ref.defenses[q],
+				onSelectFunc = [&,q](int32_t val)
+				{
+					local_ref.defenses[q] = val;
+				}));
+			def_grid->add(Button(text = "-",
+				forceFitH = true,
+				onPressFunc = [&,q]()
+				{
+					local_ref.defenses.erase(q);
 					refresh_dlg();
 				}));
 		}
