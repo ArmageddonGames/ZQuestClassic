@@ -5,34 +5,37 @@ class Input {
 	// @delete
 	internal Input();
 
-	// Whether the given button (`CB_` constants) is down (or 'pressed').
+	// Whether the given button is down (or 'pressed').
 	//
+	// @index [Button]
 	// @zasm_var BUTTONPRESS
 	internal bool Press[];
 
-	// Whether the given button (`CB_` constants) is down (or 'pressed').
+	// Whether the given button is down (or 'pressed').
 	//
+	// @index [Button]
 	// @zasm_var BUTTONINPUT
 	internal bool Button[];
 
-	// Returns true if the respective key was just pressed this frame (similar
-	// to [Press], but for keys instead of buttons).
+	// Returns true if the respective key was just pressed this frame.
 	//
+	// @index [KeyCode]
 	// @zasm_var KEYPRESS
 	internal bool KeyPress[];
 
-	// Returns true if the respective key is down this frame (similar to
-	// [Button], but for keys instead of buttons).
+	// Returns true if the respective key is down this frame.
 	//
+	// @index [KeyCode]
 	// @zasm_var KEYINPUT
 	internal bool Key[];
 
 	// @zasm_var MOUSEARR
 	internal untyped Mouse[];
 
-	// For each index (using `CB_` constants to access), the keyboard key
-	// (`KEY_` constants) that is bound to that button.
+	// For each button, the keyboard key that is bound to that button.
 	//
+	// @index [Button]
+	// @value [KeyCode]
 	// @zasm_var KEYBINDINGS
 	internal int KeyBindings[];
 
@@ -41,23 +44,23 @@ class Input {
 	// @zasm_var KEYMODIFIERS
 	internal int ModifierKeys;
 
-	// Whether a given keyboard key (`KEY_` constants) is disabled from having
+	// Whether a given keyboard key is disabled from having
 	// any in-engine effect.
 	//
+	// @index [KeyCode]
 	// @zasm_var DISABLEKEY
 	internal bool DisableKey[];
 
-	// Whether a given button (`CB_` constants) is disabled from having any
-	// in-engine effect.
+	// Whether a given button is disabled from having any in-engine effect.
 	//
+	// @index [Button]
 	// @zasm_var DISABLEBUTTON
 	internal bool DisableButton[];
 
-	// Similar to Press, except that it only returns presses from a joystick
+	// Similar to [Press], except that it only returns presses from a joystick
 	// device, not a keyboard.
 	//
-	// Use the `CB_` constants to access this array.
-	//
+	// @index [Button]
 	// @zasm_var JOYPADPRESS
 	internal const bool Joypad[];
 

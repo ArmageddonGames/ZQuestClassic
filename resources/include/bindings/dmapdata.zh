@@ -45,8 +45,7 @@ class dmapdata {
 	// @zasm_var DMAPDATACONTINUE
 	internal int Continue;
 
-	// The type of the dmap, using the [DmapType] (`DMAP_`) constants.
-	//
+	// @value [DMapType]
 	// @zasm_var DMAPDATATYPE
 	internal int Type;
 
@@ -115,8 +114,9 @@ class dmapdata {
 	// @zasm_var DMAPDATADISABLEDITEMS
 	internal bool DisabledItems[];
 
-	// The flags for the dmap. Uses the `DMFS_` constants.
+	// All of the dmap's flags.
 	//
+	// @index [DMapFlag]
 	// @zasm_var DMAPDATAFLAGARR
 	internal int Flagset[];
 
@@ -154,6 +154,7 @@ class dmapdata {
 	internal untyped MapInitD[];
 
 	// Stores the large map exploration data for each screen on the dmap.
+	//
 	// <todo>Test if works on overworld dmaps.</todo>
 	//
 	// @zasm_var DMAPDATACHARTED
@@ -167,25 +168,9 @@ class dmapdata {
 	// @zasm_var DMAPDATAMIRRDMAP
 	internal int MirrorDMap;
 
-	// The flags used by the DMap. These are OR'd together.
+	// The flags used by the DMap. These are OR'd together. See [DMapBitwiseFlag].
 	//
-	// - CAVES               0x0001
-	// - 3STAIR              0x0002
-	// - WHIRLWIND           0x0004
-	// - GUYCAVES            0x0008
-	// - NOCOMPASS           0x0010
-	// - WAVY                0x0020
-	// - WHIRLWINDRET        0x0040
-	// - ALWAYSMSG           0x0080
-	// - VIEWMAP             0x0100
-	// - DMAPMAP             0x0200
-	// - MINIMAPCOLORFIX     0x0400
-	// - SCRIPT1             0x0800
-	// - SCRIPT2             0x1000
-	// - SCRIPT3             0x2000
-	// - SCRIPT4             0x4000
-	// - SCRIPT5             0x8000
-	//
+	// @future_deprecated Use [Flagset] instead!
 	// @zasm_var DMAPDATAFLAGS
 	internal int Flags;
 

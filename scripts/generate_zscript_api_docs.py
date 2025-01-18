@@ -672,6 +672,13 @@ def add_comment(symbol):
         add('')
         add('.. rst-class:: classref-comment')
         add('')
+        for tag, value in symbol.comment.tags.items():
+            if tag in ['value', 'index', 'param', 'length']:
+                for line in value.splitlines():
+                    add(indent(sanitize(f'`{tag}` ' + line), 3))
+                    add('')
+                    add('')
+        add('')
         add(indent(sanitize(symbol.comment.text), 3))
         add('')
 

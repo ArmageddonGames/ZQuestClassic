@@ -1,3 +1,5 @@
+import "bindings/common.zh"
+
 enum WipeEffect
 {
 	WIPE_CIRCLE,
@@ -34,11 +36,13 @@ class screendata {
 	// @zasm_var COMBOID
 	internal int ComboI[];
 
-	// Valid values: [ComboType] (`CT_`).
-	//
+	// @value [ComboType]
 	// @zasm_var COMBOTD
 	internal int ComboT[];
 
+	// The solidity bits of each of the [NUM_COMBO_POS] combo positions on the screen.
+	//
+	// @value [ComboSolidityBitflags]
 	// @zasm_var COMBOSD
 	internal int ComboS[];
 
@@ -50,9 +54,9 @@ class screendata {
 	// @zasm_var SCRDOORD
 	internal int Door[];
 
-	// The 32 screen states used by this screen. Use the [ScreenState] (`ST_`) constants to
-	// access.
+	// The 32 screen states used by this screen.
 	//
+	// @index [ScreenState]
 	// @zasm_var SCREENSTATED
 	internal bool State[];
 
@@ -122,8 +126,9 @@ class screendata {
 	// @zasm_var SCREENEFLAGSD
 	internal int EFlags[];
 
-	// The screen room type.
+	// The special room type.
 	//
+	// @value [RoomType]
 	// @zasm_var ROOMTYPE
 	internal int RoomType;
 
@@ -183,9 +188,8 @@ class screendata {
 	// The Tile Warp type for Tile Warps A, B, C, and D; [0], [1], [2], and [3]
 	// respectively.
 	//
-	// Valid indices: [TileWarpIndex] (`TILEWARP_`).
-	// Valid values: [WarpType] (`WT_`).
-	//
+	// @index [TileWarpIndex]
+	// @value [WarpType]
 	// @zasm_var SCREENDATATILEWARPTYPE
 	internal int TileWarpType[];
 
@@ -252,17 +256,15 @@ class screendata {
 
 	// The enemy 'Spawn Pattern'.
 	//
-	// Valid values: [EnemyPattern] (`PATTERN_`).
-	//
+	// @value [EnemyPattern]
 	// @zasm_var SCREENDATAPATTERN
 	internal int Pattern;
 
 	// The Sidewarp type for Sidewarps A, B, C, and D; [0], [1], [2], and [3]
 	// respectively.
 	//
-	// Valid indices: [SideWarpIndex] (`SIDEWARP_`).
-	// Valid values: [WarpType] (`WT_`).
-	//
+	// @index [SideWarpIndex]
+	// @value [WarpType]
 	// @zasm_var SCREENDATASIDEWARPTYPE
 	internal int SideWarpType[];
 
@@ -297,7 +299,7 @@ class screendata {
 	// Returns [SIDEWARP_NONE] if there is no sidewarp in that direction.
 	//
 	// Valid indices: [DIR_UP], [DIR_DOWN], [DIR_LEFT], [DIR_RIGHT]
-	// Valid values: [SideWarpIndex] (`SIDEWARP_`)
+	// Valid values: [SideWarpIndex]
 	//
 	// @zasm_var SCREENSIDEWARPID
 	internal int SideWarpID[];
@@ -332,17 +334,16 @@ class screendata {
 	// @zasm_var SCREENDATACSENSITIVE
 	internal int CSensitive;
 
-	// The No Reset Flagset. Values are ORd together as follows:
+	// Which parts of the screen state that won't reset on reentry.
 	//
-	// TODO: document values
-	//
+	// @value [NoResetBitflags]
 	// @zasm_var SCREENDATANORESET
 	internal int NoReset;
 
-	// The No Carry Over Flagset. Values are ORd together s follows:
+	// For screen state carryovers, which parts of the screen state that won't carry over to the
+	// target screen.
 	//
-	// TODO: document values
-	//
+	// @value [NoCarryBitflags]
 	// @zasm_var SCREENDATANOCARRY
 	internal int NoCarry;
 
@@ -416,22 +417,19 @@ class screendata {
 
 	// The Combo IDs used by 'Secret Combos' on this screen.
 	//
-	// See `SECCMB_` in std_constants.zh for more information.
-	//
+	// @index [SecretComboIndex]
 	// @zasm_var SCREENDATASECRETCOMBO
 	internal int SecretCombo[];
 
 	// The CSets used by 'Secret Combos' on this screen.
 	//
-	// See `SECCMB_` in std_constants.zh for more information.
-	//
+	// @index [SecretComboIndex]
 	// @zasm_var SCREENDATASECRETCSET
 	internal int SecretCSet[];
 
 	// The Combo Flags used by 'Secret Combos' on this screen.
 	//
-	// See `SECCMB_` in std_constants.zh for more information.
-	//
+	// @index [SecretComboIndex]
 	// @zasm_var SCREENDATASECRETFLAG
 	internal int SecretFlags[];
 
@@ -682,8 +680,9 @@ class screendata {
 	//   SETR D2 REFNPC
 	internal npc LoadNPC(int n);
 
-	// Creates a new sprite object, with the given ID. Use the NPC_ constants.
+	// Creates a new sprite object, with the given ID.
 	//
+	// @param [NPCID] id
 	// @zasm
 	//   POP D2
 	//   CREATENPCR D2
@@ -896,7 +895,7 @@ class screendata {
 
 	// As DrawString(), but includes a shadow on the text.
 	//
-	// Valid values for [shadow_type]: [ShadowType] (`SHD_`).
+	// Valid values for [shadow_type]: [ShadowType].
 	//
 	// @zasm
 	//   DRAWSTRINGR2
@@ -950,8 +949,8 @@ class screendata {
 	// If these are non-zero, the rotation anchor point will center on these
 	// coordinates.
 	//
-	// You may specify a colour to 'int lit' to use a lit mode. This tints the
-	// entire bitmap using that colour index of the main palette.
+	// You may specify a color to 'int lit' to use a lit mode. This tints the
+	// entire bitmap using that color index of the main palette.
 	//
 	// @zasm
 	//   TILEBLIT
@@ -979,8 +978,8 @@ class screendata {
 	// If these are non-zero, the rotation anchor point will center on these
 	// coordinates.
 	//
-	// You may specify a colour to 'int lit' to use a lit mode. This tints the
-	// entire bitmap using that colour index of the main palette.
+	// You may specify a color to 'int lit' to use a lit mode. This tints the
+	// entire bitmap using that color index of the main palette.
 	//
 	// @zasm
 	//   COMBOBLIT
@@ -1138,7 +1137,7 @@ class screendata {
 
 	// Plays the warping screen 'wipe' effect.
 	//
-	// Valid values for [effect]: [WipeEffect] (`WIPE_`).
+	// Valid values for [effect]: [WipeEffect].
 	//
 	// @zasm
 	//   POP D2
@@ -1147,7 +1146,7 @@ class screendata {
 
 	// Plays the warping screen 'wipe' effect.
 	//
-	// Valid values for [effect]: [WipeEffect] (`WIPE_`).
+	// Valid values for [effect]: [WipeEffect].
 	//
 	// @zasm
 	//   POP D2
@@ -1276,7 +1275,7 @@ class screendata {
 	//   POPARGS D5 0.0002
 	internal void SetExDoor(int dir, int index, bool state);
 
-	// Valid values for [type]: [WarpType] (`WT_`).
+	// Valid values for [type]: [WarpType].
 	//
 	// @zasm
 	//   SETSIDEWARP

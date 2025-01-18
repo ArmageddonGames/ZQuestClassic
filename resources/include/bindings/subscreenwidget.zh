@@ -3,7 +3,7 @@ class subscreenwidget {
 	// @delete
 	internal subscreenwidget();
 
-	// The widget's type, using [SubscreenWidgetType] (`SUBWIDG_`) constants.
+	// The widget's type, using [SubscreenWidgetType] constants.
 	//
 	// @zasm_var SUBWIDGTYPE
 	internal const int Type;
@@ -248,7 +248,7 @@ class subscreenwidget {
 	// @zasm_var SUBWIDGPRESSINITD
 	internal untyped PressInitD[];
 
-	// Use the [InteractButton] (`INTBTN_`) constants to index this array.
+	// Use [InteractButton] to index this array.
 	//
 	// The 'true' buttons here, when pressed while this widget is selected, run
 	// the press script.
@@ -256,7 +256,7 @@ class subscreenwidget {
 	// @zasm_var SUBWIDGBTNPRESS
 	internal bool BtnPressScript[];
 
-	// Use the [InteractButton] (`INTBTN_`) constants to index this array.
+	// Use [InteractButton] to index this array.
 	//
 	// The 'true' buttons here, when pressed while this widget is selected,
 	// change the current page based on [PageMode].
@@ -363,7 +363,7 @@ class subscreenwidget {
 
 	// The widget's Shadow Type.
 	//
-	// Valid values: [ShadowType] (`SHD_`).
+	// @value [ShadowType]
 	//
 	// - [SUBWIDG_TEXT]
 	// - [SUBWIDG_TEXTBOX]

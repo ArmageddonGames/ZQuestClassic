@@ -1050,7 +1050,7 @@ namespace ZScript
 		bool readonly;
 		bool internal;
 
-	private:
+	protected:
 		// The list of individual data declarations.
 		owning_vector<ASTDataDecl> declarations_;
 	};
@@ -1064,6 +1064,7 @@ namespace ZScript
 
 		std::optional<LocationData> getIdentifierLocation() const;
 		std::string getName() const;
+		std::optional<std::string> getDocumentationPrefix() const;
 		void execute(ASTVisitor& visitor, void* param = NULL);
 		virtual bool isEnum() const {return true;}
 		

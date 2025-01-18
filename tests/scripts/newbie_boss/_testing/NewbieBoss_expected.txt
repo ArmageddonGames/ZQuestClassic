@@ -36474,7 +36474,7 @@ SETR DATA D2
 POPARGS D5 0.0002
 RETURNFUNC; Func[void __HideFFCAndWait(ffc)] Body End
 SETR D4 SP2; Func[int InFrontX(int, int)] Body Start
-PUSHR D4; switch() #22 Key
+PUSHR D4; switch() #21 Key
 LOAD D2 0.0001; UsrFunc[int DirNormal(int)] Params Start
 PUSHR D2; UsrFunc[int DirNormal(int)] Params End
 CALLFUNC 2.0373; UsrFunc[int DirNormal(int)] Call
@@ -36484,7 +36484,7 @@ COMPAREV SWITCHKEY 2
 GOTOCMP 29207 ==; case '20000'
 COMPAREV SWITCHKEY 3
 GOTOCMP 29210 ==; case '30000'
-GOTO 29213; switch() #22 NoMatch
+GOTO 29213; switch() #21 NoMatch
 LOAD D2 0; Case block AND return Start
 SUBV D2 16
 GOTO 29214; return End
@@ -36495,7 +36495,7 @@ SETV D2 0; Case block AND return Start
 POPARGS D5 0.0002; return End
 RETURNFUNC; Func[int InFrontX(int, int)] Body End
 SETR D4 SP2; Func[int InFrontY(int, int)] Body Start
-PUSHR D4; switch() #23 Key
+PUSHR D4; switch() #22 Key
 LOAD D2 0.0001; UsrFunc[int DirNormal(int)] Params Start
 PUSHR D2; UsrFunc[int DirNormal(int)] Params End
 CALLFUNC 2.0373; UsrFunc[int DirNormal(int)] Call
@@ -36505,7 +36505,7 @@ COMPAREV SWITCHKEY 0
 GOTOCMP 29228 ==; case '0'
 COMPAREV SWITCHKEY 1
 GOTOCMP 29231 ==; case '10000'
-GOTO 29234; switch() #23 NoMatch
+GOTO 29234; switch() #22 NoMatch
 LOAD D2 0; Case block AND return Start
 SUBV D2 16
 GOTO 29235; return End
@@ -45945,7 +45945,7 @@ MULTR D2 D3
 POPARGS D5 0.0002; return End
 RETURNFUNC; Func[int VectorY(int, int)] Body End
 SETR D4 SP2; Func[int InFrontX(int, int)] Body Start
-PUSHR D4; switch() #22 Key
+PUSHR D4; switch() #21 Key
 LOAD D2 0.0001; UsrFunc[int DirNormal(int)] Params Start
 PUSHR D2; UsrFunc[int DirNormal(int)] Params End
 CALLFUNC 0.0124; UsrFunc[int DirNormal(int)] Call
@@ -45955,7 +45955,7 @@ COMPAREV SWITCHKEY 2
 GOTOCMP 997 ==; case '20000'
 COMPAREV SWITCHKEY 3
 GOTOCMP 1000 ==; case '30000'
-GOTO 1003; switch() #22 NoMatch
+GOTO 1003; switch() #21 NoMatch
 LOAD D2 0; Case block AND return Start
 SUBV D2 16
 GOTO 1004; return End
@@ -45966,7 +45966,7 @@ SETV D2 0; Case block AND return Start
 POPARGS D5 0.0002; return End
 RETURNFUNC; Func[int InFrontX(int, int)] Body End
 SETR D4 SP2; Func[int InFrontY(int, int)] Body Start
-PUSHR D4; switch() #23 Key
+PUSHR D4; switch() #22 Key
 LOAD D2 0.0001; UsrFunc[int DirNormal(int)] Params Start
 PUSHR D2; UsrFunc[int DirNormal(int)] Params End
 CALLFUNC 0.0124; UsrFunc[int DirNormal(int)] Call
@@ -45976,7 +45976,7 @@ COMPAREV SWITCHKEY 0
 GOTOCMP 1018 ==; case '0'
 COMPAREV SWITCHKEY 1
 GOTOCMP 1021 ==; case '10000'
-GOTO 1024; switch() #23 NoMatch
+GOTO 1024; switch() #22 NoMatch
 LOAD D2 0; Case block AND return Start
 SUBV D2 16
 GOTO 1025; return End

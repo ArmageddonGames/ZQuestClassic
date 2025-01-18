@@ -1,0 +1,1688 @@
+// Contains required constants for std.zh and ZScript functions.
+
+#include "std_zh/std.cfg"
+#include "std_zh/limits.zh"
+
+//some type shorthands
+typedef const int define;
+typedef const int DEFINE;
+typedef const float DEFINEF;
+typedef const long DEFINEL;
+typedef const bool DEFINEB;
+typedef const untyped DEFINEU;
+
+typedef const int CONFIG;
+typedef const float CONFIGF;
+typedef const long CONFIGL;
+typedef const bool CONFIGB;
+typedef const untyped CONFIGU; 
+
+DEFINEF PI				= 3.1416;
+DEFINEF PI2				= 6.2832;
+
+DEFINEF RADIAN 			= 57.2958; //Multiplication value for converting radians to degrees. 
+DEFINEF DEGREE			= 0.0174; //Multiplication value for converting degrees to radians.
+
+DEFINE SQRT_ERROR			= 464; // The return value of SafeSqrt() if a negative value is passed. 
+DEFINEF SQRT_MAX			= 463.4095; //The largest square root thet ZC can return.
+
+
+DEFINEF MAX_CONSTANT		= 214747.9999 + (OPTION_VALUE(TRUE_INT_SIZE) ? 0.3648 : 0);
+DEFINEF MIN_CONSTANT		= -214747.9999 - (OPTION_VALUE(TRUE_INT_SIZE) ? 0.3649 : 0);
+
+
+DEFINE MAX_SCRIPTDRAWINGCOMMANDS	= 1000;
+
+DEFINE MAX_INT 			= 214747 + (OPTION_VALUE(TRUE_INT_SIZE) ? 1 : 0);
+DEFINE MIN_INT 			= -214747 - (OPTION_VALUE(TRUE_INT_SIZE) ? 1 : 0);
+DEFINE MAX_FLOAT 			= 214747.9999 + (OPTION_VALUE(TRUE_INT_SIZE) ? 0.3648 : 0);
+DEFINE MIN_FLOAT 			= -214747.9999 - (OPTION_VALUE(TRUE_INT_SIZE) ? 0.3649 : 0);
+DEFINE MAX_SHORT             = 32767;
+DEFINE MIN_SHORT             = -32768;
+DEFINE MAX_BYTE              = 255;
+DEFINE MIN_BYTE              = 0;
+
+DEFINE MAX_COUNTER 			= WORD_MAX;
+DEFINE MIN_COUNTER 			= WORD_MIN;
+
+DEFINEL MAX_TIME             = 1944000000L; // Max value of [Game->Time].
+
+DEFINE MIN_LWEAPON 			= 1; //Lowest numbered objects.
+DEFINE MIN_EWEAPON 			= 1;
+DEFINE MIN_NPC			= 1;
+DEFINE MIN_ITEM			= 1;
+DEFINE MAX_LWEAPON 			= 255; //1 to 255.
+DEFINE MAX_EWEAPON 			= 255; //1 to 255.
+DEFINE MAX_NPCS	 		= 255; //1 to 255.
+DEFINE MAX_ITEM	 		= 255; //1 to 255;
+
+DEFINE MIN_FFC			= 1;
+DEFINE MAX_FFC			= 128;
+DEFINE MIN_OBJ			= 1; //Short, const for loops.
+
+DEFINE MIN_COUNTER_INDEX		= 0;
+DEFINE MAX_COUNTER_INDEX		= 106;
+DEFINE NUM_COUNTERS			= 107; //0 to 106
+
+DEFINE MIN_COMBO_POS 		= 0;
+DEFINE MAX_COMBO_POS 		= 175;
+DEFINE NUM_COMBO_POS 		= 176;
+
+DEFINE MAX_OBJECT_POINTERS 		= 255; //Max of any one type. 
+DEFINE MAX_WEAPON_POINTERS 		= 510; //eweapon and lweapon combined.
+DEFINE MAX_TOTAL_OBJECT_POINTERS 	= 1020; //Max shared, across the three types. 
+DEFINE MAX_SPRITES 			= 1020; //npc, eweapon, and lweapon
+DEFINE MAX_DRAWING 			= 1000; //Maximum number of simultaneous drawing commands.
+
+DEFINE MIN_BITMAP_X			= 0; //Legal Bitmap Region for Drawing
+DEFINE MAX_BITMAP_X			= 511;
+DEFINE MIN_BITMAP_Y			= 0;
+DEFINE MAX_BITMAP_Y		 	= 511;
+
+DEFINE MAX_GLOBAL_VARIABLES		= 255;
+DEFINE MAX_VARIABLES			= 255; //Vars in operation at any one time.
+DEFINE MAX_BITSPERVARIABLE		= 18;
+
+DEFINE MIN_ITEMDATA			= 0;
+DEFINE MAX_ITEMDATA			= 255;
+DEFINE NUM_ITEMDATA         = 256;
+
+DEFINE NUM_LEVELS           = 512;
+
+DEFINE MAX_ARRAY_POINTERS	 	= 4095; //Arrays in operation. 
+DEFINE MAX_TILES 			= 214499;
+DEFINE MAX_COMBOS			= 65279;
+DEFINE MAX_STRINGS			= 65519; //Strings in String Editor
+
+DEFINE HP_PER_HEART			= 16;
+DEFINE MP_PER_BLOCK			= 32;
+
+DEFINE MAX_MESSAGES			= 65535;
+DEFINE MAX_MESSAGELENGTH		= 145; //Pass an array of (at least) this size to Game->GetMessage
+
+DEFINE MAX_MAPS 			= 256;
+DEFINE MAX_DMAPS			= 512;
+DEFINE MAX_DMAPNAMELENGTH		= 21; //Size of arrays to pass to Game->GetDMapX
+DEFINE MAX_DMAPTITLELENGTH		= 21;
+DEFINE MAX_DMAPINTROLENGTH		= 73;
+
+//FFC Size Limitations
+DEFINE MAX_FFC_W 			= 4; //Four tiles wide
+DEFINE MAX_FFC_H 			= 4; //Four tiles high
+DEFINE MAX_FFC_EFFECT_W		= 64; //Sixty-four pixels wide.
+DEFINE MAX_FFC_EFFECT_H		= 64; //Sixty four pixels high. 
+
+//Default array sizes
+DEFINE INIT_D_SIZE			= 8;
+DEFINE INIT_A_SIZE			= 2;
+DEFINE MISC_SIZE			= 32;
+DEFINE NPC_ATTRIBUTES_SIZE		= 32;
+DEFINE ITEM_ATTRIBUTES_SIZE		= 10;
+DEFINE GAMEMISC_SIZE 		= 32;
+DEFINE MAX_DEFENSE 			= 42;
+DEFINE MAX_DEFENCE 			= 42;
+
+DEFINE SCREEN_W 			= 256; // Width of the screen, in pixels.
+DEFINE SCREEN_H 			= 176; // Height of the screen, in pixels.
+
+DEFINE SCREEN_RIGHT 			= 255; //The rightmost screen pixel.
+DEFINE SCREEN_LEFT 			= 0; //The leftmost screen pixel.
+DEFINE SCREEN_TOP 			= 0; //The top screen pixel, below the subscreen.
+DEFINE SCREEN_BOTTOM 		= 175; //The lowest screen pixel.  
+
+DEFINE SUBSCREEN_BOTTOM		= -1; //Bottom of passive subscreen.
+DEFINE SUBSCREEN_TOP 		= -56; //Top of passive subscreen.
+
+DEFINE SCREEN_CENTER_X 		= 128;
+DEFINE SCREEN_CENTRE_X 		= 128;
+DEFINE SCREEN_CENTER_Y 		= 88; 
+DEFINE SCREEN_CENTRE_Y 		= 88; 
+
+//Defaults from Init Data
+DEFINEF GRAVITY			= 0.16;
+DEFINEF TERMINAL_VELOCITY		= 3.20;
+
+
+
+
+
+
+//Equivalent Degrees and Radians for Cardinal Directions
+//Degrees
+DEFINE DEG_DIR_RIGHTUP 	= 315;
+DEFINE DEG_DIR_UPRIGHT 	= 315;
+DEFINE DEG_DIR_UP 		= 270;
+DEFINE DEG_DIR_UPLEFT 	= 225;
+DEFINE DEG_DIR_LEFTUP 	= 225;
+DEFINE DEG_DIR_LEFT 		= 180;
+DEFINE DEG_DIR_LEFTDOWN 	= 135;
+DEFINE DEG_DIR_DOWNLEFT 	= 135;
+DEFINE DEG_DIR_DOWN 		= 90;
+DEFINE DEG_DIR_RIGHTDOWN 	= 45;
+DEFINE DEG_DIR_DOWNRIGHT 	= 45;
+DEFINE DEG_DIR_RIGHT 	= 0;
+
+//Radians
+DEFINEF RAD_DIR_RIGHTUP 	= 5.4978;
+DEFINEF RAD_DIR_UPRIGHT 	= 5.4978;
+DEFINEF RAD_DIR_UP 		= 4.7214;
+DEFINEF RAD_DIR_UPLEFT 	= 3.927;
+DEFINEF RAD_DIR_LEFTUP 	= 3.927;
+DEFINEF RAD_DIR_LEFT 	= 3.1416; //3.1519; //Pi
+DEFINEF RAD_DIR_LEFTDOWN 	= 2.3562; //Pi
+DEFINEF RAD_DIR_DOWNLEFT 	= 2.3562; //Pi
+DEFINEF RAD_DIR_DOWN 	= 1.5708;
+DEFINEF RAD_DIR_RIGHTDOWN 	= 0.7854;
+DEFINEF RAD_DIR_DOWNRIGHT 	= 0.7854;
+DEFINEF RAD_DIR_RIGHT 	= 0; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Used with [lweapon::DeadState] and [eweapon::DeadState].
+enum WeaponDeadState {
+	WDS_NOHIT             = -10, // This value switches collision detection off. Deprecated by [lweapon::CollDetection].
+	WDS_ALIVE             = -1,  // Weapon is currently 'alive'.
+	WDS_DEAD              = 0,   // Use to dispose of most weapons.
+	WDS_BEAMSHARDS        = 23,  // Used with [LW_BEAM] to shatter it into shards.
+	WDS_ARROW             = 4,   // Used with [LW_ARROW] to make them 'wink out' using tile 54.
+	WDS_BOUNCE            = 1    // Used with [LW_BRANG] or [LW_HOOKSHOT] to make it 'bounce off' and begin returning to Link.
+};
+
+
+// NPC hit point values. Set to [npc::HP] to make the enemy die in a special manner.
+DEFINE HP_SILENT = -1000;  // The enemy will die without their Death Sound playing.
+DEFINE HP_GLEEOKHEAD = 1000; //Floating Gleeok heads have this as their HP value. 
+
+//Walking Enemy Indices
+DEFINE NPCA_WALK_SHOTTYPE 		= 0;
+DEFINE NPCA_WALK_DEATHTYPE 		= 1;
+DEFINE NPCA_WALK_DEATH_ATTR_1 	= 2;
+DEFINE NPCA_WALK_DEATH_ATTR_2 	= 3;
+DEFINE NPCA_WALK_DEATH_ATTR_3 	= 4;
+DEFINE NPCA_WALK_EXTRA_SHOTS 	= 5;
+DEFINE NPCA_WALK_TOUCHEFFECT 	= 6;
+DEFINE NPCA_WALK_EFFECT_STR 		= 7;
+DEFINE NPCA_WALK_WALKSTYLE 		= 8;
+DEFINE NPCA_WALK_WALK_ATTRIB 	= 9;
+
+	//Walking Attributes (Settings)
+	//Shot Type
+	DEFINE NPCA_WALK_1SHOT		= 0;
+	DEFINE NPCA_WALK_ENDHALT		= 1;
+	DEFINE NPCA_WALK_RAPIDFIRE		= 2;
+	DEFINE NPCA_WALK_1FAST		= 3;
+	DEFINE NPCA_WALK_1SLANT		= 4;
+	DEFINE NPCA_WALK_3SHOTS		= 5;
+	DEFINE NPCA_WALK_4SHOTS		= 6;
+	DEFINE NPCA_WALK_5SHOTS		= 7;
+	DEFINE NPCA_WALK_3FAST		= 8;
+	DEFINE NPCA_WALK_BREATH		= 9;
+	DEFINE NPCA_WALK_8SHOTS		= 10;
+	DEFINE NPCA_WALK_SUMMON		= 11;
+	DEFINE NPCA_WALK_SUMMONLAYER		= 12;
+	//Death Type
+	DEFINE NPCA_WALK_DEATH_NORMAL	= 0;
+	DEFINE NPCA_WALK_DEATH_SPLITHIT	= 1;
+	DEFINE NPCA_WALK_DEATH_SPLIT		= 2;
+	DEFINE NPCA_WALK_DEATH_8SHOTS	= 3;
+	DEFINE NPCA_WALK_DEATH_EXPLODE	= 4;
+	DEFINE NPCA_WALK_DEATH_TRIBBLE	= 5;
+	//Touch Effcts
+	DEFINE NPCA_WALK_TOUCH_NORMAL	= 0;
+	DEFINE NPCA_WALK_TOUCH_TEMPJINX	= 1;
+	DEFINE NPCA_WALK_TOUCH_PERMJINX	= 2;
+	DEFINE NPCA_WALK_TOUCH_CUREJINX	= 3;
+	DEFINE NPCA_WALK_TOUCH_LOSEMAGIC	= 4;
+	DEFINE NPCA_WALK_TOUCH_LOSERUPEES	= 5;
+	DEFINE NPCA_WALK_TOUCH_DRUNK		= 6;
+	DEFINE NPCA_WALK_TOUCH_EATITEMS	= 7;
+	DEFINE NPCA_WALK_TOUCH_EATMAGIC	= 8;
+	DEFINE NPCA_WALK_TOUCH_EATRUPEES	= 9;
+	//Walkstyle
+	DEFINE NPCA_WALK_WS_NORMAL		= 0;
+	DEFINE NPCA_WALK_WS_ROPE		= 1;
+	DEFINE NPCA_WALK_WS_VIRE		= 2;
+	DEFINE NPCA_WALK_WS_POLSVOICE	= 3;
+
+//Gohma Indices
+DEFINE NPCA_GOHMA_SHOT_TYPE 			= 0;
+	//Gohma Shot Type Settings
+	DEFINE NPCA1_GOHMA_1SHOT		= 0;
+	DEFINE NPCA_GOHMA_3SHOTS		= 1;
+	DEFINE NPCA_GOHMA_BREATH		= 2;
+
+//Wallmaster Indices
+DEFINE NPCA_WALLMASTER_FIXED_DIST 		= 0;
+	//Wallmaster Settings
+	DEFINE NPCA_WALLMASTER_FIXED_DIST_ON = 0;
+	DEFINE NPCA_WALLMASTER_FIXED_DIST_OFF = 1;
+
+//Keese Indices
+DEFINE NPCA_KEESE_MOVEMENT			= 0;
+DEFINE NPCA_KEESE_DEATHTYPE 			= 1;
+	//Movement Style
+	DEFINE NPCA_KEESE_WS_KEESE 		= 0;
+	DEFINE NPCA_KEESE_WS_BAT 		= 1;
+	//Death Type
+	DEFINE NPCA_KEESE_DEATH_NORMAL	= 0;
+	DEFINE NPCA_KEESE_DEATH_TRIBBLE	= 1;
+
+//Digdogger Indices
+DEFINE NPCA_DIG_ID_1				= 0; //Digdogger ID 1
+DEFINE NPCA_DIG_ID_2				= 1; //Digdogger ID 1
+DEFINE NPCA_DIG_ID_3				= 2; //Digdogger ID 3
+DEFINE NPCA_DIG_ID_4				= 3; //Digdogger ID 4
+DEFINE NPCA_DIG_ENEM_1_QUANTITY		= 4; //Quantity of enemy 1.
+DEFINE NPCA_DIG_ENEM_2_QUANTITY		= 5; //Quantity of enemy 1.
+DEFINE NPCA_DIG_ENEM_3_QUANTITY		= 6; //Quantity of enemy 1.
+DEFINE NPCA_DIG_ENEM_4_QUANTITY		= 7; //Quantity of enemy 1.
+DEFINE NPCA_DIG_TYPE				= 8; //Type of digdogger
+	//Digdogger Type Settings
+	DEFINE NPCA_DIG_TYPE_NORMAL		= 0; //Digdogger main
+	DEFINE NPCA_DIG_TYPE_KID		= 1; //Digdogger kid
+
+//Dodongo Indices
+DEFINE NPCA_DODONGO_TYPE		= 8; //Tyoe of Dodongo
+	//Dodongo Type Settings
+	DEFINE NPCA_DODONGO_TYPE_NES = 0; //NES Dodongo
+	DEFINE NPCA_DODONGO_TYPE_BS 	= 1; //BS Dodongo
+
+//Gleeok Indices
+DEFINE NPCA_GLEEOK_HEADS 		= 0;
+DEFINE NPCA_GLEEOK_HEAD_HP 		= 1;
+DEFINE NPCA_GLEEOK_WEAPON 		= 2;
+	//Gleeok Weapon Settings
+	DEFINE NPCA_GLEEOK_1SHOT	= 0;
+	DEFINE NPCA_GLEEOK_BREATH	= 2;
+DEFINE NPCA_GLEEOK_CLK 		= 3; //48 by defaault. 
+//IDK what this setting does. It is th Clk line param in esGleeok::esGleeok, but Clk is not used in the function. -Z
+DEFINE NPCA_GLEEOK_NECK_SEGMENTS 	= 4;
+DEFINE NPCA_GLEEOK_NECK_OFFSET_1 	= 5;
+DEFINE NPCA_GLEEOK_NECK_OFFSET_2	= 6;
+DEFINE NPCA_GLEEOK_HEAD_OFFSET  	= 7;
+DEFINE NPCA_GLEEOK_HEAD_FLY_OFFSET 	= 8;
+
+//Lanmola Indices
+DEFINE NPCA_LANMOLA_SEGMENTS  	= 0;
+DEFINE NPCA_LANMOLA_SEGMENT_LAG 	= 1;
+DEFINE NPCA_LANMOLA_SEGMENT_DROPS 	= 2;
+	//Lanmola Drop Settings
+	DEFINE NPCA_LANMOLA_NODROP	= 0;
+	DEFINE NPCA_LANMOLA_DROP	= 1;
+
+//Leever Indices
+DEFINE NPCA_LEVER_MOVE		= 0; //Engage Type
+	//Leever Movement Settings
+	DEFINE NPCA_LEEVER_PATH	= 0; //Link;s path
+	DEFINE NPCA1_LEEVER_INPLACE	= 1; //In Place
+	DEFINE NPCA_LEEVER_PATH2	= 0; //Link's path plus second (leever 3)
+DEFINE NPCA_LEVER_SUBMERGE_CSET	= 1;
+DEFINE NPCA_LEVER_EMERGE_STEP	= 2;
+
+//Manhandla Indices
+DEFINE NPCA_MANHANDLA_FRAMERATE	= 0;
+DEFINE NPCA_MANHANDLA_SIZE 		= 1;
+	//Manhandla Size Settings
+	DEFINE NPCA_MANHANDLA_SMALL 	= 0; //4-heads
+	DEFINE NPCA_MANHANDLA_LARGE 	= 1; //8-heads
+
+//Moldorm Indices
+DEFINE NPCA_MOLDORM_SEGMENTS 	= 0;
+DEFINE NPCA_MOLDORM_SEGMENT_DROPS 	= 1;
+	//Moldorm Drop Settings
+	DEFINE NPCA_MOLDORM_NODROP	= 0; //no drop per degment
+	DEFINE NPCA_MOLDORM_DROP	= 1; //drop per segment
+
+//Patra Indices
+DEFINE NPCA_PATRA_RINGEYES 		= 0;
+DEFINE NPCA_PATRA_INNEREYES 		= 1;
+DEFINE NPCA_PATRA_EYEHP 		= 2;
+DEFINE NPCA_PATRA_EYE_MOVEMENT 	= 3;
+	//Patra Eye Movmnt Settings
+	DEFINE NPCA_PATRA_CIRCLE 	= 0;
+	DEFINE NPCA_PATRA_OVAL 	= 1;
+DEFINE NPCA_PATRA_SHOOTERS 		= 4;
+	//Patra Shooters Settings
+	DEFINE NPCA_PATRA_SHOOTERS_NONE = 0;
+	DEFINE NPCA_PATRA_SHOOTERS_CORE = 1;
+	DEFINE NPCA_PATRA_SHOOTERS_INNER = 2;
+DEFINE NPCA_PATRA_PATTERN_ODDS 	= 5;
+DEFINE NPCA_PATRA_PATTERN_CYCLES 	= 6;
+DEFINE NPCA_PATRA_EYE_OFFSET 	= 7;
+DEFINE NPCA_PATRA_EYE_CSET 		= 8;
+DEFINE NPCA_PATRA_TYPE 		= 9;
+	//Patra Type (Size) Settings
+	DEFINE NPCA_PATRA_SMALL 	= 0; //1x1 core
+	DEFINE NPCA_PATRA_LARGE 	= 1; //2x2 core
+
+//Rock Indices
+DEFINE NPCA_ROCK_SIZE 		= 9;
+	//Rock Settings
+	DEFINE NPCA_ROCK_SIZE_SMALL 	= 0; //1x1
+	DEFINE NPCA_ROCK_SIZE_LARGE 	= 1; //1x1
+
+//Wizzrobe Indices
+DEFINE NPCA_WIZ_WALKSTYLE 		= 0;
+	//Wizzrobe Walkstyle Settings
+	DEFINE NPCA_WIZ_TELEPORT 	= 0;
+	DEFINE NPCA_WIZ_PHASE 	= 1;
+DEFINE NPCA_WIZ_SHOTTYPE 		= 1;
+	//Wizzrobe Shot Type Settings
+	DEFINE NPCA_WIZ_1SHOT 	= 0;
+	DEFINE NPCA_WIZ_8SHOTS 	= 1;
+	DEFINE NPCA_WIZ_SUMMON 	= 2;
+	DEFINE NPCA_WIZ_SUMMON_LAYER = 3;
+DEFINE NPCA_WIZ_SHOT_ATTR_1 		= 2;
+DEFINE NPCA_WIZ_SOLIDCOMBOS 		= 3;
+	//Wizzrobe Solid Combos Settings
+	DEFINE NPCA_WIZ_SOLID_OK_NO 	= 0;
+	DEFINE NPCA_WIZ_SOLID_OK_YES = 1;
+DEFINE NPCA_WIZ_TELEPORT_DELAY 	= 4;
+
+	
+//Trap Indices
+DEFINE NPCA_TRAP_DIR 		= 0;
+	//Trap Dir Settings
+	DEFINE NPCA_TRAP_DIR_4WAY 	= 0;
+	DEFINE NPCA_TRAP_DIR_H 	= 1; //horizontal
+	DEFINE NPCA_TRAP_DIR_V 	= 2; //vertical
+DEFINE NPCA_TRAP_MOVE 		= 1;
+	//Trap Movement Settings
+	DEFINE NPCA_TRAP_MOVE_LOS 	= 0; //line of sight
+	DEFINE NPCA_TRAP_MOVE_CONSTANT = 1;
+
+
+//Tektite Indices
+DEFINE NPCA_TEKTITE_JUMP_START 	= 0;
+DEFINE NPCA_TEKTITE_JUMP_CONT 	= 1;
+DEFINE NPCA_TEKTITE_JUMP_VELOCITY 	= 2;
+
+
+
+
+
+
+
+
+DEFINE MAX_FONT = 100;
+DEFINE MIN_FONT = 0;
+DEFINE NUM_FONTS = MAX_FONT+1;
+
+
+
+// Render Targets. Used with Screen->"*RenderTarget" and Screen->"Bitmap" drawing functions.
+enum RenderTarget
+{
+	RT_CURRENT                     = -2, // Used with Blit(). mode7(), and RevBlit() for the current RT as dest.
+	RT_SCREEN                      = -1, // Draws to screen.
+	RT_BITMAP0                     = 0,  // Draws to off-screen bitmap 0.
+	RT_BITMAP1                     = 1,  // Draws to off-screen bitmap 1.
+	RT_BITMAP2                     = 2,  // Draws to off-screen bitmap 2.
+	RT_BITMAP3                     = 3,  // Draws to off-screen bitmap 3.
+	RT_BITMAP4                     = 4,  // Draws to off-screen bitmap 4.
+	RT_BITMAP5                     = 5,  // Draws to off-screen bitmap 5.
+	RT_BITMAP6                     = 6,  // Draws to off-screen bitmap 6.
+};
+
+//Screen Flag categories. Flags from each category are ORed together, starting with the first flag
+//See Screen Data dialog for what flags are contained in each category. Use in Screen->Flags
+enum
+{
+	SF_ROOMTYPE,
+	SF_VIEW,
+	SF_SECRETS,
+	SF_WARP,
+	SF_ITEMS,
+	SF_COMBOS,
+	SF_SAVE,
+	SF_FFC,
+	SF_WHISTLE,
+	SF_MISC,
+	SF_LAST
+};
+
+//Screen Flag Roomtype
+enum
+{
+	SFR_INTERIOR,
+	SFR_DUNGEON,
+	SFR_SIDEVIEW,
+	
+	SFR_LAST
+};
+
+//Screen Flag View
+enum
+{
+	SFV_INVISLINK,
+	SFV_NOLINKMARKER,
+	SFV_NOSUBSCREEN,
+	SFV_NOOFFSET,  //'...but don't offset'
+	SFV_LAYER2BG,  //Layer 2 is Background
+	SFV_LAYER3BG,
+	SFV_DARKROOM, 
+	SFV_DARK_DITHER, 
+	SFV_DARK_TRANS, 
+	
+	SFV_LAST
+};
+
+//Screen Flag Secrets
+enum
+{
+	SFS_BLOCKSHUT, //Block->Shutters
+	SFS_TEMPSECRETS, //Secrets are temporary.
+	SFS_TRIGPERM,  //All Triggers->Perm Secret
+	SFS_ALLTRIGFLAGS,  //All triggers->16-31
+	
+	SFS_LAST
+};
+
+//Screen Flag Warp
+enum
+{
+	SFW_AUTODIRECT, //Auto Warps are Direct
+	SFW_SENDSIRECT, //Sensitive Warps are direct.
+	SFW_MAZEPATHS,  //Use maze Path
+	SFW_MAZEOVERRIDE,  //maze Overrides Sidewarps
+	SFW_SPRITECARRY, //Sprites carry over. 
+	SFW_DISABLE_MIRROR, //Disable Magic Mirror
+	
+	SFW_LAST
+};
+
+
+//Screen Flag Items
+enum 
+{
+	SFI_HOLDUP, //Hold up item.
+	SFI_FALLS, //Falls from ceiling
+	SFI_SECRETSITEM,  //Secret reveals item
+	SFI_ITEMSECRET,  //Item triggers secrets
+	SFI_ITEMSECRETPERM, //Item triggering secrets is permanent
+	SFI_ITEMRETURNS, //Regular item always returns
+	SFI_SPECIALITEMRETURNS, //Special item always returns
+	
+	SFI_LAST
+};
+
+//Screen Flag Combos
+enum
+{
+	SFC_MIDAIR, //Combos affect midair Link
+	SFC_CYCLEINIT, //Cycle combos on screen init.
+	SFC_IGNOREBOOTS,  //Damage combos ignore boots. 
+	SFC_TOGGLERINGS,  //Toggle 'Rings Affect Combos'
+	
+	SFC_LAST
+};
+
+//Screen Flag Save
+enum
+{
+	SFSV_SAVECONTHERE, //Save Point->ontinue here.
+	SFSV_SAVEONENTRY, //Save game on entry.
+	SFSV_CONTHERE,  //Comtinue here.
+	SFSV_NOCONTINUEWARP,  //No continue Here after warp. 
+	
+	SFSV_LAST
+};
+
+//Screen Flags FFC
+enum
+{
+	SFF_WRAP,   //Freeform Combos Wrap Around
+	SFF_NOCARRYOVER, //No FFC carry over. 
+	
+	SFF_LAST
+};
+
+//Screen Flags Whistle
+enum
+{
+	SFWH_STAIRS = 0, //Whistle->Stairs
+	SFWH_PALCHANGE, //Whistle->Palette Change
+	SFWH_DRYLAKE,  //Whistle->Dry lake
+	
+	SFWH_LAST
+};
+
+//Old constants, use the ones above.
+DEFINE SFW_STAIRS = SFWH_STAIRS; //Whistle->Stairs
+DEFINE SFW_PALCHANGE = SFWH_PALCHANGE; //Whistle->Palette Change
+DEFINE SFW_DRYLAKE = SFWH_DRYLAKE;  //Whistle->Dry lake
+
+//Misc. Screen flags. Bitshift 1 by the constant and OR to use.
+enum
+{
+	SFM_ALLOW_LADDER,   //Toggle 'Allow Ladder'
+	SFM_NO_DIVING,      //Toggle 'No Diving' 
+	SFM_SCRIPT1,         //General use 1 (Scripts)
+	SFM_SCRIPT2,         //General use 2 (Scripts)
+	SFM_SCRIPT3,        //General use 3 (Scripts)
+	SFM_SCRIPT4,        //General use 4 (Scripts)
+	SFM_SCRIPT5,        //General use 5 (Scripts)
+
+	SFM_LAST
+};
+
+
+// See [ScreenEnemyFlagIndex].
+enum ScreenEnemyFlagSpawn
+{
+	SEFSP_ZORA,
+	SEFSP_CORNERTRAP,
+	SEFSP_MIDDLETRAP,
+	SEFSP_ROCK,
+	SEFSP_SHOOTER,
+	
+	SEFSP_LAST
+};
+
+// See [ScreenEnemyFlagIndex].
+enum ScreenEnemyFlagList1
+{
+	SEFL1_RINGLEADER,
+	SEFL1_CARRYITEM,
+	SEFL1_INVIS,
+	SEFL1_BOSS,
+	SEFL1_TRAPS_IGNORE_SOLID,
+	
+	SEFL1_LAST
+};
+
+// See [ScreenEnemyFlagIndex].
+enum ScreenEnemyFlagList2
+{
+	SEFL2_ALWAYSRET,
+	SEFL2_ENEMIES_ITEM,
+	SEFL2_ENEMEIS_SECRET,
+	SEFL2_ENEMIES_SECRET_PERM,
+	SEFL2_CHAIN_ENEMIES_TRIGGERS,
+	
+	SEFL2_LAST
+};
+
+
+
+// Used with [dmapdata::Flagset].
+enum DMapFlag
+{
+	DMFS_CAVESNOTCELLARS,     //Use caves instead of item cellars
+	DMFS_3STAIRWARPS,         //Allow 3-stair warps
+	DMFS_WWIND,               //Allow whistle whirlwinds
+	DMFS_GUYCAVES,            //Special rooms and guys are in caves only
+	DMFS_NOCOMPASS,           //Don't display compass marker in minimap
+	DMFS_WAVY,                //Underwater wave effect
+	DMFS_WWINDRET,            //Whistle whirlwind returns Link to beginning
+	DMFS_ALWAYSINTROMSG,      //Always display intro string
+	DMFS_VIEWMAP,             //View overworld map by pressing 'Map'
+	DMFS_DMAPMAP,             //...But only show screens marked in minimap
+	DMFS_MINIMAPCOLORFIX,     //Use minimap foreground color 2
+	DMFS_MINIMAPCOLOURFIX = DMFS_MINIMAPCOLORFIX,    //Use minimap foreground color 2
+	DMFS_SCRIPT1,             //DMap Script Flag 1
+	DMFS_SCRIPT2,             //DMap Script Flag 2
+	DMFS_SCRIPT3,             //DMap Script Flag 3
+	DMFS_SCRIPT4,             //DMap Script Flag 4
+	DMFS_SCRIPT5,             //DMap Script Flag 5
+	DMFS_RESERVED,            //RESERVED DO NOT USE
+	DMFS_LAYER3ISBACKGROUND,  //Layer 3 is Background
+	DMFS_LAYER2ISBACKGROUND,  //Layer 2 is Background
+	DMFS_TRUECELLARENEMIES,   //True Cellar Enemies
+	DMFS_BUNNY,               //Become Bunny with no Pearl
+	DMFS_MIRRORCONTINUE,      //Mirror Continues instead of Warping
+	DMFS_MAX
+};
+
+//Screen states. Use these with Screen->State[], etc.
+enum ScreenState {
+	ST_DOORUP             = 0, // The locked/bomb door has been permanently unlocked/bombed
+	ST_DOORDOWN           = 1, // The locked/bomb door has been permanently unlocked/bombed
+	ST_DOORLEFT           = 2, // The locked/bomb door has been permanently unlocked/bombed
+	ST_DOORRIGHT          = 3, // The locked/bomb door has been permanently unlocked/bombed
+	ST_ITEM               = 4, // If set, the item is gone
+	ST_SPECIALITEM        = 5, // If set, the Cave/Item Cellar/Dive For Item/Armos item is gone
+	ST_ENEMYNORETURN      = 6, // If set, enemies won't return
+	ST_TEMPNORETURN       = 7, // If set, enemies won't return. This is automatically unset when you leave the DMap
+	ST_LOCKBLOCK          = 8, // The lock block on the screen has been triggered
+	ST_BOSSLOCKBLOCK      = 9, // The boss lock block on the screen has been triggered
+	ST_CHEST              = 10, // The unlocked chest on this screen has been opened
+	ST_LOCKEDCHEST        = 11, // The locked chest on this screen has been opened
+	ST_BOSSCHEST          = 12, // The boss chest on this screen has been opened
+	ST_SECRET             = 13, // Screen Secrets have been made permanent
+	ST_VISITED            = 14, // If set, this screen will appear on the Overworld Map
+	ST_LIGHTBEAM          = 15  // If set, the light triggers on the screen have been triggered
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Used with [Hero->SetItemSlot].
+enum ItemSlot { ITM_SLOT_B, ITM_SLOT_A, ITM_SLOT_X, ITM_SLOT_Y };
+
+
+//MapData
+
+
+
+
+
+
+DEFINEF DIR16_DEG_INCREMENT = 22.5; //Number of degrees per 1/16 rotation
+
+DEFINEF DIR16_DEG_UP 		= 270;
+DEFINEF DIR16_DEG_UPUPLEFT = 247.5;
+
+DEFINEF DIR16_DEG_UPLEFT 	= 225;
+DEFINEF DIR16_DEG_LEFTLEFTUP = 202.5;
+DEFINEF DIR16_DEG_LEFT 		= 180;
+DEFINEF DIR16_DEG_LEFTLEFTDOWN = 157.5;
+DEFINEF DIR16_DEG_LEFTDOWN 	= 135;
+DEFINEF DIR16_DEG_DOWNDOWNLEFT = 112.5;
+DEFINEF DIR16_DEG_DOWN 		= 90;
+DEFINEF DIR16_DEG_DOWNDOWNRIGHT = 67.5;
+DEFINEF DIR16_DEG_RIGHTDOWN 	= 45;
+DEFINEF DIR16_DEG_RIGHTRIGHTDOWN = 22.5;
+DEFINEF DIR16_DEG_RIGHT 	= 0;
+DEFINEF DIR16_DEG_RIGHTUPUP  = 292.5;
+DEFINEF DIR16_DEG_RIGHTUP 	= 315;
+DEFINEF DIR16_DEG_RIGHTRIGHTUP 	= 337.5;
+
+
+DEFINEF DIR16_RADS_UP 		= 4.7214;
+DEFINEF DIR16_RADS_UPUPLEFT = 4.3197;
+DEFINEF DIR16_RADS_UPLEFT 	= 3.927;
+DEFINEF DIR16_RADS_LEFTLEFTUP = 3.5343;
+DEFINEF DIR16_RADS_LEFT 	= 3.1416; //3.1519; //Pi
+DEFINEF DIR16_RADS_LEFTLEFTDOWN = 2.7489;
+DEFINEF DIR16_RADS_LEFTDOWN 	= 2.3562; 
+DEFINEF DIR16_RADS_DOWNDOWNLEFT = 1.9635;
+DEFINEF DIR16_RADS_DOWN 	= 1.5708;
+DEFINEF DIR16_RADS_DOWNDOWNRIGHT = 1.1781;
+DEFINEF DIR16_RADS_RIGHTDOWN 	= 0.7854;
+DEFINEF DIR16_RADS_RIGHTRIGHTDOWN = 0.3927; 
+DEFINEF DIR16_RADS_RIGHT 	= 0; 
+DEFINEF DIR16_RADS_RIGHTRIGHTUP = 5.8905;
+DEFINEF DIR16_RADS_RIGHTUP 	= 5.4978;
+DEFINEF DIR16_RADS_RIGHTUPUP 	= 5.1141;
+
+// DMap Types for use with [dmapdata::Type]
+enum DMapType {
+	DMAP_DUNGEON,
+	DMAP_OVERWORLD,
+	DMAP_CAVE,
+	DMAP_BSOVERWORLD
+};
+
+
+
+
+
+
+
+//MIDI values, used for [Screen->MIDI], [dmapdata::MIDI], [mapdata::MIDI], [Audio->PlayMIDI].
+enum
+{
+    MIDI_USE_DMAP = -4, // ONLY for [Screen->MIDI] and [mapdata::MIDI].
+    MIDI_NONE,
+    MIDI_OVERWORLD,
+    MIDI_DUNGEON,
+    MIDI_LEVEL9 // Cannot be played by [Audio->PlayMIDI].
+};
+
+// Engine processes that can be paused. Used with [Game->Suspend].
+enum SuspendType { 
+	
+	// Combo animation
+	susptCOMBOANIM,
+	
+	// Main Sprite animation by type
+	susptGUYS, susptLWEAPONS, susptEWEAPONS, susptITEMS, susptLINK, 
+	
+	// FFC (e.g. movement, changers, but not scripts)
+	susptUPDATEFFC,
+	
+	// Sprite subclasses
+	susptDECORATIONS, susptPARTICLES, //sprite subclasses
+	
+	// Palette events
+	susptPALCYCLE, susptLAKES, //lake dries up
+	
+	// game system events
+	susptCOLLISIONS, susptCONTROLSTATE, susptONEFRAMECONDS, susptSCRIPDRAWCLEAR, susptQUAKE,
+
+	// Script Types
+	susptGLOBALGAME, susptNPCSCRIPTS, susptLWEAPONSCRIPTS, susptEWEAPONSCRIPTS, susptITEMSPRITESCRIPTS,
+
+	susptFFCSCRIPTS, susptLINKACTIVE, susptITEMSCRIPTENGINE, susptDMAPSCRIPT, susptSCREENSCRIPTS,
+	susptSUBSCREENSCRIPTS, susptCOMBOSCRIPTS,
+	
+	// Moving items
+	susptCONVEYORSITEMS = 60, susptDRAGGINGITEM, susptROAMINGITEM,
+	// Misc
+	susptLENS, susptHOOKSHOT, susptMOVINGBLOCKS, susptMAGICCAST, susptSCREENDRAW,
+
+	susptLAST,
+};
+
+
+
+// Used with [messagedata::Flags].
+enum MessageFlag
+{
+	MSGFLAG_WRAP,         // If the text wraps around the bounding box
+	MSGFLAG_CONT,         // If the message is the continuation of a previous one
+	MSGFLAG_CENTER,       // Reserved
+	MSGFLAG_RIGHT,        // Reserved
+	MSGFLAG_FULLTILE,     // If the background tile should be treated as the UL of a tile block,
+	                      // instead of the UL of a 2x2 adjustable frame
+	MSGFLAG_TRANS_BG,     // If the background should be translucent
+	MSGFLAG_TRANS_FG,     // If the text should be translucent
+};
+
+// Flags for [GetMapscreenFlag], [SetMapscreenFlag].
+enum mapscreenflags
+{
+	// Room Types
+	MSF_INTERIOR, MSF_DUNGEON, MSF_SIDEVIEW,
+	
+	// View
+	MSF_INVISLINK, MSF_NOLINKMARKER, MSF_NOSUBSCREEN, MSF_NOOFFSET, MSF_LAYER3BG,
+	MSF_LAYER2BG, MSF_DARKROOM,
+	
+	// Secrets
+	MSF_BLOCKSHUT, MSF_TEMPSECRETS, MSF_TRIGPERM, MSF_ALLTRIGFLAGS,
+	
+	// Warp
+	MSF_AUTODIRECT, MSF_SENDSIRECT, MSF_MAZEPATHS, MSF_MAZEOVERRIDE, MSF_SPRITECARRY,
+	MSF_DIRECTTIMEDWARPS, MSF_SECRETSISABLETIMEWRP, MSF_RANDOMTIMEDWARP,
+	
+	// Item
+	MSF_HOLDUP, MSF_FALLS,
+	
+	// Combo
+	MSF_MIDAIR, MSF_CYCLEINIT, MSF_IGNOREBOOTS, MSF_TOGGLERINGS,
+	
+	// Save
+	MSF_SAVECONTHERE, MSF_SAVEONENTRY, MSF_CONTHERE, MSF_NOCONTINUEWARP,
+	
+	// FFC
+	MSF_WRAPFFC, MSF_NOCARRYOVERFFC, 
+	
+	// Whistle 
+	MSF_STAIRS, MSF_PALCHANGE, MSF_DRYLAKE,
+	
+	// Enemies
+	MSF_INVISIBLEENEMIES, MSF_TRAPS_IGNORE_SOLID, MSF_EMELIESALWAYSRETURN, MSF_ENEMIES_ITEM, MSF_ENEMEIS_SECRET,
+	MSF_ENEMIES_SECRET_PERM,
+	
+	// Misc
+	MSF_ALLOW_LADDER, MSF_NO_DIVING, MSF_SFXONENTRY, MSF_LENSEFFECT,
+		 
+	//Custom / Script 
+	MSF_SCRIPT1,
+	MSF_CUSTOM1 = MSF_SCRIPT1,
+	MSF_SCRIPT2,
+	MSF_CUSTOM2 = MSF_SCRIPT2,
+	MSF_SCRIPT3,
+	MSF_CUSTOM3 = MSF_SCRIPT3,
+	MSF_SCRIPT4,
+	MSF_CUSTOM4 = MSF_SCRIPT4,
+	MSF_SCRIPT5,
+	MSF_CUSTOM5 = MSF_SCRIPT5,
+	MSF_LAST
+};
+
+// @deprecated Use [MoveFlag] instead.
+enum HeroMoveFlag
+{
+	HEROMV_OBEYS_GRAVITY,
+	HEROMV_CAN_PITFALL,
+	HEROMV_NO_FAKE_Z = 8,
+	HEROMV_NO_REAL_Z
+};
+
+// @deprecated Use [MoveFlag] instead.
+enum ItemspriteMoveFlag
+{
+	ITEMMV_OBEYS_GRAVITY,
+	ITEMMV_CAN_PITFALL,
+	ITEMMV_NO_FAKE_Z = 8,
+	ITEMMV_NO_REAL_Z
+};
+
+// @deprecated Use [MoveFlag] instead.
+enum WeaponMoveFlag
+{
+	WPNMV_OBEYS_GRAVITY,
+	WPNMV_CAN_PITFALL,
+	WPNMV_NO_FAKE_Z = 8,
+	WPNMV_NO_REAL_Z
+};
+
+enum MoveFlag
+{
+	MV_OBEYS_GRAVITY,
+	MV_CAN_PITFALL,
+	MV_NO_FAKE_Z = 8,
+	MV_NO_REAL_Z
+};
+
+
+// "special" walk flags
+enum NPCWalkType
+{
+	SPW_NONE, SPW_DOOR, SPW_CLIPRIGHT, SPW_FLOATER, SPW_TRAP, SPW_HALFSTEP, 
+	SPW_WATER, SPW_WIZZROBE, SPW_CLIPBOTTOMRIGHT
+};
+
+enum NPCMoveStatus
+{
+	NPCMS_PAUSED, NPCMS_SPEEDUP, NPCMS_NORMAL, NPCMS_SLOWDOWN
+};
+
+
+enum DitherType
+{
+	DITH_CHECKER, DITH_CHECKER_INV,
+	DITH_CRISS_CROSS, DITH_CRISS_CROSS_INV,
+	DITH_DIAG_ULDR, DITH_DIAG_ULDR_INV,
+	DITH_DIAG_URDL, DITH_DIAG_URDL_INV,
+	DITH_ROW, DITH_ROW_INV,
+	DITH_COL, DITH_COL_INV,
+	DITH_DOTS, DITH_DOTS_INV,
+	DITH_GRID, DITH_GRID_INV,
+	DITH_STATIC, DITH_STATIC_INV,
+	DITH_STATIC2, DITH_STATIC2_INV,
+	DITH_STATIC3, DITH_STATIC3_INV,
+	DITH_DOTS2, DITH_DOTS2_INV,
+	DITH_DOTS3, DITH_DOTS3_INV,
+	DITH_DOTS4, DITH_DOTS4_INV,
+	DITH_MAX
+};
+
+enum BottleFlag
+{
+	BTF_REVIVE,
+	BTF_USEWHENFULL,
+	BTF_CURESWORDJINX,
+	BTF_CUREITEMJINX,
+	BTF_CURESHIELDJINX,
+	BTF_MAX
+};
+
+enum ComboGeneralFlag
+{
+	GENFLAG_HOOKSHOTTABLE,
+	GENFLAG_SWITCHHOOKABLE,
+	GENFLAG_MAX
+};
+
+enum InteractButton
+{
+	INTBTN_A,
+	INTBTN_B,
+	INTBTN_L,
+	INTBTN_R,
+	INTBTN_EX1,
+	INTBTN_EX2,
+	INTBTN_EX3,
+	INTBTN_EX4,
+
+	INTBTN_X = INTBTN_EX1,
+	INTBTN_Y = INTBTN_EX2,
+};
+
+DEFINE BIT_INTBTN_A = 1b << INTBTN_A;
+DEFINE BIT_INTBTN_B = 1b << INTBTN_B;
+DEFINE BIT_INTBTN_L = 1b << INTBTN_L;
+DEFINE BIT_INTBTN_R = 1b << INTBTN_R;
+DEFINE BIT_INTBTN_EX1 = 1b << INTBTN_EX1;
+DEFINE BIT_INTBTN_EX2 = 1b << INTBTN_EX2;
+DEFINE BIT_INTBTN_EX3 = 1b << INTBTN_EX3;
+DEFINE BIT_INTBTN_EX4 = 1b << INTBTN_EX4;
+
+DEFINE BIT_INTBTN_X = BIT_INTBTN_EX1;
+DEFINE BIT_INTBTN_Y = BIT_INTBTN_EX2;
+
+enum ItemButton
+{
+	ITMBTN_A,
+	ITMBTN_B,
+	ITMBTN_X,
+	ITMBTN_Y,
+	NUM_ITMBTN
+};
+
+enum ComboTriggerFlag
+{
+	TRIGFLAG_SWORD, //Weapons->LWeapons->Sword - Triggered by Sword LWeapons
+	TRIGFLAG_SWORDBEAM, //Weapons->LWeapons->Sword Beam - Triggered by Sword Beam LWeapons
+	TRIGFLAG_BRANG, //Weapons->LWeapons->Boomerang - Triggered by Boomerang LWeapons
+	TRIGFLAG_BOMB, //Weapons->LWeapons->Bomb Boom - Triggered by Bomb (explosion) LWeapons
+	TRIGFLAG_SBOMB, //Weapons->LWeapons->Super Bomb Boom - Triggered by Super Bomb (explosion) LWeapons
+	TRIGFLAG_LITBOMB, //Weapons->LWeapons->Placed Bomb - Triggered by Bomb (placed) LWeapons
+	TRIGFLAG_LITSBOMB, //Weapons->LWeapons->Placed Super Bomb - Triggered by Super Bomb (placed) LWeapons
+	TRIGFLAG_ARROW, //Weapons->LWeapons->Arrow - Triggered by Arrow LWeapons
+	TRIGFLAG_FIRE, //Weapons->LWeapons->Fire - Triggered by Fire LWeapons
+	TRIGFLAG_WHISTLE, //Weapons->LWeapons->Whistle - Triggered by Whistle LWeapons (whistle played)
+	TRIGFLAG_BAIT, //Weapons->LWeapons->Bait - Triggered by Bait LWeapons
+	TRIGFLAG_WAND, //Weapons->LWeapons->Wand - Triggered by Wand Handle LWeapon
+	TRIGFLAG_MAGIC, //Weapons->LWeapons->Magic - Triggered by Magic LWeapons
+	TRIGFLAG_WIND, //Weapons->LWeapons->Wind - Triggered by Wind LWeapons
+	TRIGFLAG_REFMAGIC, //Weapons->LWeapons->Refl. Magic - Triggered by Reflected Magic LWeapons
+	TRIGFLAG_REFFIREBALL, //Weapons->LWeapons->Refl. Fireball - Triggered by Reflected Fireball LWeapons
+	TRIGFLAG_REFROCK, //Weapons->LWeapons->Refl. Rock - Triggered by Reflected Rock LWeapons
+	TRIGFLAG_HAMMER, //Weapons->LWeapons->Hammer - Triggered by Hammer LWeapon
+	TRIGFLAG_RESET_ANIM, //Effects->Reset Anim - On trigger, reset the animation of the combo.
+	TRIGFLAG_INVERT_PROXIMITY, //Other->Invert Proximity Req. - Proximity requirement is reversed
+	TRIGFLAG_BTN_TOP, //Other->Btn: Top - Triggered by button press from above
+	TRIGFLAG_BTN_BOTTOM, //Other->Btn: Bottom - Trigger by button press from below
+	TRIGFLAG_BTN_LEFT, //Other->Btn: Left - Trigger by button press from left
+	TRIGFLAG_BTN_RIGHT, //Other->Btn: Right - Trigger by button press from right
+	TRIGFLAG_INVERT_MIN_MAX, //Weapons->LWeapons->Max Level Instead - Treat the 'TriggerLevel' as a max instead of a min
+	TRIGFLAG_STEP, //Other->'Step->' - Triggered by 'Step->'
+	TRIGFLAG_STEP_SENS, //Other->'Step-> (Sensitive)' - Triggered by 'Step->Sensitive'
+	TRIGFLAG_SHUTTER, //Other->'Shutter->' - Triggered by 'Shutter->'
+	TRIGFLAG_CTYPE_EFFECTS, //Effects->'->ComboType Effects' - On trigger, cause the combo's type-related effects to occur. (ex: opening a chest)
+	TRIGFLAG_ONLY_GENTRIG, //Other->'Only Gen Triggers' - Don't allow the combo to trigger via it's normal trigger methods (ex: bush via slashing)
+	TRIGFLAG_KILL_WEAPON, //Weapons->Effects->'Kill Triggering Weapon' - If triggered by a weapon, kill the weapon.
+	TRIGFLAG_EW_FIREBALL, //Weapons->EWeapons->Fireball - Triggered by Fireball EWeapons
+	TRIGFLAG_HOOKSHOT, //Weapons->LWeapons->Hookshot - Triggered by Hookshot LWeapons
+	TRIGFLAG_SPARKLE, //Weapons->LWeapons->Sparkle - Triggered by Sparkle LWeapons
+	TRIGFLAG_BYRNA, //Weapons->LWeapons->Byrna - Triggered by Byrna LWeapons
+	TRIGFLAG_REFBEAM, //Weapons->LWeapons->Refl. Beam - Triggered by Reflected Beam LWeapons
+	TRIGFLAG_STOMP, //Weapons->LWeapons->Stomp - Triggered by Stomp Boot LWeapons
+	TRIGFLAG_SCRIPT1, //Weapons->LWeapons->Custom Weapon 1 - Triggered by 'Custom Weapon 01' LWeapons
+	TRIGFLAG_SCRIPT2, //Weapons->LWeapons->Custom Weapon 2 - Triggered by 'Custom Weapon 02' LWeapons
+	TRIGFLAG_SCRIPT3, //Weapons->LWeapons->Custom Weapon 3 - Triggered by 'Custom Weapon 03' LWeapons
+	TRIGFLAG_SCRIPT4, //Weapons->LWeapons->Custom Weapon 4 - Triggered by 'Custom Weapon 04' LWeapons
+	TRIGFLAG_SCRIPT5, //Weapons->LWeapons->Custom Weapon 5 - Triggered by 'Custom Weapon 05' LWeapons
+	TRIGFLAG_SCRIPT6, //Weapons->LWeapons->Custom Weapon 6 - Triggered by 'Custom Weapon 06' LWeapons
+	TRIGFLAG_SCRIPT7, //Weapons->LWeapons->Custom Weapon 7 - Triggered by 'Custom Weapon 07' LWeapons
+	TRIGFLAG_SCRIPT8, //Weapons->LWeapons->Custom Weapon 8 - Triggered by 'Custom Weapon 08' LWeapons
+	TRIGFLAG_SCRIPT9, //Weapons->LWeapons->Custom Weapon 9 - Triggered by 'Custom Weapon 09' LWeapons
+	TRIGFLAG_SCRIPT10, //Weapons->LWeapons->Custom Weapon 10 - Triggered by 'Custom Weapon 10' LWeapons
+	TRIGFLAG_AUTO, //Other->Always Triggered - Triggered automatically, every frame.
+	TRIGFLAG_TRIG_SECRETS, //Effects->Triggers Secrets - Triggered by 'Secrets->'
+	TRIGFLAG_INVERT_ITEMREQ, //Counters/Items->Invert Item Req - Invert the item requirement (require NOT having the item)
+	TRIGFLAG_CONSUME_ITEMREQ, //Counters/Items->Consume Item Req - On trigger, consume the required item.
+	TRIGFLAG_COUNTER_GE, //Counters/Items->'Require >=' - Only trigger if the counter has >= the specified amount
+	TRIGFLAG_COUNTER_LT, //Counters/Items->'Require <' - Only trigger if the counter has < the specified amount
+	TRIGFLAG_COUNTER_EAT, //Counters/Items->Consume Amount - Consume the specified amount from the counter. Negative amounts add.
+	TRIGFLAG_COUNTER_NOT_ONLY_TRIG_EAT, //Counters/Items->Consume w/o trig - Consume the specified amount from the counter even if the combo failed to trigger.
+	TRIGFLAG_LIGHTON, //Other->'Light On->' - Triggered by a lightbeam.
+	TRIGFLAG_LIGHTOFF, //Other->'Light Off->' - Triggered by lack of a lightbeam.
+	TRIGFLAG_PUSH, //Other->'Push->' - Triggered when the [Hero] pushes into the combo.
+	TRIGFLAG_LENS_ON, //Other->'Lens On->' - Triggered when the lens is revealing.
+	TRIGFLAG_LENS_OFF, //Other->'Lens Off->' - Triggered when the lens is not revealing.
+	TRIGFLAG_EW_ARROW, //Weapons->EWeapons->Arrow - Triggered by Arrow EWeapons
+	TRIGFLAG_EW_BRANG, //Weapons->EWeapons->Boomerang - Triggered by Boomerang EWeapons
+	TRIGFLAG_EW_SWORD, //Weapons->EWeapons->Sword - Triggered by Sword EWeapons
+	TRIGFLAG_EW_ROCK, //Weapons->EWeapons->Rock - Triggered by Rock EWeapons
+	TRIGFLAG_EW_SCRIPT1, //Weapons->EWeapons->Custom Weapon 1 - Triggered by 'Custom Weapon 01' EWeapons
+	TRIGFLAG_EW_SCRIPT2, //Weapons->EWeapons->Custom Weapon 2 - Triggered by 'Custom Weapon 02' EWeapons
+	TRIGFLAG_EW_SCRIPT3, //Weapons->EWeapons->Custom Weapon 3 - Triggered by 'Custom Weapon 03' EWeapons
+	TRIGFLAG_EW_SCRIPT4, //Weapons->EWeapons->Custom Weapon 4 - Triggered by 'Custom Weapon 04' EWeapons
+	TRIGFLAG_EW_SCRIPT5, //Weapons->EWeapons->Custom Weapon 5 - Triggered by 'Custom Weapon 05' EWeapons
+	TRIGFLAG_EW_SCRIPT6, //Weapons->EWeapons->Custom Weapon 6 - Triggered by 'Custom Weapon 06' EWeapons
+	TRIGFLAG_EW_SCRIPT7, //Weapons->EWeapons->Custom Weapon 7 - Triggered by 'Custom Weapon 07' EWeapons
+	TRIGFLAG_EW_SCRIPT8, //Weapons->EWeapons->Custom Weapon 8 - Triggered by 'Custom Weapon 08' EWeapons
+	TRIGFLAG_EW_SCRIPT9, //Weapons->EWeapons->Custom Weapon 9 - Triggered by 'Custom Weapon 09' EWeapons
+	TRIGFLAG_EW_SCRIPT10, //Weapons->EWeapons->Custom Weapon 10 - Triggered by 'Custom Weapon 10' EWeapons
+	TRIGFLAG_EW_MAGIC, //Weapons->EWeapons->Magic - Triggered by Magic EWeapons
+	TRIGFLAG_EW_BBLAST, //Weapons->EWeapons->Bomb Blast - Triggered by Bomb (explosion) EWeapons
+	TRIGFLAG_EW_SBBLAST, //Weapons->EWeapons->SBomb Blast - Triggered by Super Bomb (explosion) EWeapons
+	TRIGFLAG_EW_LITBOMB, //Weapons->EWeapons->Lit Bomb - Triggered by Bomb (unexploded) EWeapons
+	TRIGFLAG_EW_LITSBOMB, //Weapons->EWeapons->Lit SBomb - Triggered by Super Bomb (unexploded) EWeapons
+	TRIGFLAG_EW_FIRETRAIL, //Weapons->EWeapons->Fire Trail - Triggered by Fire Trail EWeapons
+	TRIGFLAG_EW_FLAME, //Weapons->EWeapons->Flame - Triggered by Flame EWeapons
+	TRIGFLAG_EW_WIND, //Weapons->EWeapons->Wind - Triggered by Wind EWeapons
+	TRIGFLAG_EW_FLAME2, //Weapons->EWeapons->Flame 2 - Triggered by Flame 2 EWeapons
+	TRIGFLAG_SPECIAL_ITEM, //States/Spawning->Spawns Special Item - The spawned item will be the special item
+	TRIGFLAG_EXST_ITEM, //States/Spawning->Trigger ExState after item pickup - Trigger ExState after picking up the spawned item
+	TRIGFLAG_EXST_ENEMY, //States/Spawning->Trigger ExState after enemy kill - Trigger ExState after killing the spawned enemy
+	TRIGFLAG_AUTOGRAB_ITEM, //States/Spawning->Spawned Item auto-collects - Spawned item auto-collects
+	TRIGFLAG_KILL_ENEMIES, //Other->'Enemies->' - Triggered when all enemies are killed
+	TRIGFLAG_SECRETSTR, //Other->'Secrets->' - Triggered when screen secrets are triggered
+	TRIGFLAG_THROWN, //Weapons->LWeapons->Thrown - Triggered by Thrown Object weapons
+	TRIGFLAG_QUAKESTUN, //Weapons->LWeapons->Quake Hammer - Triggered by a Quake Stun
+	TRIGFLAG_SQUAKESTUN, //Weapons->LWeapons->S. Quake Hammer - Triggered by a Super Quake Stun
+	TRIGFLAG_ANYFIRE, //Weapons->Other->Any Fire - Triggered by Any Fire
+	TRIGFLAG_STRONGFIRE, //Weapons->Other->Strong Fire - Triggered by Strong Fire
+	TRIGFLAG_MAGICFIRE, //Weapons->Other->Magic Fire - Triggered by Magic Fire
+	TRIGFLAG_DIVINEFIRE, //Weapons->Other->Divine Fire - Triggered by Divine Fire
+	TRIGFLAG_TRIGLEVELSTATE, //States/Spawning->'LevelState->' - Triggered by Level State
+	TRIGFLAG_LEVELSTATE, //States/Spawning->'->LevelState' - Triggers Level State
+	TRIGFLAG_TRIGGLOBALSTATE, //States/Spawning->'GlobalState->' - Triggered by Global State
+	TRIGFLAG_GLOBALSTATE, //States/Spawning->'->GlobalState' - Triggers Global State
+	TRIGFLAG_DO_KILL_ENEMIES, //Effects->Kill Enemies - Kill all enemies
+	TRIGFLAG_DO_CLEAR_ENEMIES, //Effects->Clear Enemies - Delete all enemies
+	TRIGFLAG_DO_CLEAR_LWEAPONS, //Effects->Clear LWeapons - Delete all lweapons
+	TRIGFLAG_DO_CLEAR_EWEAPONS, //Effects->Clear EWeapons - Delete all eweapons
+	TRIGFLAG_IGNITE_WEAPONS_ANY, //Weapons->Effects->Ignite Weapon (Any) - Light the triggering weapon on normal fire.
+	TRIGFLAG_IGNITE_WEAPONS_STRONG, //Weapons->Effects->Ignite Weapon (Strong) - Light the triggering weapon on strong fire.
+	TRIGFLAG_IGNITE_WEAPONS_MAGIC, //Weapons->Effects->Ignite Weapon (Magic) - Light the triggering weapon on magic fire.
+	TRIGFLAG_IGNITE_WEAPONS_DIVINE, //Weapons->Effects->Ignite Weapon (Divine) - Light the triggering weapon on divine fire.
+	TRIGFLAG_SEPARATE_WEAPON_TRIGGERS, //Weapons->Effects->Weapon Separate Triggers - Triggering weapons only trigger weapon-related effects
+	TRIGFLAG_TGROUP_CONTRIB, //States/Spawning->Contributes To TrigGroup - This combo contributes to its' TrigGroup
+	TRIGFLAG_TGROUP_LESS, //States/Spawning->'TrigGroup Less->' - When the number of combos that contribute to this combo's Trigger Group is LESS than the Trigger Group Val, trigger this combo.
+	TRIGFLAG_TGROUP_GREATER, //States/Spawning->'TrigGroup Greater->' - When the number of combos that contribute to this combo's Trigger Group is GREATER than the Trigger Group Val, trigger this combo.
+	TRIGFLAG_TRIG_PUSHED, //Other->'Pushed->' - Triggers when this combo, as a pushblock, settles into a new positon.
+	TRIGFLAG_TRIG_DIVE, //Other->'Dive->' - Triggers when the [Hero] dives on this combo.
+	TRIGFLAG_TRIG_DIVE_SENS, //Other->'Dive-> (Sensitive)' - Triggers when the [Hero] dives on this combo. More sensitive hitbox than 'TRIGFLAG_TRIG_DIVE'
+	TRIGFLAG_REFARROW, //Weapons->LWeapons->Refl. Arrow - Triggered by Reflected Arrow LWeapons
+	TRIGFLAG_REFFIRE, //Weapons->LWeapons->Refl. Fire - Triggered by Reflected Fire LWeapons
+	TRIGFLAG_REFFIRE2, //Weapons->LWeapons->Refl. Fire 2 - Triggered by Reflected Fire 2 LWeapons
+	TRIGFLAG_TOGGLE_DARKNESS, //Effects->Toggle Darkness - Toggle the screen being a dark room
+	TRIGFLAG_REQ_DARKNESS, //Other->Req. Darkness - Can only trigger if the screen is a dark room
+	TRIGFLAG_REQ_NO_DARKNESS, //Other->Req. Darkness - Can only trigger if the screen is lit (not a dark room)
+	TRIGFLAG_LITEM_REQUIRE, //Counters/Items->Require All - Require all the specified LItems to trigger the combo
+	TRIGFLAG_LITEM_INV_REQUIRE, //Counters/Items->Require Not All - Require not all (some is ok) of the specified LItems to trigger the combo
+	TRIGFLAG_LITEM_SET, //Counters/Items->'->Set' - Grants the specified LItems. If 'TRIGFLAG_LITEM_UNSET' is also on, toggles them instead.
+	TRIGFLAG_LITEM_UNSET, //Counters/Items->'->Unset' - Removes the specified LItems. If 'TRIGFLAG_LITEM_SET' is also on, toggles them instead.
+	TRIGFLAG_TINT_CLEAR, //Graphics->'->Clear Tint' - Clears the palette tint.
+	TRIGFLAG_ONLY_GROUNDED_WEAPONS, //Weapons->Other->'Only Grounded Weapons' - weapons with Z > 0 won't trigger the combo
+
+	TRIGFLAG_MAX_IN_USE,
+	TRIGFLAG_MAX = 32*6
+};
+
+//Higher blockflag bits are too high for zscript! Use long access...
+
+
+enum ScriptTiming
+{
+	SCR_TIMING_INIT = -1,
+	SCR_TIMING_START_FRAME, SCR_TIMING_POST_COMBO_ANIM, SCR_TIMING_POST_POLL_INPUT,
+	SCR_TIMING_POST_FFCS, SCR_TIMING_POST_GLOBAL_ACTIVE,
+	SCR_TIMING_POST_PLAYER_ACTIVE, SCR_TIMING_POST_DMAPDATA_ACTIVE,
+	SCR_TIMING_POST_DMAPDATA_PASSIVESUBSCREEN, SCR_TIMING_POST_COMBOSCRIPT,
+	SCR_TIMING_POST_PUSHBLOCK,
+	SCR_TIMING_POST_ITEMSPRITE_SCRIPT, SCR_TIMING_POST_ITEMSPRITE_ANIMATE,
+	SCR_TIMING_POST_NPC_ANIMATE, SCR_TIMING_POST_EWPN_ANIMATE, SCR_TIMING_POST_EWPN_SCRIPT,
+	SCR_TIMING_POST_OLD_ITEMDATA_SCRIPT, SCR_TIMING_POST_PLAYER_ANIMATE,
+	SCR_TIMING_POST_NEW_ITEMDATA_SCRIPT, SCR_TIMING_POST_CASTING,
+	SCR_TIMING_POST_LWPN_ANIMATE,
+	SCR_TIMING_POST_DECOPARTICLE_ANIMATE, SCR_TIMING_POST_COLLISIONS_PALETTECYCLE,
+	SCR_TIMING_WAITDRAW, SCR_TIMING_POST_GLOBAL_WAITDRAW, SCR_TIMING_POST_PLAYER_WAITDRAW,
+	SCR_TIMING_POST_DMAPDATA_ACTIVE_WAITDRAW, SCR_TIMING_POST_DMAPDATA_PASSIVESUBSCREEN_WAITDRAW,
+	SCR_TIMING_POST_SCREEN_WAITDRAW, SCR_TIMING_POST_FFC_WAITDRAW, SCR_TIMING_POST_COMBO_WAITDRAW,
+	SCR_TIMING_POST_ITEM_WAITDRAW, SCR_TIMING_POST_NPC_WAITDRAW, SCR_TIMING_POST_EWPN_WAITDRAW,
+	SCR_TIMING_POST_LWPN_WAITDRAW, SCR_TIMING_POST_ITEMSPRITE_WAITDRAW,
+	SCR_TIMING_PRE_DRAW, SCR_TIMING_POST_DRAW, SCR_TIMING_POST_STRINGS, SCR_TIMING_END_FRAME,
+	SCR_NUM_TIMINGS
+};
+
+// Used with [genericdata::ExitState] and [genericdata::ReloadState].
+enum GenericScriptStateIndex
+{
+	GENSCR_ST_RELOAD, //When reloading from save select screen
+	GENSCR_ST_CONTINUE, //When F6->Continue
+	GENSCR_ST_CHANGE_SCREEN, //When screen changes
+	GENSCR_ST_CHANGE_DMAP, //When dmap changes
+	GENSCR_ST_CHANGE_LEVEL, //When level changes
+	GENSCR_NUMST
+};
+
+// Used with [WaitEvent].
+enum GenericScriptEvent
+{
+	GENSCR_EVENT_NIL = -1, //N/A (error value)
+	GENSCR_EVENT_INIT, //When loading in from a save/new quest
+	GENSCR_EVENT_CONTINUE, //When F6->Continue
+	GENSCR_EVENT_FFC_PRELOAD, //When FFCs run 'on screen init'
+	GENSCR_EVENT_CHANGE_SCREEN, //When the screen changes
+	GENSCR_EVENT_CHANGE_DMAP, //When the dmap changes
+	GENSCR_EVENT_CHANGE_LEVEL, //When the level changes
+	GENSCR_EVENT_HERO_HIT_1, //Hero is hit, before ring applied
+	GENSCR_EVENT_HERO_HIT_2, //Hero is hit, after ring applied
+	GENSCR_EVENT_COLLECT_ITEM, //Item is collected
+	GENSCR_EVENT_ENEMY_DROP_ITEM_1, //Enemy drops item (before item created)
+	GENSCR_EVENT_ENEMY_DROP_ITEM_2, //Enemy drops item (if & after item created)
+	GENSCR_EVENT_ENEMY_DEATH, //Enemy dying
+	GENSCR_EVENT_ENEMY_HIT1, //Enemy hit, before defenses
+	GENSCR_EVENT_ENEMY_HIT2, //Enemy hit, after defenses
+	GENSCR_EVENT_POST_COLLECT_ITEM, //After item is collected (post hold if held)
+	GENSCR_EVENT_PLAYER_FALL, //Hero falls in a pitfall
+	GENSCR_EVENT_PLAYER_DROWN, //Hero drowns
+	GENSCR_NUMEVENT
+};
+enum //Game->EventData[] indexes for 'GENSCR_EVENT_HERO_HIT_1' and 'GENSCR_EVENT_HERO_HIT_2'
+{
+	GENEV_HEROHIT_DAMAGE, //Damage to be taken
+	GENEV_HEROHIT_HITDIR, //Dir to be knocked in
+	GENEV_HEROHIT_NULLIFY, //Bool: to nullify the hit, or not
+	GENEV_HEROHIT_NAYRUON, //Bool: if nayru's love will nullify the damage, or not
+	GENEV_HEROHIT_IFRAMES, //Number of IFrames to have after hit, if not nullified
+	GENEV_HEROHIT_HITTYPE, //What type of object is hitting the hero ('OBJTYPE_')
+	GENEV_HEROHIT_HITOBJ, //The pointer to that object
+	GENEV_HEROHIT_HITTYPE2, //A second type of object (sometimes 'OBJTYPE_NONE')
+	GENEV_HEROHIT_HITOBJ2 //The pointer to the second object
+};
+enum //Game->EventData[] indexes for 'GENSCR_EVENT_COLLECT_ITEM'
+{
+	GENEV_ITEMCOL_ID, //Item ID to be gained
+	GENEV_ITEMCOL_PICKUP, //Pickup flags for the item pickup
+	GENEV_ITEMCOL_PSTR, //Pickup string to be displayed
+	GENEV_ITEMCOL_PSTRFLAGS, //Pickup string flags
+	GENEV_ITEMCOL_NULLIFY, //Bool: to nullify the item pickup, or not
+	GENEV_ITEMCOL_ITEMPTR, //'itemsprite' object pointer
+	GENEV_ITEMCOL_TYPE, //Type of hit; see GENEVT_ICTYPE_
+	GENEV_ITEMCOL_WPNPTR //'lweapon' object pointer, or 'NULL' if no weapon is available
+};
+enum //Game->EventData[] indexes for 'GENSCR_EVENT_ENEMY_DROP_ITEM_1'
+{
+	GENEV_EDI1_NPC, //the npc pointer
+	GENEV_EDI1_ITEMID, //the chosen item ID
+	GENEV_EDI1_DROPSET //the dropset the ID was chosen from
+	//If the ITEMID is set to `-2`, the dropset will be rolled automatically.
+	//ITEMID of -1 means no item will be dropped.
+};
+enum //Game->EventData[] indexes for 'GENSCR_EVENT_ENEMY_DROP_ITEM_2'
+{
+	GENEV_EDI2_NPC, //the npc pointer
+	GENEV_EDI2_ITM //the itemsprite pointer
+};
+enum //Game->EventData[] indexes for 'GENSCR_EVENT_ENEMY_DEATH'
+{
+	GENEV_EDEATH_DYING, //Bool: if the enemy is dying, or not (set false to cancel death)
+	GENEV_EDEATH_NPC //the npc pointer
+};
+enum //Game->EventData[] indexes for 'GENSCR_EVENT_ENEMY_HIT1' and 'GENSCR_EVENT_ENEMY_HIT2'
+{
+	GENEV_EHIT_POWER, //damage amount
+	GENEV_EHIT_DEFENSETYPE, //defense type
+	GENEV_EHIT_UNBLOCKABLE, //unblockable flagset
+	GENEV_EHIT_WEAPONID, //weapon ID
+	GENEV_EHIT_NULLIFY, //Bool: if true the hit will not connect
+	GENEV_EHIT_NPCPTR, //npc pointer
+	GENEV_EHIT_LWPNPTR //lweapon pointer
+};
+enum //Game->EventData[] indexes for 'GENSCR_EVENT_PLAYER_FALL' and 'GENSCR_EVENT_PLAYER_DROWN'
+{
+	GENEV_PLAYER_FALLDROWN_COMBO //The combo ID the [Hero] is falling/drowning into.
+};
+
+enum //constants for 'GENEV_ITEMCOL_TYPE'
+{
+	GENEVT_ICTYPE_COLLECT, //Hero collected the item
+	GENEVT_ICTYPE_MELEE, //Melee weapon collected the item
+	GENEVT_ICTYPE_MELEE_EW, //Melee weapon collected the item
+	GENEVT_ICTYPE_RANGED_DRAG //Ranged weapon collected, and will drag //Only 'NULLIFY' can be edited here
+};
+enum //constants for 'GENEV_HEROHIT_HITTYPE' / 'GENEV_HEROHIT_HITTYPE2'
+{
+	OBJTYPE_NONE = -1,
+	OBJTYPE_NPC, OBJTYPE_LWPN, OBJTYPE_EWPN, OBJTYPE_ITSPR, OBJTYPE_COMBODATA,
+	OBJTYPE_COMBOPOS, OBJTYPE_FFC,
+	NUM_OBJTYPE
+};
+
+
+
+enum //Combodata LiftFlags[]
+{
+	LF_LIFTABLE,
+	LF_DROPSET,
+	LF_DROPONLIFT,
+	LF_SPECIALITEM,
+	LF_NOUCSET,
+	LF_NOWPNCMBCSET,
+	LF_BREAKONSOLID
+};
+
+enum 
+{
+	CSPACE_RGB,
+	CSPACE_CMYK, 
+	CSPACE_HSV, CSPACE_HSV_CW, CSPACE_HSV_CCW, 
+	CSPACE_HSL, CSPACE_HSL_CW, CSPACE_HSL_CCW, 
+	CSPACE_LAB, 
+	CSPACE_LCH, CSPACE_LCH_CW, CSPACE_LCH_CCW,
+	CSPACE_NUMCSPACE
+};
+
+
+enum //For 'itemdata->RunScript()'
+{
+	ISCR_KILL, ISCR_RUN, ISCR_PERPETUAL
+};
+
+enum //For 'itemdata->PickupType'
+{
+	IPTYPE_DISABLED,
+	IPTYPE_SET,
+	IPTYPE_ADD,
+	IPTYPE_SUB,
+	IPTYPE_LIMIT
+};
+
+
+
+enum //spritedata->Flags[] indexes
+{
+	SPRFL_AUTOFLASH,
+	SPRFL_2PFLASH,
+	SPRFL_HFLIP,
+	SPRFL_VFLIP,
+	SPRFL_BEHIND,
+	NUM_SPRFL
+};
+
+enum //Light shapes for torch combos, lantern itemdata, and GlowShape variables
+{
+	LIGHT_CIRCLE,
+	LIGHT_CONE,
+	LIGHT_SQUARE
+};
+
+//Override Flag constants, compare with itemdata->OverrideFlags, itemdata->WeaponOverrideFlags and npcdata->OverrideFlags. These correspond to the "Enabled" checkboxes in the Graphics->Size tab in the Item and Enemy Editors. Add or OR (|) these together 
+const int SZOF_TILEWIDTH      = 1;     //0000000001b, 0x001
+const int SZOF_TILEHEIGHT     = 2;     //0000000010b, 0x002
+const int SZOF_HITWIDTH       = 4;     //0000000100b, 0x004
+const int SZOF_HITHEIGHT      = 8;     //0000001000b, 0x008
+const int SZOF_HITZHEIGHT     = 16;     //0000010000b, 0x010
+const int SZOF_HITXOFFSET     = 32;     //0000100000b, 0x020
+const int SZOF_HITYOFFSET     = 64;     //0001000000b, 0x040
+const int SZOF_DRAWXOFFSET    = 128;     //0010000000b, 0x080
+const int SZOF_DRAWYOFFSET    = 256;     //0100000000b, 0x100
+const int SZOF_DRAWZOFFSET    = 512;     //1000000000b, 0x200, Enemies only.
+
+//Special hardcoded draw layers
+//Note: These may draw multiple times, or no times at all, during a frame.
+//      Timing may vary from frame to frame, and based on QRs or other settings.
+enum
+{
+	SPLAYER_PLAYER_DRAW = -200000,  //The [Hero], when this occurs changes based on various conditions.
+	SPLAYER_EWEAP_BEHIND_DRAW, //Eweapons with 'Behind = true'
+	SPLAYER_EWEAP_FRONT_DRAW, //Eweapons with 'Behind = false'
+	SPLAYER_LWEAP_BEHIND_DRAW, //Lweapons with 'Behind = true'
+	SPLAYER_LWEAP_FRONT_DRAW, //Lweapons with 'Behind = false'
+	SPLAYER_LWEAP_ABOVE_DRAW, //Lweapons with (Z+FakeZ) > Init Data 'Jump Layer Height', IF the [Hero] is also above this height.
+	SPLAYER_CHAINLINK_DRAW, //Hookshot chain links. This may draw multiple times per frame.
+	SPLAYER_NPC_DRAW, //Enemies
+	SPLAYER_NPC_ABOVEPLAYER_DRAW, //Enemies 'grabbing' the [Hero], or with a higher Z than the [Hero]
+	SPLAYER_NPC_AIRBORNE_DRAW, //Flying enemies, or enemies in the Z axis (amount required QR dependant)
+	SPLAYER_ITEMSPRITE_DRAW, //Itemsprites
+	SPLAYER_FAIRYITEM_DRAW, //Moving fairies
+	SPLAYER_PUSHBLOCK, //Pushable Blocks
+	SPLAYER_MOVINGBLOCK, //Moving Pushable Blocks
+	SPLAYER_OVERHEAD_CMB, //Overhead combos
+	SPLAYER_OVERHEAD_FFC, //Overhead ffcs
+	SPLAYER_DARKROOM_UNDER, //Under dark room darkness
+	SPLAYER_DARKROOM_OVER, //Over dark room darkness
+	SPLAYER_FFC_DRAW, //Non-Overhead ffcs
+	SPLAYER_LENS_UNDER_1, //Lens drawing secrets/revealing things
+	SPLAYER_LENS_UNDER_2, //Lens drawing secrets/revealing things
+	SPLAYER_LENS_OVER //Lens drawing blackness to cover most of the screen
+};
+
+enum //for Hero->LiftFlags[]
+{
+	LIFTFL_DISABLE_SHIELD,
+	LIFTFL_DISABLE_ITEMS,
+	LIFTFL_NO_SWIMMING,
+	LIFTFL_DROP_ON_HIT,
+	LIFTFL_MAX
+};
+
+enum
+{
+	MR_SCREEN,
+	MR_DMAP,
+	MR_LEVEL,
+	MR_NEVER
+};
+
+enum
+{	
+	MRF_NOCUT,
+	MRF_REVERT
+};
+
+
+enum ItemBurnIndex
+{
+	ITM_BURNSPR_NO_BURN,
+	ITM_BURNSPR_ANY_BURN,
+	ITM_BURNSPR_STRONG_BURN,
+	ITM_BURNSPR_MAGIC_BURN,
+	ITM_BURNSPR_DIVINE_BURN,
+	ITM_BURNSPR_MAX
+};
+
+enum //Subscreen Types
+{
+	SSTYPE_ACTIVE,
+	SSTYPE_PASSIVE,
+	SSTYPE_OVERLAY,
+	SSTYPE_MAX
+};
+
+//Subscreen Flags
+enum
+{
+	SSFL_ACTIVE_NOPAGEWRAP,
+	SSFL_ACTIVE_OVERRIDE_SELECTOR,
+	SSFL_ACTIVE_MAX
+};
+enum
+{
+	SSFL_PASSIVE_MAX
+};
+enum
+{
+	SSFL_OVERLAY_MAX
+};
+
+enum //Transition Types
+{
+	TRANS_TY_INSTANT,
+	TRANS_TY_SLIDE,
+	TRANS_TY_PIXEL,
+	TRANS_TY_MAX
+};
+
+//Transition arguments
+enum
+{
+	TRANS_INSTANT_ARG_MAX
+};
+enum
+{
+	TRANS_SLIDE_ARG_DIR,
+	TRANS_SLIDE_ARG_SPEED,
+	TRANS_SLIDE_ARG_MAX
+};
+enum
+{
+	TRANS_PIXEL_ARG_INVERT,
+	TRANS_PIXEL_ARG_DURATION,
+	TRANS_PIXEL_ARG_XOFF,
+	TRANS_PIXEL_ARG_YOFF,
+	TRANS_PIXEL_ARG_MAX
+};
+
+enum TransitionFlagIndex
+{
+	TRANSFLAG_NO_HIDE_SELECTOR,
+	TRANSFLAG_MAX
+};
+
+
+enum SubscreenWidgetType
+{
+	SUBWIDG_NULL, SUBWIDG_FRAME, SUBWIDG_TEXT, SUBWIDG_LINE, SUBWIDG_RECT,
+	SUBWIDG_TIME, SUBWIDG_MMETER, SUBWIDG_LMETER, SUBWIDG_BTNITM, SUBWIDG_COUNTER,
+	SUBWIDG_OLDCTR, SUBWIDG_MMAPTITLE, SUBWIDG_MMAP, SUBWIDG_LMAP, SUBWIDG_BGCOLOR,
+	SUBWIDG_ITEMSLOT, SUBWIDG_MCGUFF_FRAME, SUBWIDG_MCGUFF, SUBWIDG_TILEBLOCK, SUBWIDG_MINITILE,
+	SUBWIDG_SELECTOR, SUBWIDG_LGAUGE, SUBWIDG_MGAUGE, SUBWIDG_TEXTBOX, SUBWIDG_SELECTEDTEXT,
+	SUBWIDG_MISCGAUGE, SUBWIDG_BTNCOUNTER,
+	SUBWIDG_MAX
+};
+
+enum //Visibility Flags
+{
+	SUBVISIB_CLOSED, //Visible while the active subscreen is closed
+	SUBVISIB_OPEN, //Visible while the active subscreen is open
+	SUBVISIB_SCROLLING, //Visible while the active subscreen is opening/closing
+	SUBVISIB_NO_MSGSTR, //Hide while a message string is displaying
+	SUBVISIB_MAX
+};
+
+enum //Widget genflags
+{
+	SUBW_GENFL_SELECTABLE,
+	SUBW_GENFL_PGMODE_NOWRAP,
+	SUBW_GENFL_SELECTOR_OVERRIDE,
+	SUBW_GENFL_MAX
+};
+
+enum SubscreenPageMode
+{
+	SUB_PGMODE_NONE, //no page change
+	SUB_PGMODE_NEXT, //next page
+	SUB_PGMODE_PREV, //previous page
+	SUB_PGMODE_TARG, //specified page
+	SUB_PGMODE_MAX
+};
+
+enum //Special Subscreen CSet Values
+{
+	SUB_CS_MCGUFF         = -1,
+	SUB_CS_MCGUFF_FRAME   = -2,
+	SUB_CS_OW_MAP         = -3,
+	SUB_CS_DUNG_MAP       = -4,
+	SUB_CS_BLUEFRAME      = -5,
+	SUB_CS_HCPIECES       = -6,
+	SUB_CS_SSVINE         = -7,
+	SUB_CS_MIN            = -8
+};
+enum //Special Subscreen Color Values
+{
+	SUB_COLOR_SYS_0       = -1,
+	SUB_COLOR_SYS_1       = -2,
+	SUB_COLOR_SYS_2       = -3,
+	SUB_COLOR_SYS_3       = -4,
+	SUB_COLOR_SYS_4       = -5,
+	SUB_COLOR_SYS_5       = -6,
+	SUB_COLOR_SYS_6       = -7,
+	SUB_COLOR_SYS_7       = -8,
+	SUB_COLOR_SYS_8       = -9,
+	SUB_COLOR_SYS_9       = -10,
+	SUB_COLOR_SYS_10      = -11,
+	SUB_COLOR_SYS_11      = -12,
+	SUB_COLOR_SYS_12      = -13,
+	SUB_COLOR_SYS_13      = -14,
+	SUB_COLOR_SYS_14      = -15,
+	SUB_COLOR_SYS_15      = -16,
+	SUB_COLOR_TEXT        = -17,
+	SUB_COLOR_CAPTION     = -18,
+	SUB_COLOR_OVERW_BG    = -19,
+	SUB_COLOR_DUNG_BG     = -20,
+	SUB_COLOR_DUNG_FG     = -21,
+	SUB_COLOR_CAVE_FG     = -22,
+	SUB_COLOR_BS_DARK     = -23,
+	SUB_COLOR_BS_GOAL     = -24,
+	SUB_COLOR_COMPASS_L   = -25,
+	SUB_COLOR_COMPASS_D   = -26,
+	SUB_COLOR_SUBSCR_BG   = -27,
+	SUB_COLOR_SUBSCR_SHD  = -28,
+	SUB_COLOR_MCGUFF_FRM  = -29,
+	SUB_COLOR_LMAP_BG     = -30,
+	SUB_COLOR_LMAP_FG     = -31,
+	SUB_COLOR_HERODOT     = -32,
+	SUB_COLOR_MSGTXT      = -33,
+	SUB_COLOR_TRANSPARENT = -34,
+	SUB_COLOR_MIN         = -35
+};
+enum //Special Subscreen Tile Values
+{
+	SUB_SPTILE_SSVINE     = -1,
+	SUB_SPTILE_MAGICMETER = -2,
+	SUB_SPTILE_MIN        = -3
+};
+
+enum // Flags for SUBWIDG_FRAME
+{
+	SUBW_FRAME_FLAG_TRANSP,
+	SUBW_FRAME_FLAG_OVERLAY,
+	SUBW_FRAME_NUMFLAGS
+};
+enum // Flags for SUBWIDG_TEXT
+{
+	SUBW_TEXT_NUMFLAGS
+};
+enum // Flags for SUBWIDG_LINE
+{
+	SUBW_LINE_FLAG_TRANSP,
+	SUBW_LINE_NUMFLAGS
+};
+enum // Flags for SUBWIDG_RECT
+{
+	SUBW_RECT_FLAG_TRANSP,
+	SUBW_RECT_FLAG_FILLED,
+	SUBW_RECT_NUMFLAGS
+};
+enum // Flags for SUBWIDG_TIME
+{
+	SUBW_TIME_FLAG_ALTSTR,
+	SUBW_TIME_NUMFLAGS
+};
+enum // Flags for SUBWIDG_MMETER
+{
+	SUBW_MMETER_NUMFLAGS
+};
+enum // Flags for SUBWIDG_LMETER
+{
+	SUBW_LMETER_FLAG_BOTTOM,
+	SUBW_LMETER_NUMFLAGS
+};
+enum // Flags for SUBWIDG_BTNITM
+{
+	SUBW_BTNITM_FLAG_TRANSP,
+	SUBW_BTNITM_NUMFLAGS
+};
+enum // Flags for SUBWIDG_COUNTER
+{
+	SUBW_COUNTER_FLAG_SHOW0,
+	SUBW_COUNTER_FLAG_ONLYSEL,
+	SUBW_COUNTER_NUMFLAGS
+};
+enum // Flags for SUBWIDG_OLDCTR
+{
+	SUBW_OLDCTR_FLAG_USEX,
+	SUBW_OLDCTR_NUMFLAGS
+};
+enum // Flags for SUBWIDG_MMAPTITLE
+{
+	SUBW_MMAPTITLE_FLAG_REQMAP,
+	SUBW_MMAPTITLE_FLAG_ONELINE,
+	SUBW_MMAPTITLE_NUMFLAGS
+};
+enum // Flags for SUBWIDG_MMAP
+{
+	SUBW_MMAP_FLAG_SHOWMAP,
+	SUBW_MMAP_FLAG_SHOWPLAYER,
+	SUBW_MMAP_FLAG_SHOWCOMPASS,
+	SUBW_MMAP_NUMFLAGS
+};
+enum // Flags for SUBWIDG_LMAP
+{
+	SUBW_LMAP_FLAG_SHOWMAP,
+	SUBW_LMAP_FLAG_SHOWROOM,
+	SUBW_LMAP_FLAG_SHOWPLAYER,
+	SUBW_LMAP_FLAG_LARGE,
+	SUBW_LMAP_NUMFLAGS
+};
+enum // Flags for SUBWIDG_BGCOLOR
+{
+	SUBW_BGCOLOR_NUMFLAGS
+};
+enum // Flags for SUBWIDG_ITEMSLOT
+{
+	SUBW_ITEMSLOT_FLAG_INVIS,
+	SUBW_ITEMSLOT_FLAG_NON_EQUIPPABLE,
+	SUBW_ITEMSLOT_MOVE_IGNORE_SPEC_SELTEXT,
+	SUBW_ITEMSLOT_MOVE_IGNORE_SPEC_DISPLAY,
+	SUBW_ITEMSLOT_FLAG_NO_INTERACT_WO_ITEM,
+	SUBW_ITEMSLOT_FLAG_NO_INTERACT_WO_EQUIP,
+	SUBW_ITEMSLOT_FLAG_NO_UNEQUIP,
+	SUBW_ITEMSLOT_NUMFLAGS
+};
+enum // Flags for SUBWIDG_MCGUFF_FRAME
+{
+	SUBW_MCGUFF_FRAME_FLAG_SHOWFRAME,
+	SUBW_MCGUFF_FRAME_FLAG_SHOWPIECES,
+	SUBW_MCGUFF_FRAME_FLAG_LARGEPIECES,
+	SUBW_MCGUFF_FRAME_NUMFLAGS
+};
+enum // Flags for SUBWIDG_MCGUFF
+{
+	SUBW_MCGUFF_FLAG_OVERLAY,
+	SUBW_MCGUFF_FLAG_TRANSP,
+	SUBW_MCGUFF_NUMFLAGS
+};
+enum // Flags for SUBWIDG_TILEBLOCK
+{
+	SUBW_TILEBLOCK_FLAG_OVERLAY,
+	SUBW_TILEBLOCK_FLAG_TRANSP,
+	SUBW_TILEBLOCK_NUMFLAGS
+};
+enum // Flags for SUBWIDG_MINITILE
+{
+	SUBW_MINITILE_FLAG_OVERLAY,
+	SUBW_MINITILE_FLAG_TRANSP,
+	SUBW_MINITILE_NUMFLAGS
+};
+enum // Flags for SUBWIDG_SELECTOR
+{
+	SUBW_SELECTOR_FLAG_TRANSP,
+	SUBW_SELECTOR_FLAG_LARGE,
+	SUBW_SELECTOR_FLAG_USEB,
+	SUBW_SELECTOR_NUMFLAGS
+};
+enum // Flags for SUBWIDG_LGAUGE,SUBWIDG_MGAUGE,SUBWIDG_MISCGAUGE
+{
+	SUBW_GAUGE_FLAG_MOD1,
+	SUBW_GAUGE_FLAG_MOD2,
+	SUBW_GAUGE_FLAG_MOD3,
+	SUBW_GAUGE_FLAG_MOD4,
+	SUBW_GAUGE_FLAG_UNIQUE_LAST,
+	SUBW_GAUGE_FLAG_FULL_TILE,
+	SUBW_GAUGE_FLAG_ANIMATE_UNDER,
+	SUBW_GAUGE_FLAG_ANIMATE_OVER,
+	SUBW_GAUGE_FLAG_ANIMATE_PERCENT,
+	SUBW_GAUGE_FLAG_ANIMATE_SKIP_FIRST,
+	SUBW_GAUGE_FLAG_INFITEM_REQUIRE,
+	SUBW_GAUGE_FLAG_INFITEM_DISALLOW,
+	SUBW_GAUGE_FLAG_GRID_RTOL,
+	SUBW_GAUGE_FLAG_GRID_TTOPB,
+	SUBW_GAUGE_FLAG_GRID_COLUMN_FIRST,
+	SUBW_GAUGE_FLAG_GRID_SNAKE_PATTERN,
+	SUBW_GAUGE_NUMFLAGS
+};
+enum // Flags for SUBWIDG_TEXTBOX
+{
+	SUBW_TEXTBOX_FLAG_WORDWRAP,
+	SUBW_TEXTBOX_NUMFLAGS
+};
+enum // Flags for SUBWIDG_SELECTEDTEXT
+{
+	SUBW_SELECTEDTEXT_FLAG_WORDWRAP,
+	SUBW_SELECTEDTEXT_NUMFLAGS
+};
+enum // Flags for SUBWIDG_BTNCOUNTER
+{
+	SUBW_BTNCOUNTER_FLAG_SHOW0,
+	SUBW_BTNCOUNTER_FLAG_NOCOLLAPSE,
+	SUBW_BTNCOUNTER_NUMFLAGS
+};

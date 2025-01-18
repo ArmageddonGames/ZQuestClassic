@@ -62,10 +62,7 @@ class subscreenpage {
 	// Returns the new cursor position found by moving in 'dir' from
 	// 'cursor_pos'.
 	//
-	// 'flags' determines:
-	//
-	// - SUBSEL_FLAG_NO_NONEQUIP: Skip widgets that are "Non-equippable"
-	// - SUBSEL_FLAG_NEED_ITEM: Skip widgets that currently have no equippable item
+	// [flags] are of type [MoveSubscreenSelectorBitflags].
 	//
 	// @zasm
 	//   SUBPAGE_MOVE_SEL

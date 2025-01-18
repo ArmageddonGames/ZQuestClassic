@@ -1,5 +1,5 @@
-// All internal classes, functions and properties are defined in `bindings`
-// This script is automatically imported for you.
+// All internal classes, functions and variables are defined in these `binding` files.
+// This script is automatically imported.
 
 /**
 ░░░░░░░▄▄▀▀▀▀▀▀▄▄░░░░░░░
@@ -15,6 +15,56 @@
 ░░░░▀▄▒░░░░░░░░░▒░▄▀░░░░
 ░░░░░░░▀▀▀▀▀▀▀▀▀▀░░░░░░░
 */
+
+// Variables and functions marked as `internal` are configured in these binding files
+// via special markup in comments:
+//
+// @zasm_var <VAR>
+//
+//   The ZASM variable to access for variables. Works for arrays too.
+//
+// @zasm_internal_array <number>
+//
+//    The ID for an internally-backed array. See `get_int_arr` in ffscript.cpp.
+//
+// @zasm_ref <VAR>
+//
+//   The ZASM variable to use as the `this` value for a class' internal functions. Omit to
+//   skip pushing anything for `this`.
+//
+// @zasm <followed by multiple lines>
+//
+//    Must be the last annotation. Used to provide instructions to an internal function.
+//    Any parameters are already pushed onto the stack. The value of D2 should contain
+//    the return result, if any.
+//
+// @vargs <number>
+//
+//    The xtra_vargs
+//
+// @delete
+//
+//   Mark a constructor as not available, preventing the class from being created with `new`.
+//
+// @deprecated <message>
+//
+//   Mark as deprecated, with an optional message.
+//
+// @exit
+//
+//   Mark that the function exits the script.
+//
+// @index, @value, @length, @param
+//
+//   These have no impact on the compiler, and serve only as documentation.
+//
+//   Use @param/@value to denote what type something should be, without making it a breaking
+//   change by changing from int to that type. For new stuff, prefer just using the actual type
+//   rather than using @param/@value. Though @param is still good for explaining something about
+//   a specific parameter.
+//
+// Additionally, text wrapped in square brackets at linkified if they resolve to another symbol.
+// For example: [bitmap], [Screen->ComboC], [bitmap::GetPixel].
 
 import "bindings/common.zh"
 import "bindings/sprite.zh"

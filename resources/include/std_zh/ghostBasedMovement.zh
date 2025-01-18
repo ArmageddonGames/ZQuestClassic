@@ -2,7 +2,7 @@
 //Author: EmilyV
 #option SHORT_CIRCUIT on
 
-#include "std_zh/std_constants.zh"
+#include "std_zh/std_constants2.zh"
 #include "std_zh/std_functions.zh"
 
 namespace GhostBasedMovement

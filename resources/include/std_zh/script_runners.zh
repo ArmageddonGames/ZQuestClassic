@@ -1,6 +1,6 @@
-#include "std_zh/std_constants.zh"
+#include "std_zh/std_constants2.zh"
 
-// Combo to be used for generic script vehicle FFCs. This should be
+// Combo to use for FFC scripts started by [RunFFCScript]. This should be
 // an invisible combo with no type or flag. It cannot be combo 0.
 const int FFCS_INVISIBLE_COMBO = 1;
 

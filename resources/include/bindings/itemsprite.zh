@@ -2,7 +2,9 @@
 
 typedef itemsprite item;
 
-// An active item on the screen. See [Screen->LoadItem] and [Screen->CreateItem].
+// An active item on the screen.
+//
+// See [Screen->LoadItem] and [Screen->CreateItem].
 //
 // @zasm_ref REFITEM
 // @extends sprite
@@ -20,12 +22,11 @@ class itemsprite {
 	// @zasm_var ITEMID
 	internal int ID;
 
-	// The type [itemdata] of the item. Uses the `IC_` constants.
-	//
+	// @value [ItemClass]
 	// @zasm_var ITEMFAMILY
 	internal int Type;
 
-	// The type [itemdata] of the item. Uses the `IC_` constants.
+	// Exactly the same as [Type] - use that instead.
 	//
 	// @zasm_var ITEMFAMILY
 	internal int Family;
@@ -71,9 +72,9 @@ class itemsprite {
 	// @zasm_var ITEMFLASH
 	internal bool Flash;
 
-	// The item pickup flags, as a bitwise flagset. Use the `IP_` constants to
-	// access. Take care when using any `INTERNAL` flags.
+	// The item pickup bitflags.
 	//
+	// @value [ItemPickupBitflags]
 	// @zasm_var ITEMPICKUP
 	internal int Pickup;
 
@@ -104,9 +105,9 @@ class itemsprite {
 	// @zasm_var ITEMPSTRING
 	internal int PickupString;
 
-	// The flags associated with the pickup string, as bitwise flags. Use the
-	// `IPSTR_` constants to access this.
+	// The bitflags associated with the pickup string.
 	//
+	// @value [PickupStringBitflags]
 	// @zasm_var ITEMPSTRINGFLAGS
 	internal int PickupStringFlags;
 

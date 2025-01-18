@@ -155,7 +155,7 @@ const char32 CHAR_DEL 		= 127; //Forward delete.
 
 //Extended ASCII
 
-//The following characters will not show in the ZQ editor, or in Zelda Classic, but you may use them 
+//The following characters will not show in the ZC editor, or the ZC player, but you may use them 
 //in HARDCODED ZScript Strings (not in the ZQ String Editor!) when making a Tile Font, so that you may
 //type non-English characters, and mathematical/currency symbols into hard-coded strings, and display
 //them using your Tile Font. 

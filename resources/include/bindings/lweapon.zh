@@ -86,8 +86,7 @@ class lweapon {
 	// @zasm_var LWPNFLASHCSET
 	internal int FlashCSet;
 
-	// The deadstate of the weapon, denoted by the [WeaponDeadState] (`WDS_`) constants.
-	//
+	// @value [WeaponDeadState]
 	// @zasm_var LWPNDEAD
 	internal int DeadState;
 
@@ -212,8 +211,7 @@ class lweapon {
 
 	// A set of weapon flags.
 	//
-	// Valid indices: [WeaponFlagIndex] (`WFLAG_`).
-	//
+	// @index [WeaponFlagIndex]
 	// @zasm_var LWPNFLAGS
 	internal bool Flags[];
 
@@ -264,8 +262,7 @@ class lweapon {
 
 	// The burning light radii associated with sprites of the weapon.
 	//
-	// Valid indices: [WeaponSpriteIndex] (`WPN_SPRITE_`).
-	//
+	// @index [WeaponSpriteIndex]
 	// @zasm_var LWPNBURNLIGHTRADIUS
 	internal int BurnLightRadius[];
 
@@ -299,14 +296,14 @@ class lweapon {
 	internal bool isValid();
 
 	// Loads the graphical information from the [spritedata] indicated by
-	// [spriteid].
+	// [sprite_id].
 	//
 	// @zasm
 	//   POP D2
 	//   POP D3
 	//   SETR REFLWPN D3
 	//   LWPNUSESPRITER D2
-	internal void UseSprite(int spriteid);
+	internal void UseSprite(int sprite_id);
 
 	// Creates an explosion particle effect in mode 0, 1, or 2 of the sprite.
 	//

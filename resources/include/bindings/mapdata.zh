@@ -27,8 +27,9 @@ class mapdata {
 	// @zasm_var MAPDATASTRING
 	internal int String;
 
-	// The screen room type. Use the `RT_` constants for this value.
+	// The special room type.
 	//
+	// @value [RoomType]
 	// @zasm_var MAPDATAROOM
 	internal int RoomType;
 
@@ -40,8 +41,7 @@ class mapdata {
 	// The Tile Warp type for Tile Warps A, B, C, and D; [0], [1], [2], and [3]
 	// respectively.
 	//
-	// Valid values: [WarpType] (`WT_`).
-	//
+	// @value [WarpType]
 	// @zasm_var MAPDATATILEWARPTYPE
 	internal int TileWarpType[];
 
@@ -131,16 +131,14 @@ class mapdata {
 
 	// The spawn pattern for the screen enemies.
 	//
-	// Valid values: [EnemyPattern] (`PATTERN_`).
-	//
+	// @value [EnemyPattern]
 	// @zasm_var MAPDATAPATTERN
 	internal int Pattern;
 
 	// The Sidewarp type for Sidewarps A, B, C, and D; [0], [1], [2], and [3]
 	// respectively.
 	//
-	// Valid values: [WarpType] (`WT_`).
-	//
+	// @value [WarpType]
 	// @zasm_var MAPDATASIDEWARPTYPE
 	internal int SideWarpType[];
 
@@ -162,8 +160,8 @@ class mapdata {
 
 	// The four directions you must go for the maze path.
 	//
-	// Valid indices: [DIR_UP], [DIR_DOWN], [DIR_LEFT], [DIR_RIGHT]
-	//
+	// @length 4
+	// @value [DIR_UP], [DIR_DOWN], [DIR_LEFT], [DIR_RIGHT]
 	// @zasm_var MAPDATAPATH
 	internal int MazePath[];
 
@@ -172,13 +170,12 @@ class mapdata {
 	// @zasm_var MAPDATASIDEWARPSC
 	internal int SideWarpScreen[];
 
-	// Returns the sidewarp ID for a given screen edge, as `SideWarpID[dir]`;
+	// The sidewarp ID for each screen edge.
 	//
-	// Returns [SIDEWARP_NONE] if there is no sidewarp in that direction.
+	// [SIDEWARP_NONE] if there is no sidewarp in that direction.
 	//
-	// Valid indices: [DIR_UP], [DIR_DOWN], [DIR_LEFT], [DIR_RIGHT]
-	// Valid values: [SideWarpIndex] (`SIDEWARP_`)
-	//
+	// @index [DIR_UP], [DIR_DOWN], [DIR_LEFT], [DIR_RIGHT]
+	// @value [SideWarpIndex]
 	// @zasm_var MAPDATASIDEWARPID
 	internal int SideWarpID[];
 
@@ -465,9 +462,9 @@ class mapdata {
 	// @zasm_var MAPDATACOMBOED
 	internal int ComboE[];
 
-	// The screen states used for this screen. Use the `ST_` constants to access
-	// this.
+	// The screen states used for this screen.
 	//
+	// @index [ScreenState]
 	// @zasm_var MAPDATASCREENSTATED
 	internal bool State[];
 

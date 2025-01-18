@@ -61,8 +61,7 @@ class sprite {
 	// The direction that the sprite is facing. Used by certain weapon types
 	// to determine movement, shield deflection and such.
 	//
-	// Valid values: [Direction] (`DIR_`).
-	//
+	// @value [Direction]
 	// @zasm_var SPRITE_DIR
 	internal int Dir;
 
@@ -134,8 +133,7 @@ class sprite {
 
 	// The drawing mode to use.
 	//
-	// Valid values: [DrawStyle] (`DS_`).
-	//
+	// @value [DrawStyle]
 	// @zasm_var SPRITE_DRAW_STYLE
 	internal int DrawStyle;
 
@@ -159,8 +157,7 @@ class sprite {
 
 	// How to flip (or rotate) the sprite.
 	//
-	// Valid values: [TransformationType] (`FLIP_` or `ROT_`).
-	//
+	// @value {@link TransformationType|TransformationType (FLIP_ or ROT_)}
 	// @zasm_var SPRITE_FLIP
 	internal int Flip;
 
@@ -232,7 +229,7 @@ class sprite {
 	// @zasm_var SPRITE_FALL_CMB
 	internal int FallCombo;
 
-	// The movement flags of the sprite. See [MoveFlag] (`MV_`) constants.
+	// The movement flags of the sprite. See [MoveFlag] constants.
 	//
 	// @zasm_var SPRITE_MOVE_FLAGS
 	internal bool MoveFlags[];

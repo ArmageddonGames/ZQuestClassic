@@ -1,6 +1,6 @@
 import "bindings/qrs.zh"
 
-// Use as index for [Game->Gravity].
+// Used with [Game->Gravity].
 enum GravityIndex
 {
 	GR_STRENGTH,
@@ -9,7 +9,7 @@ enum GravityIndex
 	GR_AIRDRAG
 };
 
-// Use as index for [Game->Scrolling].
+// Used with [Game->Scrolling].
 enum ScrollingIndex
 {
 	SCROLL_DIR,
@@ -19,7 +19,7 @@ enum ScrollingIndex
 	SCROLL_OY
 };
 
-// Use as index for [Game->MiscSprites].
+// Used with [Game->MiscSprites].
 enum MiscSpriteIndex
 {
 	MISCSPR_FALL,
@@ -29,7 +29,7 @@ enum MiscSpriteIndex
 	MISCSPR_MAX
 };
 
-// Use as index for [Game->MiscSFX].
+// Used with [Game->MiscSFX].
 enum MiscSfx
 {
 	MISCSFX_BUSH,
@@ -48,7 +48,7 @@ enum MiscSfx
 	MISCSFX_MAX
 };
 
-// Use as index for [Game->Generic].
+// Used with [Game->Generic].
 enum GenericIndex
 {
 	GEN_HEARTPIECES        = 0, // Heart Pieces currently possessed
@@ -189,32 +189,28 @@ class Game {
 
 	// The value of each of the game's counters.
 	//
-	// Valid indices: [CounterIndex] (`CR_`).
-	// Valid values: `0 to 65535`.
-	//
+	// @index [CounterIndex]
+	// @value `0–65535`
 	// @zasm_var GAMECOUNTERD
 	internal int Counter[];
 
 	// The max value of each of the game's counters.
 	//
-	// Valid indices: [CounterIndex] (`CR_`).
-	// Valid values: `0 to 65535`.
-	//
+	// @index [CounterIndex]
+	// @value `0–65535`
 	// @zasm_var GAMEMCOUNTERD
 	internal int MCounter[];
 
 	// The value of each of the game's drain counters.
 	//
-	// Valid indices: [CounterIndex] (`CR_`).
-	// Valid values: `-32768 to 32767`.
-	//
+	// @index [CounterIndex]
+	// @value `-32768–32767`
 	// @zasm_var GAMEDCOUNTERD
 	internal int DCounter[];
 
 	// Generic values related to the game.
 	//
-	// Valid indices: [GenericIndex] (`GEN_`).
-	//
+	// @index [GenericIndex]
 	// @zasm_var GAMEGENERICD
 	internal untyped Generic[];
 
@@ -282,8 +278,7 @@ class Game {
 
 	// The values of all Quest Rules.
 	//
-	// Valid indices: [QR] (`qr_`).
-	//
+	// @index [QR]
 	// @zasm_var FFRULE
 	internal bool FFRules[];
 
@@ -357,29 +352,25 @@ class Game {
 
 	// Values related to gravity.
 	//
-	// Valid indices: [GravityIndex] (`GR_`).
-	//
+	// @index [GravityIndex]
 	// @zasm_var GAMEGRAVITY
 	internal int Gravity[];
 
-	// values related to scrolling.
+	// Values related to scrolling.
 	//
-	// Valid indices: [ScrollingIndex] (`SCROLL_`).
-	//
+	// @index [ScrollingIndex]
 	// @zasm_var GAMESCROLLING
 	internal const int Scrolling[];
 
 	// The `Quest->Graphics->Sprites->Misc Sprites` values.
 	//
-	// Valid indices: [MiscSpriteIndex] (`MISCSPR_`).
-	//
+	// @index [MiscSpriteIndex]
 	// @zasm_var GAMEMISCSPR
 	internal int MiscSprites[];
 
 	// The `Quest->Audio->Misc SFX` values.
 	//
-	// Valid indices: [MiscSfx] (`MISCSFX_`).
-	//
+	// @index [MiscSfx]
 	// @zasm_var GAMEMISCSFX
 	internal int MiscSFX[];
 
@@ -394,8 +385,7 @@ class Game {
 	// Which mouse cursor should be displayed during gameplay.
 	// [ZCM_BLANK] is the default, and it resets on visiting the title screen.
 	//
-	// Valid values: [MouseCursor] (`ZCM_`).
-	//
+	// @value [MouseCursor]
 	// @zasm_var GAMEMOUSECURSOR
 	internal int MouseCursor;
 
@@ -1143,27 +1133,17 @@ class Game {
 	// Returns the current item of the selected [itemtype]. This generally
 	// returns the highest owned of an itemclass, with some exceptions.
 	//
-	// If [Game->OverrideItems[itemtype]] is set to an override value, that
-	// value will be returned.
-	//
-	// Use the `IC_` constants for itemtype, and the `CIID_FLAG_` constants
-	// bitwise-or'd for [flags].
-	//
-	// With `CIID_FLAG_CHECKCOST`, it will ignore items whose usecosts are
-	// currently not affordable.
-	//
-	// With `CIID_FLAG_CHECKJINX`, it will ignore items which are currently
-	// disabled by jinxes.
-	//
-	// With `CIID_FLAG_CHECKBUNNY`, it will ignore items which are currently
-	// disabled by BunnyClk.
+	// If the item is set to an override value via [Game->OverrideItems], that
+	// value is returned.
 	//
 	// Returns `-1` for 'no item'.
 	//
+	// @param [ItemClass] itemtype
+	// @param [CurrentItemIDBitflags] bitflags
 	// @zasm
 	//   CURRENTITEMID
 	//   POPARGS D5 0.0002
-	internal int CurrentItemID(int itemtype, int flags = 1L);
+	internal int CurrentItemID(int itemtype, int bitflags = 1L);
 
 	// Loads the [subscreendata] pointer for the specified
 	// active/passive/overlay subscreen.

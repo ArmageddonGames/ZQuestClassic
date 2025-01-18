@@ -5,8 +5,9 @@ class Audio {
 	// @delete
 	internal Audio();
 
-	// The audio panning style. Use the `PAN_` constants for this value.
+	// The audio panning style.
 	//
+	// @value Undocumented - see https://github.com/ZQuestClassic/ZQuestClassic/blob/5b2e5ccb2ee020ed0a72a0cce69e3b3ed81811eb/src/zc/zc_sys.cpp#L8393C9-L8393C13
 	// @zasm_var AUDIOPAN
 	internal int PanStyle;
 

@@ -45,14 +45,14 @@ class subscreendata {
 	// @zasm_var SUBDATAINITD
 	internal untyped InitD[];
 
-	// Use the `INTBTN_` constants to index this array.
+	// Use [InteractButton] to index this array.
 	//
 	// The 'true' buttons here, when pressed, change pages leftwards.
 	//
 	// @zasm_var SUBDATABTNLEFT
 	internal bool BtnPageLeft[];
 
-	// Use the `INTBTN_` constants to index this array.
+	// Use [InteractButton] to index this array.
 	//
 	// The 'true' buttons here, when pressed, change pages rightwards.
 	//
@@ -238,8 +238,7 @@ class subscreendata {
 
 	// The flags for the current transition.
 	//
-	// Use the `TRANSFLAG_` constants to access these.
-	//
+	// @index [TransitionFlagIndex]
 	// @zasm_var SUBDATATRANSFLAGS
 	internal bool TransFlags[];
 

@@ -19,8 +19,7 @@ class bottledata {
 	// @zasm_var BOTTLEPERCENT
 	internal bool IsPercent[];
 
-	// Valid indices: [BottleFlag] (`BTF_`).
-	//
+	// @index [BottleFlag]
 	// @zasm_var BOTTLEFLAGS
 	internal bool Flags[];
 

@@ -1,4 +1,4 @@
-650 / 794 (81%) passed
+648 / 794 (81%) passed
 
 Failures:
 	00026-deku-leaf/script.zs
@@ -141,10 +141,12 @@ Failures:
 	00533-test-play-init-data-backups/script.zs
 	00536-poker-combos/pokercombos.z
 	00536-poker-combos/script.zs
+	00546-oracle-trampoline/script.zs
 	00547--new-palette-based-day-night-system/DayNightNew.zs
 	00571-gumzol/gumzol.z
 	00571-gumzol/script.zs
 	00580-mani-s-script-header/script.zs
+	00589-temporary-no-return-item-drops/TempNoReturnItem.zs
 
 === 00026-deku-leaf/script.zs
 Pass 1: Parsing
@@ -14503,6 +14505,130 @@ script.zs Line 251 - Error T021: Function GetBestSequence(int[]) has not been de
 Failure!
 Compile finished with exit code '21' (compiled with errors)
 
+=== 00546-oracle-trampoline/script.zs
+Pass 1: Parsing
+Pass 2: Preprocessing
+Pass 3: Registration
+Pass 4: Analyzing Code
+script.zs Line 266 - Warning S094: Function 'screendata::GetTileWarpType(int)' is deprecated, and should not be used.
+
+264    {
+265        int effect;
+266        int type = Screen->GetTileWarpType(i);
+                      ^~~~~~~~~~~~~~~~~~~~~~~
+
+
+INFO: Use [TileWarpType] instead!
+script.zs Line 267 - Warning S094: Function 'screendata::GetTileWarpDMap(int)' is deprecated, and should not be used.
+
+265    int effect;
+266    int type = Screen->GetTileWarpType(i);
+267    int dmap = Screen->GetTileWarpDMap(i);
+                  ^~~~~~~~~~~~~~~~~~~~~~~
+
+
+INFO: Use [TileWarpDMap] instead!
+script.zs Line 268 - Warning S094: Function 'screendata::GetTileWarpScreen(int)' is deprecated, and should not be used.
+
+266    int type = Screen->GetTileWarpType(i);
+267    int dmap = Screen->GetTileWarpDMap(i);
+268    int scrn = Screen->GetTileWarpScreen(i);
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+INFO: Use [TileWarpScreen] instead!
+script.zs Line 239 - Error T017: Cannot cast from int to ComboFlag.
+
+237    {
+238        this->Walk = 0xF;
+239        this->Flag = 0;
+           ^~~~~~~~~~~~~~
+
+
+script.zs Line 73 - Warning S094: Function 'Game::PlaySound(int)' is deprecated, and should not be used.
+
+71    Waitframe();
+72    if(bounceSFX)
+73        Game->PlaySound(bounceSFX);
+          ^~~~~~~~~~~~~~~
+
+
+INFO: Use [Audio->PlaySound] instead!
+script.zs Line 92 - Warning S094: Function 'Game::PlaySound(int)' is deprecated, and should not be used.
+
+90    {
+91        if(bounceSFX)
+92            Game->PlaySound(bounceSFX);
+              ^~~~~~~~~~~~~~~
+
+
+INFO: Use [Audio->PlaySound] instead!
+script.zs Line 121 - Warning S094: Function 'Game::PlaySound(int)' is deprecated, and should not be used.
+
+119    Waitframe();
+120    if(bounceSFX)
+121        Game->PlaySound(bounceSFX);
+           ^~~~~~~~~~~~~~~
+
+
+INFO: Use [Audio->PlaySound] instead!
+script.zs Line 168 - Warning S094: Function 'Game::PlaySound(int)' is deprecated, and should not be used.
+
+166    Screen->Quake = 10;
+167    if(bonkSFX)
+168        Game->PlaySound(bonkSFX);
+           ^~~~~~~~~~~~~~~
+
+
+INFO: Use [Audio->PlaySound] instead!
+script.zs Line 370 - Warning S094: Function 'Game::GetCurDMap()' is deprecated, and should not be used.
+
+368        Quit();
+369    }
+370    int dmap = Game->GetCurDMap();
+                  ^~~~~~~~~~~~~~~~
+
+
+INFO: Use [CurDMap] instead!
+script.zs Line 371 - Warning S094: Function 'Game::GetCurDMapScreen()' is deprecated, and should not be used.
+
+369    }
+370    int dmap = Game->GetCurDMap();
+371    int scrn = Game->GetCurDMapScreen();
+                  ^~~~~~~~~~~~~~~~~~~~~~
+
+
+INFO: Use [CurDMapScreen] instead!
+script.zs Line 374 - Warning S094: Function 'Game::GetCurDMap()' is deprecated, and should not be used.
+
+372    this->Data[TDI_RUNFROMCOMBO] = false;
+373    // Wait for the screen to change
+374    while(dmap==Game->GetCurDMap()&&scrn==Game->GetCurDMapScreen())
+                   ^~~~~~~~~~~~~~~~
+
+
+INFO: Use [CurDMap] instead!
+script.zs Line 374 - Warning S094: Function 'Game::GetCurDMapScreen()' is deprecated, and should not be used.
+
+372    this->Data[TDI_RUNFROMCOMBO] = false;
+373    // Wait for the screen to change
+374    while(dmap==Game->GetCurDMap()&&scrn==Game->GetCurDMapScreen())
+                                             ^~~~~~~~~~~~~~~~~~~~~~
+
+
+INFO: Use [CurDMapScreen] instead!
+script.zs Line 444 - Warning S094: Function 'Game::PlaySound(int)' is deprecated, and should not be used.
+
+442    Screen->Quake = 10;
+443    if(this->Data[TDI_BONKSFX])
+444        Game->PlaySound(this->Data[TDI_BONKSFX]);
+           ^~~~~~~~~~~~~~~
+
+
+INFO: Use [Audio->PlaySound] instead!
+Failure!
+Compile finished with exit code '17' (compiled with errors)
+
 === 00547--new-palette-based-day-night-system/DayNightNew.zs
 Pass 1: Parsing
 Pass 2: Preprocessing
@@ -15083,4 +15209,47 @@ script.zs Line 746 - Warning S094: Function 'Game::PlaySound(int)' is deprecated
 INFO: Use [Audio->PlaySound] instead!
 Failure!
 Compile finished with exit code '9' (compiled with errors)
+
+=== 00589-temporary-no-return-item-drops/TempNoReturnItem.zs
+Pass 1: Parsing
+Pass 2: Preprocessing
+Pass 3: Registration
+Pass 4: Analyzing Code
+TempNoReturnItem.zs Line 56 - Warning S094: Function 'Game::GetCurScreen()' is deprecated, and should not be used.
+
+54    */
+55    genericdata gd = Game->LoadGenericData(Game->GetGenericScript("TempNoReturnItemGeneric"));
+56    unless(Game->GetCurScreen() < 0x80 && gd->Running && !FindValue(gd, ReturnValue(this->Pos)))
+             ^~~~~~~~~~~~~~~~~~
+
+
+INFO: Use [CurScreen] instead!
+TempNoReturnItem.zs Line 60 - Error T017: Cannot cast from int to const ItemPickupBitflags.
+
+58    itemsprite drop = CreateItemAt(ItemID, this->X, this->Y);
+59    drop->Misc[ITEMSPR_MISC_TEMPNORETURN_ID] = ReturnValue(this->Pos);
+60    drop->Pickup |= (Mode == 0 ? IP_TIMEOUT : (Mode == 1 ? IP_ALWAYSGRAB : 0));
+                                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+TempNoReturnItem.zs Line 105 - Warning S094: Function 'Game::GetCurScreen()' is deprecated, and should not be used.
+
+103    long ReturnValue(int pos)
+104    {
+105        return ReturnValue(pos, Game->GetCurScreen(), Game->GetCurMap());
+                                   ^~~~~~~~~~~~~~~~~~
+
+
+INFO: Use [CurScreen] instead!
+TempNoReturnItem.zs Line 105 - Warning S094: Function 'Game::GetCurMap()' is deprecated, and should not be used.
+
+103    long ReturnValue(int pos)
+104    {
+105        return ReturnValue(pos, Game->GetCurScreen(), Game->GetCurMap());
+                                                         ^~~~~~~~~~~~~~~
+
+
+INFO: Use [CurMap] instead!
+Failure!
+Compile finished with exit code '17' (compiled with errors)
 

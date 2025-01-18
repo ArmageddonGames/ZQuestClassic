@@ -1407,6 +1407,21 @@ std::string ASTDataEnum::getName() const {
 	return name;
 }
 
+// Derive the prefix for an enum based on the first member name, for quick reference
+// in documentation contexts.
+std::optional<std::string> ASTDataEnum::getDocumentationPrefix() const
+{
+	if (declarations_.empty())
+		return std::nullopt;
+
+	std::string first_name = declarations_[0]->getName();
+	size_t underscore_index = first_name.find_first_of('_');
+	if (underscore_index == std::string::npos)
+		return std::nullopt;
+
+	return first_name.substr(0, underscore_index + 1);
+}
+
 void ASTDataEnum::execute(ASTVisitor& visitor, void* param)
 {
 	visitor.caseDataEnum(*this, param);

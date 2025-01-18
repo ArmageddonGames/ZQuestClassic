@@ -5,10 +5,6 @@
 *	resize your values.
 */
 
-const int CHAR_BIT 	= 8;		// Number of bits in one byte.
-const int SHORT_BIT 	= 16;		// Number of bits in one short.
-const int INT_BIT 	= 18;		// Number of bits in one int.
-
 //8b Values
 const int CHAR_MIN 	= -128;		// Minimum value of a signed byte.
 const int SCHAR_MIN 	= -128;		// Minimum value of a signed byte.

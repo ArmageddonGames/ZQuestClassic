@@ -159,31 +159,24 @@ class bitmap {
 	// Identical to [Screen->Quad], but it draws to a target bitmap, and you can
 	// specify a bitmap as your texture.
 	//
-	// Pass the bitmap pointer that you want to use to 'bitmap render_source'.
+	// If [render_source] != `NULL`, then it will use that bitmap as the texture.
+	// Otherwise, if `NULL`, it defaults to using a tile.
 	//
-	// If you do not wish to use a bitmap as a texture, pass NULL to the arg
-	// 'bitmap render_source'.
-	//
-	// Use PT_TEXTURE or a similar polytype, to render your bitmap as a texture.
+	// For [polygon_render_mode], use [PolygonRenderMode] to render the
+	// bitmap as a texture.
 	//
 	// For bitmap textures, specify the exact height and width of the texture as
-	// args 'w' and 'h'.
+	// args [w] and [h].
 	//
-	// If rendering a bitmap as a texture, the 'h' and 'w' args need not be a
+	// If not rendering a bitmap as a texture, the 'h' and 'w' args must be a
 	// power of 2.
-	//
-	// If `bitmap render_source` != NULL, then it will use this as the texture,
-	// instead of a tile or combo.
-	//
-	// If the pointer supplied to render_source is invalid (contains no data),
-	// then this function will default to using a tile.
 	//
 	// @zasm
 	//   BMPQUADR
 	//   POPARGS D5 0.0017
 	internal void Quad(int layer, int x1, int y1, int x2, int y2, int x3,
 					   int y3, int x4, int y4, int w, int h, int cset, int flip,
-					   int texture, int render_mode,
+					   int tile, int polygon_render_mode,
 					   bitmap render_source = < bitmap > 0);
 
 	// @zasm
@@ -279,7 +272,7 @@ class bitmap {
 	internal void DrawScreen(int layer, int map, int source_screen, int x,
 							 int y, int rotation = 0);
 
-	// BLITS THE BITMAP ON POINTER 'b' TO A TARGET BITMAP.
+	// BLITS THE BITMAP ON POINTER 'b' TO A TARGET BITMAP. TODO ! WHY ARE WE YELLING
 	//
 	// Like [Screen->DrawBitmapEx], except that it draws FROM an initialised bitmap
 	// pointer, TO a target bitmap, which may be a user-created bitmap, or it may be the
@@ -305,8 +298,9 @@ class bitmap {
 	// If these are non-zero, the rotation anchor point will center on these
 	// coordinates.
 	//
-	// You may specify a colour to `int lit` to use a lit mode. This tints the
-	// entire bitmap using that colour index of the main palette.
+	// You may specify a color to `int lit` to use a lit mode. This tints the
+	// entire bitmap using that color index of the main palette.
+	// TODO ! "bitmap target" ?
 	//
 	// @zasm
 	//   BMPBLIT
@@ -346,8 +340,8 @@ class bitmap {
 	// If these are non-zero, the rotation anchor point will center on these
 	// coordinates.
 	//
-	// You may specify a colour to 'int lit' to use a lit mode. This tints the
-	// entire bitmap using that colour index of the main palette.
+	// You may specify a color to 'int lit' to use a lit mode. This tints the
+	// entire bitmap using that color index of the main palette.
 	//
 	// @alias RevBlit
 	// @zasm
@@ -377,8 +371,8 @@ class bitmap {
 	// If these are non-zero, the rotation anchor point will center on these
 	// coordinates.
 	//
-	// You may specify a colour to 'int lit' to use a lit mode. This tints the
-	// entire bitmap using that colour index of the main palette.
+	// You may specify a color to 'int lit' to use a lit mode. This tints the
+	// entire bitmap using that color index of the main palette.
 	//
 	// @zasm
 	//   BMPTILEBLIT
@@ -406,8 +400,8 @@ class bitmap {
 	// If these are non-zero, the rotation anchor point will center on these
 	// coordinates.
 	//
-	// You may specify a colour to 'int lit' to use a lit mode. This tints the
-	// entire bitmap using that colour index of the main palette.
+	// You may specify a color to 'int lit' to use a lit mode. This tints the
+	// entire bitmap using that color index of the main palette.
 	//
 	// @zasm
 	//   BMPCOMBOBLIT
@@ -472,7 +466,7 @@ class bitmap {
 	// @zasm
 	//   BMPPOLYGONR
 	//   POPARGS D5 0.0006
-	internal void Polygon(int layer, int num_points, int[] vertices, int colour,
+	internal void Polygon(int layer, int num_points, int[] vertices, int color,
 						  int opacity = OP_OPAQUE);
 
 	// Clears the bitmap to the specified color on the specified layer timing.

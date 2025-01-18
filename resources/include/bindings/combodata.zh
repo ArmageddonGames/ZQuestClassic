@@ -1,3 +1,5 @@
+#include "bindings/common.zh"
+
 // @zasm_ref REFCOMBODATA
 class combodata {
 	// @delete
@@ -79,23 +81,22 @@ class combodata {
 
 	// How to flip (or rotate) the combo.
 	//
-	// Valid values: [TransformationType] (`FLIP_` or `ROT_`).
-	//
+	// @value {@link TransformationType|TransformationType (FLIP_ or ROT_)}
 	// @zasm_var COMBODFLIP
 	internal int Flip;
 
-	// The solidity bitmask of the combo (same as [Screen->ComboS])
+	// The solidity bitmask of the combo (same as [Screen->ComboS]).
 	//
+	// @value [ComboSolidityBitflags]
 	// @zasm_var COMBODWALK
 	internal int Walk;
 
-	// The effect bitmask of the combo (same as [Screen->ComboE])
+	// The effect bitmask of the combo (same as [Screen->ComboE]).
 	//
 	// @zasm_var COMBODEFFECT
 	internal int Effect;
 
-	// Valid values: [ComboType] (`CT_`).
-	//
+	// @value [ComboType]
 	// @zasm_var COMBODTYPE
 	internal int Type;
 
@@ -132,11 +133,10 @@ class combodata {
 	// @zasm_var COMBODNEXTC
 	internal int NextCSet;
 
-	// The inherent flag of the combo. Use the `CF_` constants from
-	// `std_constants.zh`.
+	// The inherent flag of the combo.
 	//
 	// @zasm_var COMBODFLAG
-	internal int Flag;
+	internal ComboFlag Flag;
 
 	// The number of extra tiles to move horizontally between each frame.
 	//
@@ -149,9 +149,9 @@ class combodata {
 	// @zasm_var COMBODAKIMANIMY
 	internal int SkipAnimY;
 
-	// Bitwise access to the combo's animation flags. Use the `AF_` constants to
-	// access.
+	// The combo's animation flags.
 	//
+	// @value [AnimationBitflags]
 	// @zasm_var COMBODANIMFLAGS
 	internal int AnimFlags;
 
@@ -173,20 +173,20 @@ class combodata {
 	// @zasm_var COMBODATTRISHORTS
 	internal int Attrishorts[];
 
-	// The trigger flags of the combo
+	// The trigger flags of the combo.
 	//
-	// Use the `TRIGFLAG_` constants from `std_constants.zh`
-	//
+	// @index [ComboTriggerFlag]
 	// @zasm_var COMBODTRIGGERFLAGS2
 	internal bool TrigFlags[];
 
-	// The 16 combo flags. Their effect depends on the combo type.
+	// The combo's 16 variable flags. Their effect depends on the combo type.
 	//
 	// @zasm_var COMBODUSRFLAGARR
 	internal bool Flags[];
 
-	// The combo generic flags, specified by the `GENFLAG_` constants.
+	// The combo's general flags.
 	//
+	// @index [ComboGeneralFlag]
 	// @zasm_var COMBODGENFLAGARR
 	internal bool GenFlags[];
 
@@ -248,11 +248,11 @@ class combodata {
 	// @zasm_var COMBODTRIGGERCOPYCAT
 	internal int TrigCopycat;
 
-	// The item pickup flags for the spawned item
+	// The item pickup bitflags for the spawned item.
 	//
-	// Only the flags `IP_HOLDUP`, `IP_TIMEOUT`, `IP_TRIGGERSECRETS`,
-	// `IP_ALWAYSGRAB` are used.
+	// Only these bitflags are used: [IP_HOLDUP], [IP_TIMEOUT], [IP_TRIGGERSECRETS], and [IP_ALWAYSGRAB].
 	//
+	// @value [ItemPickupBitflags]
 	// @zasm_var COMBODTRIGITEMPICKUP
 	internal int TrigSpawnItemPickup;
 

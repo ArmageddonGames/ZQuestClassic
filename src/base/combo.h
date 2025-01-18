@@ -85,7 +85,7 @@ struct newcombo
 	byte animflags;
 	byte expansion[6];
 	int32_t attributes[NUM_COMBO_ATTRIBUTES]; // combodata->Attributes[] and Screen->GetComboAttribute(pos, indx) / SetComboAttribute(pos, indx)
-	int32_t usrflags; // combodata->Flags and Screen->ComboFlags[pos]
+	int32_t usrflags; // combodata->Flags
 	int16_t genflags; // general flags
 	int32_t triggerflags[6];
 	int32_t triggerlevel;

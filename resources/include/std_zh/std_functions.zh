@@ -1,22 +1,22 @@
-#include "std_zh/std_constants.zh"
+#include "std_zh/std_constants2.zh"
 #include "std_zh/script_runners.zh"
 
-//Returns if Link is above an npc.
-bool Above(npc n){ return Link->Y < n->Y; }
+// Returns true if [Hero] is above a sprite.
+bool Above(sprite s)
+{
+	return Hero->Y < s->Y;
+}
 
-//Returns if Link is above, below, left of, or right of an ffc.
-bool Above(ffc n){ return Link->Y < n->Y; }
-
-//Returns if Link is above, below, left of, or right of an eweapon.
-bool Above(eweapon n){ return Link->Y < n->Y; }
-
-//Returns if Link is above, below, left of, or right of an lweapon.
-bool Above(lweapon n){ return Link->Y < n->Y; }
+// Returns true if [Herp] is below a sprite.
+bool Below(sprite s)
+{
+	return Hero->Y > s->Y;
+}
 
 //Various methods for shooting at Link and at random
 void AimEWeapon(eweapon e, int aimtype)
 {
-	int angle = RadianAngle(e->X, e->Y, Link->X, Link->Y);
+	int angle = RadianAngle(e->X, e->Y, Hero->X, Hero->Y);
 	switch(aimtype)
 	{
 		case AT_4DIR:
@@ -175,18 +175,6 @@ int AtFrontY(int dir)
 	return y;
 }
 
-//Returns if Link is below an npc.
-bool Below(npc n){ return Link->Y > n->Y; }
-
-//Returns if Link is above, below, left of, or right of an ffc.
-bool Below(ffc n){ return Link->Y > n->Y; }
-
-//Returns if Link is above, below, left of, or right of an eweapon.
-bool Below(eweapon n){ return Link->Y > n->Y; }
-
-//Returns if Link is above, below, left of, or right of an lweapon.
-bool Below(lweapon n){ return Link->Y > n->Y; }
-
 //This should allow any scripted object to easily mimic Link styled LOZ solidity collision
 //checking, be it Link, FFCs, or enemies.
 //Note - You should use full_tile=true if you don't want the upper eight pixels to overlap
@@ -209,8 +197,8 @@ bool CanWalk(int x, int y, int dir, int step, bool full_tile)
 
 
 // Get the X and Y coordinates at the center of a sprite
-int CenterLinkX() { return Link->X+8; }
-int CenterLinkY() { return Link->Y+8; }
+int CenterLinkX() { return Hero->X+8; }
+int CenterLinkY() { return Hero->Y+8; }
 int CenterX(ffc anFFC) { return anFFC->X+8*anFFC->TileWidth; }
 int CenterX(npc anNPC) { return anNPC->X+8*anNPC->TileWidth; }
 int CenterX(eweapon anEWeapon) { return anEWeapon->X+8*anEWeapon->TileWidth; }
@@ -458,61 +446,61 @@ bool Collision(item a, ffc b)
 // This only checks hitboxes.
 bool Collision(eweapon b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the lweapon's.
 // This only checks hitboxes.
 bool Collision(lweapon b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the item's.
 // This only checks hitboxes.
 bool Collision(item b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the npc's.
 // This only checks hitboxes.  Uses TileWidth and TileHeight to find the center of the FFCs.
 bool Collision(npc b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the FFC's.
 // This only checks hitboxes.
 bool Collision(ffc f)
 {
-	int ax = Link->X + Link->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
-	return RectCollision(f->X, f->Y, f->X+(f->TileWidth*16)-1, f->Y+(f->TileHeight*16)-1, ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1);
+	int ax = Hero->X + Hero->HitXOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
+	return RectCollision(f->X, f->Y, f->X+(f->TileWidth*16)-1, f->Y+(f->TileHeight*16)-1, ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1);
 }
 
 //Only legal from combodata scripts as this->Collision
 bool Collision(combodata f)
 {
-	int ax = Link->X + Link->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
-	return RectCollision(f->X, f->Y, f->X+15, f->Y+15, ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1);
+	int ax = Hero->X + Hero->HitXOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
+	return RectCollision(f->X, f->Y, f->X+15, f->Y+15, ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1);
 }
 
 //Returns true if the combo at '(x, y)' has either an inherent or place flag of type 'flag'
@@ -901,9 +889,9 @@ float DistanceSquared( float x, float y )
 //returns true if Link is within 'dist' distance of an ffc on both its X and its Y axis.
 bool DistXY(ffc a, int dist)
 {
-	if ( Abs(Link->X - a->X) <= dist )
+	if ( Abs(Hero->X - a->X) <= dist )
 	{
-		if ( Abs(Link->Y - a->Y) <= dist ) return true;
+		if ( Abs(Hero->Y - a->Y) <= dist ) return true;
 	}
 	return false;
 }
@@ -1152,10 +1140,10 @@ bool EnemiesAlive()
 //Returns if Link is facing an ffc.
 bool Facing(ffc f)
 {
-	if ( Link->Dir == DIR_UP && Link->Y > f->Y ) return true;
-	if ( Link->Dir == DIR_DOWN && Link->Y < f->Y ) return true;
-	if ( Link->Dir == DIR_RIGHT && Link->X < f->X ) return true;
-	if ( Link->Dir == DIR_LEFT && Link->X > f->X ) return true;
+	if ( Hero->Dir == DIR_UP && Hero->Y > f->Y ) return true;
+	if ( Hero->Dir == DIR_DOWN && Hero->Y < f->Y ) return true;
+	if ( Hero->Dir == DIR_RIGHT && Hero->X < f->X ) return true;
+	if ( Hero->Dir == DIR_LEFT && Hero->X > f->X ) return true;
 	return false;
 }
 
@@ -1221,93 +1209,46 @@ int FirstComboOf(int t, int layer)
 	return -1;
 }
 
-//G
-
-//Returns the catchall type used by a mapscreen passed as pointer 'm'.
-catchalltypes GetCatchallType(mapdata m)
-{
-	switch(m->RoomType)
-	{
-		//no catchall
-		case rtNONE:
-		case rtPOTIONORHEART:
-		case rtGORIYA:
-		case rtLEVEL9:
-		case rtTENRUPY:
-		case rtGAN:
-		case rtWINGAME:
-		case rtMAGIC:
-		case rtSLASH:
-			return caNONE;
-
-		case rtGAMBLE:
-			return caGAMBLE;
-
-		//item id
-		case rtSPECIALITEM:
-			return caITEM;
-
-		case rtSECRETMONEY:
-			return caAMOUNT;
-
-		//shops
-		case rtPOTION:
-		case rtSHOP:
-		case rtONEITEM:
-			return caSHOPID;
-
-		case rtPAYINFO:
-			return caINFOSHOPID;
-
-		//price
-		case rtARROWS:
-		case rtDOORREPAIR:
-		case rtBOMBS:
-		case rtMOYL: //the non-heart cost
-			return caPRICE;
-
-		case rtSTAIRWARP: return caWARPRING;
-		case rtITEMPOND: return caPONDID;
-
-		default:
-			return caNONE;
-
-	}
-}
-
 //Returns the item ID of the item equipped to the A button
 int GetEquipmentA()
 {
 	return Hero->ItemA;
-	//return (Hero->Equipment&0xFF);
 }
 
 //Returns the item ID of the item equipped to the B button
 int GetEquipmentB()
 {
 	return Hero->ItemB;
-	//return ((Hero->Equipment&0xFF00)>>8);
 }
 
 //Returns the item ID of the item equipped to the X button
 int GetEquipmentX()
 {
 	return Hero->ItemX;
-	//return ((Hero->Equipment&0xFF00)>>8);
 }
 
 //Returns the item ID of the item equipped to the Y button
 int GetEquipmentY()
 {
 	return Hero->ItemY;
-	//return ((Hero->Equipment&0xFF00)>>8);
 }
 
-//Returns true if DMap bitwise flags 'flag' is set on dmap 'dmap'
+// Returns true if DMap bitwise flags 'flag' is set on dmap 'dmap'.
+//
+// Only works with the [DMapBitwiseFlag] flags - [DMapFlag] is not supported.
+//
+// @deprecated Use [dmapdata::Flagset] instead, with [DMapFlag].
 bool GetDMapFlag(int dmap, int flag)
 {
 	dmapdata dm = Game->LoadDMapData(dmap);
 	return (dm->Flags&flag);
+}
+
+// Returns true if [flag] is set on the given dmap.
+bool GetDMapFlag(int dmap, DMapFlag flag)
+{
+	dmapdata dm = Game->LoadDMapData(dmap);
+	return dm->Flagset[flag];
 }
 
 int GetFirstItemOf(int itemclass)
@@ -1375,7 +1316,7 @@ int GetHighestLevelItemOwned(int itemclass)
 	for(int i=0; i<=MAX_HIGHEST_LEVEL_ITEM_CHECK; ++i)
 	{
 		itemdata id = Game->LoadItemData(i);
-		if(id->Family == itemclass && Link->Item[i])
+		if(id->Family == itemclass && Hero->Item[i])
 		{
 			if(id->Level >= highestlevel)
 			{
@@ -1448,11 +1389,12 @@ itemdata GetItemData(item i)
 	return Game->LoadItemData(i->ID);
 }
 
-//Returns true if an item's Pickup state is set
-//Use the IP_ constants for the 'pickup' argument of this function
-bool GetItemPickup(item i, int pickup)
+// Returns true if an item's Pickup state is set.
+//
+// @param [ItemPickupBitflags] bitflags
+bool GetItemPickup(item i, int bitflags)
 {
-	return (i->Pickup&pickup);
+	return (i->Pickup&bitflags);
 }
 
 //A shorthand way to get a combo on the current layer.
@@ -1536,12 +1478,13 @@ int GetLayerComboT(int layer, int pos)
 	return Game->LoadTempScreen(layer)->ComboT[pos];
 }
 
-//Returns true if Link has the level item 'itm' from level 'level'
-//Overloaded to use the current level if no 'level' arg is entered
-//Use the LI_ constants for the 'itm' argument
-bool GetLevelItem(int level, int itm)
+// Returns true if Link has the level item 'itm' from level 'level'
+// Overloaded to use the current level if no 'level' arg is entered
+//
+// @param [LevelItemBitflags] bitflags
+bool GetLevelItem(int level, int bitflags)
 {
-	return (Game->LItems[level]&itm);
+	return (Game->LItems[level]&bitflags);
 }
 bool GetLevelItem(int itm)
 {
@@ -2129,19 +2072,19 @@ int InFrontY(int dir, int dist)
 //Returns true if the left mouse button is pressed
 bool InputLeftClick()
 {
-	return (Link->InputMouseB&MB_LEFTCLICK);
+	return (Hero->InputMouseB&MB_LEFTCLICK);
 }
 
 //Returns true if the central mouse button (if equipped) is pressed
 bool InputMiddleClick()
 {
-	return (Link->InputMouseB&MB_MIDDLECLICK);
+	return (Hero->InputMouseB&MB_MIDDLECLICK);
 }
 
 //Returns true if the right mouse button is pressed
 bool InputRightClick()
 {
-	return (Link->InputMouseB&MB_RIGHTCLICK);
+	return (Hero->InputMouseB&MB_RIGHTCLICK);
 }
 
 //Returns true if the present screen is a dungen type.
@@ -2262,13 +2205,13 @@ int LastComboOf(int t, int layer)
 }
 
 //Returns if Link is left of an npc.
-bool LeftOf(npc n){ return Link->X < n->X; }
+bool LeftOf(npc n){ return Hero->X < n->X; }
 //Returns if Link is above, below, left of, or right of an ffc.
-bool LeftOf(ffc n){ return Link->X < n->X; }
+bool LeftOf(ffc n){ return Hero->X < n->X; }
 //Returns if Link is above, below, left of, or right of an eweapon.
-bool LeftOf(eweapon n){ return Link->X < n->X; }
+bool LeftOf(eweapon n){ return Hero->X < n->X; }
 //Returns if Link is above, below, left of, or right of an lweapon.
-bool LeftOf(lweapon n){ return Link->X < n->X; }
+bool LeftOf(lweapon n){ return Hero->X < n->X; }
 
 
 // Interpolates between p1 and p2 given 't' clamped within range 0,1.
@@ -2281,57 +2224,59 @@ float Lerp(float p1, float p2, float t)
 // This only checks hitboxes.
 bool LinkCollision(eweapon b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the lweapon's.
 // This only checks hitboxes.
 bool LinkCollision(lweapon b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the item's.
 // This only checks hitboxes.
 bool LinkCollision(item b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the npc's.
 // This only checks hitboxes.  Uses TileWidth and TileHeight to find the center of the FFCs.
 bool LinkCollision(npc b)
 {
-	int ax = Link->X + Link->HitXOffset;
+	int ax = Hero->X + Hero->HitXOffset;
 	int bx = b->X + b->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
 	int by = b->Y + b->HitYOffset;
-	return RectCollision(ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Link->Z + Link->HitZHeight >= b->Z) && (Link->Z <= b->Z + b->HitZHeight);
+	return RectCollision(ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1, bx, by, bx+b->HitWidth-1, by+b->HitHeight-1) && (Hero->Z + Hero->HitZHeight >= b->Z) && (Hero->Z <= b->Z + b->HitZHeight);
 }
 
 // Returns true if there is a collision between Link's hitbox and the FFC's.
 // This only checks hitboxes.
 bool LinkCollision(ffc f)
 {
-	int ax = Link->X + Link->HitXOffset;
-	int ay = Link->Y + Link->HitYOffset;
-	return RectCollision(f->X, f->Y, f->X+(f->TileWidth*16)-1, f->Y+(f->TileHeight*16)-1, ax, ay, ax+Link->HitWidth-1, ay+Link->HitHeight-1);
+	int ax = Hero->X + Hero->HitXOffset;
+	int ay = Hero->Y + Hero->HitYOffset;
+	return RectCollision(f->X, f->Y, f->X+(f->TileWidth*16)-1, f->Y+(f->TileHeight*16)-1, ax, ay, ax+Hero->HitWidth-1, ay+Hero->HitHeight-1);
 }
 
-// Returns the first EWeapon of the given type. Use the EW_ constants.
+// Returns the first EWeapon of the given type.
 // If none exist, it returns an uninitialised pointer.
+//
+// @param [EWeaponType] type
 eweapon LoadEWeaponOf(int type)
 {
 	eweapon w;
@@ -2360,13 +2305,15 @@ lweapon LoadLWeaponOf(int type)
 
 // Returns the first NPC of the given ID. Use the NPC_ constants.
 // If none exist, it returns an uninitialised pointer.
-npc LoadNPCOf(int type)
+//
+// @param [NPCID] id
+npc LoadNPCOf(int id)
 {
 	npc n;
 	for ( int i = Screen->NumNPCs; i > 0; --i )
 	{
 		n = Screen->LoadNPC(i);
-		if (n->ID == type) return n;
+		if (n->ID == id) return n;
 	}
 	npc n2; //NULL
 	return n2;
@@ -2393,7 +2340,7 @@ float LogToBase(float x, float base)
 }
 
 
-//Returns a random integer between 0 abd 199,999
+//Returns a random integer between 0 and 199,999
 int longrand(int max)
 {
 	int numdigits;
@@ -2466,10 +2413,10 @@ float Midpoint(float p1, float p2)
 //Creates an lweapon at 'distx,disty' away from where Link is facing
 lweapon NextToLink(int id, int distx, int disty)
 {
-	lweapon l = CreateLWeaponAt(id, Link->X+InFrontX(Link->Dir, distx), Link->Y+InFrontY(Link->Dir, disty));
+	lweapon l = CreateLWeaponAt(id, Hero->X+InFrontX(Hero->Dir, distx), Hero->Y+InFrontY(Hero->Dir, disty));
 	if(l->isValid())
 	{
-		l->Dir = Link->Dir;
+		l->Dir = Hero->Dir;
 	}
 	return l;
 }
@@ -2505,18 +2452,18 @@ void NoAction()
 		Input->Press[q] = false;
 	}
 	/*
-	Link->InputUp = false; Link->PressUp = false;
-	Link->InputDown = false; Link->PressDown = false;
-	Link->InputLeft = false; Link->PressLeft = false;
-	Link->InputRight = false; Link->PressRight = false;
-	Link->InputR = false; Link->PressR = false;
-	Link->InputL = false; Link->PressL = false;
-	Link->InputA = false; Link->PressA = false;
-	Link->InputB = false; Link->PressB = false;
-	Link->InputEx1 = false; Link->PressEx1 = false;
-	Link->InputEx2 = false; Link->PressEx2 = false;
-	Link->InputEx3 = false; Link->PressEx3 = false;
-	Link->InputEx4 = false; Link->PressEx4 = false;
+	Hero->InputUp = false; Hero->PressUp = false;
+	Hero->InputDown = false; Hero->PressDown = false;
+	Hero->InputLeft = false; Hero->PressLeft = false;
+	Hero->InputRight = false; Hero->PressRight = false;
+	Hero->InputR = false; Hero->PressR = false;
+	Hero->InputL = false; Hero->PressL = false;
+	Hero->InputA = false; Hero->PressA = false;
+	Hero->InputB = false; Hero->PressB = false;
+	Hero->InputEx1 = false; Hero->PressEx1 = false;
+	Hero->InputEx2 = false; Hero->PressEx2 = false;
+	Hero->InputEx3 = false; Hero->PressEx3 = false;
+	Hero->InputEx4 = false; Hero->PressEx4 = false;
 	*/
 }
 
@@ -2556,10 +2503,10 @@ int NumEWeaponsOf(int type)
 	}
 	return ret;
 }
-// Use the I_ constants.
+
 // Warning: these iterate over every onscreen item.
-// Iterating over every onscreen lweapon multiple times per frame may
-// cause slowdown in Zelda Classic.
+//
+// @param [ItemID] type
 int NumItemsOf(int type)
 {
 	int ret = 0;
@@ -2580,10 +2527,9 @@ int NumKeys(int level = -1)
 	return Game->LKeys[level]+Game->Counter[CR_KEYS];
 }
 
-// Use the LW_ constants.
 // Warning: these iterate over every onscreen lweapon.
-// Iterating over every onscreen lweapon multiple times per frame may
-// cause slowdown in Zelda Classic.
+//
+// @param [LWeaponType] type
 int NumLWeaponsOf(int type)
 {
 	int ret = 0;
@@ -2597,7 +2543,7 @@ int NumLWeaponsOf(int type)
 	return ret;
 }
 
-// Valid values for [type]: [NpcType] (`NPCT_`).
+// @param [NPCType] type
 int NumNPCsOf(int type)
 {
 	int ret = 0;
@@ -2724,13 +2670,13 @@ void Remove(npc n)
 }
 
 //Returns if Link is right of an npc.
-bool RightOf(npc n){ return Link->X > n->X; }
+bool RightOf(npc n){ return Hero->X > n->X; }
 //Returns if Link is above, below, left of, or right of an ffc.
-bool RightOf(ffc n){ return Link->X > n->X; }
+bool RightOf(ffc n){ return Hero->X > n->X; }
 //Returns if Link is above, below, left of, or right of an eweapon.
-bool RightOf(eweapon n){ return Link->X > n->X; }
+bool RightOf(eweapon n){ return Hero->X > n->X; }
 //Returns if Link is above, below, left of, or right of an lweapon.
-bool RightOf(lweapon n){ return Link->X > n->X; }
+bool RightOf(lweapon n){ return Hero->X > n->X; }
 
 //Rounds x to the nearest integer
 float Round(float x)
@@ -2924,7 +2870,7 @@ void SetDMapFlag(int dmap, int flag, bool state)
 //Writes items to both the A and the b item slots.
 void SetEquipment(int a, int b)
 {
-	Link->Equipment = (((a&0xFF)|((b&0xFF)<<8)));
+	Hero->Equipment = (((a&0xFF)|((b&0xFF)<<8)));
 }
 
 //Sets an item's Pickup state to 'state'

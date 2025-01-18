@@ -3,7 +3,7 @@ class ZInfo {
 	// @delete
 	internal ZInfo();
 
-	// Copies the name of the specified itemclass ([ItemClass] (`IC_`)) into the
+	// Copies the name of the specified itemclass ([ItemClass]) into the
 	// buffer.
 	//
 	// @zasm

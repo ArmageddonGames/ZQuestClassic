@@ -1,6 +1,6 @@
 #include "bindings/sprite.zh"
 
-enum NpcType
+enum NPCType
 {
 	NPCT_GUY,
 	NPCT_WALK,
@@ -88,7 +88,7 @@ enum NpcType
 	NPCT_FRIENDLY_10 = 72
 };
 
-// Use as index for npc->Defense[].
+// Used with [npc::Defense].
 enum NpcDefenseIndex
 {
 	NPCD_BRANG,
@@ -129,7 +129,7 @@ enum NpcDefenseIndex
 	NPCD_REFFIRE2
 };
 
-// Use as value type for npc->Defense[].
+// Used with [npc::Defense].
 enum NpcDefenseType
 {
 	NPCDT_NONE,
@@ -218,27 +218,7 @@ enum BossPal
 	BPAL_FROZEN // Unused
 };
 
-enum NpcMoveFlagIndex
-{
-	NPCMV_OBEYS_GRAVITY,
-	NPCMV_CAN_PITFALL,
-	NPCMV_CAN_PIT_WALK,
-	NPCMV_CAN_WATERDROWN,
-	NPCMV_CAN_WATER_WALK,
-	NPCMV_ONLY_WATER_WALK,
-	NPCMV_ONLY_SHALLOW_WATER_WALK,
-	NPCMV_ONLY_PIT_WALK,
-	NPCMV_NO_FAKE_Z,
-	NPCMV_NO_REAL_Z,
-	NPCMV_USE_FAKE_Z,
-	NPCMV_IGNORE_SOLIDITY,
-	NPCMV_IGNORE_BLOCKFLAGS,
-	NPCMV_IGNORE_SCREENEDGE,
-	NPCMV_USE_SCRIPTED_MOVEMENT_ENGINE,
-	NPCMV_NOT_PUSHABLE_BY_SOLIDS
-};
-
-enum NpcShieldIndex
+enum NPCShieldIndex
 {
 	SHLD_FRONT,
 	SHLD_BACK,
@@ -247,7 +227,7 @@ enum NpcShieldIndex
 	SHLD_CAN_BREAK
 };
 
-enum NpcFade
+enum NPCFade
 {
 	NPCF_NONE,
 	NPCF_FLICKER,
@@ -262,6 +242,22 @@ class npc {
 	// @delete
 	internal npc();
 
+	// @value [NPCID]
+	// @zasm_var NPCID
+	internal const int ID;
+
+	// The type, or 'npc class' of the npc.
+	//
+	// @value [NPCType]
+	// @zasm_var NPCTYPE
+	internal int Type;
+
+	// Exactly the same as [Type], use that instead.
+	//
+	// @value [NPCType]
+	// @zasm_var NPCTYPE
+	internal int Family;
+
 	// The current frame of the npc's animation.
 	//
 	// @zasm_var NPCFRAME
@@ -272,7 +268,7 @@ class npc {
 	// @zasm_var SPRITEMAXNPC
 	internal int Max;
 
-	// The timer used for enemy knockback.
+	// The timer used for npc knockback.
 	// The first byte is the clock.
 	// The second byte is the dir.
 	// Enemies that split do not slide.
@@ -282,8 +278,7 @@ class npc {
 
 	// The death effect for the npc.
 	//
-	// Valid values: [NpcFade] (`NPCF_`).
-	//
+	// @value [NPCFade]
 	// @zasm_var NPCFADING
 	internal int Fading;
 
@@ -322,25 +317,6 @@ class npc {
 	// @zasm_var NPCHP
 	internal int HP;
 
-	// The enemy ID of the enemy.
-	//
-	// @zasm_var NPCID
-	internal const int ID;
-
-	// The type, or 'enemy class' of the enemy.
-	//
-	// Valid values: [NpcType] (`NPCT_`).
-	//
-	// @zasm_var NPCTYPE
-	internal int Type;
-
-	// The type, or 'enemy class' of the enemy. Same as [Type].
-	//
-	// Valid values: [NpcType] (`NPCT_`).
-	//
-	// @zasm_var NPCTYPE
-	internal int Family;
-
 	// @zasm_var NPCDP
 	internal int Damage;
 
@@ -350,15 +326,13 @@ class npc {
 	// @zasm_var NPCOTILE
 	internal int OriginalTile;
 
-	// Valid values: [NpcWeapon] (`WPN_`).
-	//
+	// @value [NpcWeapon]
 	// @zasm_var NPCWEAPON
 	internal int Weapon;
 
-	// The Dropset ID that this enemy will drop from when killed.
+	// The Dropset ID that this npc will drop from when killed.
 	//
-	// Valid values: [ItemSet] (`IS_`).
-	//
+	// @value [ItemSet]
 	// @zasm_var NPCITEMSET
 	internal int ItemSet;
 
@@ -369,8 +343,7 @@ class npc {
 	// @zasm_var NPCITEMSET
 	internal int Dropset;
 
-	// Valid values: [BossPal] (`BPAL_`).
-	//
+	// @value [BossPal]
 	// @zasm_var NPCBOSSPAL
 	internal BossPal BossPal;
 
@@ -404,16 +377,15 @@ class npc {
 	internal int Stun;
 
 	// This returns true if the NPC is the core segment of a segmented engine
-	// enemy.
+	// npc.
 	//
 	// @zasm_var NPCISCORE
 	internal bool Core;
 
 	// Expanded to a size of 42 to cover new defense categories.
 	//
-	// Valid indices are [NpcDefenseIndex] (`NPCD_`).
-	// Valid values: [NpcDefenseType] (`NPCDT_`).
-	//
+	// @index [NpcDefenseIndex]
+	// @value [NpcDefenseType]
 	// @zasm_var NPCDEFENSED
 	internal int Defense[];
 
@@ -449,6 +421,7 @@ class npc {
 	// Some lweapons, notably some melee weapons such as swords (but not sword
 	// beams), and boomerangs are not yet implemented in this mechanic.
 	//
+	// @index [HitIndex]
 	// @zasm_var NPCHITBY
 	internal untyped HitBy[];
 
@@ -470,32 +443,31 @@ class npc {
 	// @zasm_var NPCSCRDEFENSED
 	internal int ScriptDefense[];
 
-	// Returns the number of remaining invincibility frames if the enemy is
+	// Returns the number of remaining invincibility frames if the npc is
 	// invincible, otherwise 0.
 	//
 	// @zasm_var NPCINVINC
 	internal int InvFrames;
 
-	// Returns if the enemy is invincible, because of ( superman variable ).
+	// Returns if the npc is invincible, because of ( superman variable ).
 	//
 	// @zasm_var NPCSUPERMAN
 	internal int Invincible;
 
-	// If true, the enemy is a Ringleader, and killing this npc will kill every
+	// If true, the npc is a Ringleader, and killing this npc will kill every
 	// npc in the room.
 	//
 	// @zasm_var NPCRINGLEAD
 	internal bool Ringleader;
 
-	// True if the enemy is carrying an item.
+	// True if the npc is carrying an item.
 	//
 	// @zasm_var NPCHASITEM
 	internal bool HasItem;
 
-	// Flags related to the enemy's shield.
+	// Flags related to the npc's shield.
 	//
-	// Valid indices are [NpcShieldIndex] (`SHLD_`).
-	//
+	// @index [NPCShieldIndex]
 	// @zasm_var NPCSHIELD
 	internal bool Shield[];
 
@@ -518,7 +490,7 @@ class npc {
 	// @zasm_var NPCSCRIPT
 	internal int Script;
 
-	// If true, the enemy will not 'die' even if it has 0hp or is too far
+	// If true, the npc will not 'die' even if it has 0hp or is too far
 	// off-screen.
 	//
 	// [Remove] will still delete the npc.
@@ -537,7 +509,7 @@ class npc {
 	// @zasm_var NPCNOSCRIPTKB
 	internal bool NoScriptKnockback;
 
-	// The number of pixels engine knockback moves the enemy at a time.
+	// The number of pixels engine knockback moves the npc at a time.
 	// Default 4.
 	//
 	// @zasm_var NPCKNOCKBACKSPEED
@@ -568,18 +540,18 @@ class npc {
 	// @zasm_var NPCCANFLICKER
 	internal bool InvFlicker;
 
-	// This sets what color the enemy is drawn when flickering.
+	// This sets what color the npc is drawn when flickering.
 	//
 	// @zasm_var NPCFLICKERCOLOR
 	internal int FlickerColor;
 
 	// This sets how many times the transparency effect is applied to the
-	// enemy's flicker effect.
+	// npc's flicker effect.
 	//
 	// @zasm_var NPCFLICKERTRANSP
 	internal int FlickerTransparencyPasses;
 
-	// This returns the enemy's current displayed cset when taking damage or
+	// This returns the npc's current displayed cset when taking damage or
 	// invincible. If not in one of these states, will return its normal cset.
 	//
 	// @zasm_var NPCFLASHINGCSET
@@ -674,9 +646,9 @@ class npc {
 
 	// Run Engine knockback (Only does anything if a knockback is in-progress)
 	//
-	// This is automatically called for most engine enemy types
+	// This is automatically called for most engine npc types
 	//
-	// Calling this from enemy types such as 'Other' will allow them to recieve
+	// Calling this from npc types such as 'Other' will allow them to recieve
 	// knockback
 	//
 	// This is called as a part of scripted walking functions, such as
@@ -777,7 +749,7 @@ class npc {
 	//   NPCVARWALK8 D2
 	internal void VariableWalk8(int arr);
 
-	// Causes an enemy to walk, and occasionally halt.
+	// Causes an npc to walk, and occasionally halt.
 	//
 	// {int rate, int homing, int special, int hrate, int haltcnt}
 	//
@@ -798,7 +770,7 @@ class npc {
 	//   NPCHALTWALK8 D2
 	internal void HaltingWalk8(int arr);
 
-	// Causes an enemy to move, ignoring solidity on the screen.
+	// Causes an npc to move, ignoring solidity on the screen.
 	//
 	// @zasm
 	//   POP D2
@@ -806,7 +778,7 @@ class npc {
 	//   NPCFLOATWALK D2
 	internal void FloatingWalk(int arr);
 
-	// Fires the breath weapon set to the enemy.
+	// Fires the breath weapon set to the npc.
 	//
 	// @zasm
 	//   POP D2
@@ -845,9 +817,9 @@ class npc {
 	//   SETR D2 NPCCOLLISION
 	internal bool Collision(int obj_type, untyped obj_pointer);
 
-	// Checks if enemy is lined up with Link.
+	// Checks if npc is lined up with Link.
 	//
-	// If so, returns direction Link is at as compared to enemy.
+	// If so, returns direction Link is at as compared to npc.
 	//
 	// Returns -1 if not lined up. Range is inclusive.
 	//
@@ -858,7 +830,7 @@ class npc {
 	//   SETR D2 NPCLINEDUP
 	internal int LinedUp(int range, bool dir8 = false);
 
-	// Returns true if Link is within 'range' pixels of the enemy.
+	// Returns true if Link is within 'range' pixels of the npc.
 	//
 	// @zasm
 	//   POP D2
@@ -949,7 +921,7 @@ class npc {
 	//   SWITCHNPC D2
 	internal bool Switch(int effect);
 
-	// Returns true if the enemy is in a state in which it should not be allowed
+	// Returns true if the npc is in a state in which it should not be allowed
 	// to move (ex. spawning, dying, stunned, time frozen by clock)
 	//
 	// @zasm
@@ -957,7 +929,7 @@ class npc {
 	//   NPCMOVEPAUSED
 	internal bool MovePaused();
 
-	// Attempts to move the enemy by 'pxamnt' pixels in the 'dir' direction,
+	// Attempts to move the npc by 'pxamnt' pixels in the 'dir' direction,
 	// failing if it is blocked by something it cannot walk through.
 	//
 	// @zasm
@@ -968,7 +940,7 @@ class npc {
 	//   NPCMOVE
 	internal bool Move(int dir, int pxamnt, int special = 0);
 
-	// Attempts to move the enemy by 'pxamnt' pixels in the 'degrees' angle,
+	// Attempts to move the npc by 'pxamnt' pixels in the 'degrees' angle,
 	// failing if it is blocked by something it cannot walk through.
 	//
 	// @zasm
@@ -979,7 +951,7 @@ class npc {
 	//   NPCMOVEANGLE
 	internal bool MoveAtAngle(int degrees, int pxamnt, int special = 0);
 
-	// Attempts to move the enemy by 'dx' in the x direction and 'dy' in the y
+	// Attempts to move the npc by 'dx' in the x direction and 'dy' in the y
 	// direction, failing if it is blocked by something it cannot walk through.
 	//
 	// @zasm
@@ -990,7 +962,7 @@ class npc {
 	//   NPCMOVEXY
 	internal bool MoveXY(int dx, int dy, int special = 0);
 
-	// Attempts to move the enemy by 'pxamnt' pixels in the 'dir' direction,
+	// Attempts to move the npc by 'pxamnt' pixels in the 'dir' direction,
 	// failing if it is blocked by something it cannot walk through.
 	//
 	// @zasm
@@ -1001,7 +973,7 @@ class npc {
 	//   NPCCANMOVEDIR
 	internal bool CanMove(int dir, int pxamnt, int special = 0);
 
-	// Attempts to move the enemy by 'pxamnt' pixels in the 'degrees' angle,
+	// Attempts to move the npc by 'pxamnt' pixels in the 'degrees' angle,
 	// failing if it is blocked by something it cannot walk through.
 	//
 	// @zasm
@@ -1012,7 +984,7 @@ class npc {
 	//   NPCCANMOVEANGLE
 	internal bool CanMoveAtAngle(int degrees, int pxamnt, int special = 0);
 
-	// Attempts to move the enemy by 'dx' in the x direction and 'dy' in the y
+	// Attempts to move the npc by 'dx' in the x direction and 'dy' in the y
 	// direction, failing if it is blocked by something it cannot walk through.
 	//
 	// @zasm
@@ -1023,12 +995,12 @@ class npc {
 	//   NPCCANMOVEXY
 	internal bool CanMoveXY(int dx, int dy, int special = 0);
 
-	// Checks if the enemy could be arbitrarily placed (teleported) at 'nx,ny'.
+	// Checks if the npc could be arbitrarily placed (teleported) at 'nx,ny'.
 	//
 	// If 'nw' or 'nh' are > -1, they will be used as the width/height of the
-	// enemy for the check.
+	// npc for the check.
 	//
-	// Otherwise, the enemy's hitwidth/hitheight are used.
+	// Otherwise, the npc's hitwidth/hitheight are used.
 	//
 	// Some enemies treat pits/liquid as solid, EXCEPT if they are being knocked
 	// back.
@@ -1041,7 +1013,7 @@ class npc {
 	//
 	// Use 'SPW_NONE' if you don't know what to use.
 	//
-	// Returns true if the enemy could be placed successfully, false otherwise.
+	// Returns true if the npc could be placed successfully, false otherwise.
 	//
 	// @zasm
 	//   NPCCANPLACE
@@ -1049,7 +1021,7 @@ class npc {
 	internal bool CanPlace(int nx, int ny, int special = 0,
 						   bool knockback = false, int nw = -1, int nh = -1);
 
-	// This returns true if the enemy is currently in a flicker frame (either
+	// This returns true if the npc is currently in a flicker frame (either
 	// invisible or color masked).
 	//
 	// @zasm

@@ -51,9 +51,9 @@ int BoolToInt(bool input)
 
 int CenterLinkY(bool hitoffset, bool drawoffset)
 {
-	int ly = Link->Y + 8 * Link->TileHeight;
-	if ( hitoffset ) ly += Link->HitYOffset;
-	if ( drawoffset ) ly += Link->DrawYOffset;	
+	int ly = Hero->Y + 8 * Hero->TileHeight;
+	if ( hitoffset ) ly += Hero->HitYOffset;
+	if ( drawoffset ) ly += Hero->DrawYOffset;	
 	return ly;
 }
 
@@ -212,8 +212,8 @@ int CenterY(item i, bool usehitbox, bool trueoffset, bool drawoffset)
 //Check for collision between Link and a combo at location 'cmb'. 
 bool Collision(int cmb)
 {
-	unless ( RectCollision( ComboX(cmb), ComboY(cmb), (ComboX(cmb)+16), (ComboY(cmb)+16), (Link->X+Link->HitXOffset+Link->DrawXOffset), (Link->Y+Link->HitYOffset+Link->DrawYOffset),
-		((Link->X+Link->HitXOffset+Link->DrawXOffset)+(Link->HitWidth)), ((Link->Y+Link->HitYOffset+Link->DrawYOffset)+(Link->HitHeight))) ) return false;
+	unless ( RectCollision( ComboX(cmb), ComboY(cmb), (ComboX(cmb)+16), (ComboY(cmb)+16), (Hero->X+Hero->HitXOffset+Hero->DrawXOffset), (Hero->Y+Hero->HitYOffset+Hero->DrawYOffset),
+		((Hero->X+Hero->HitXOffset+Hero->DrawXOffset)+(Hero->HitWidth)), ((Hero->Y+Hero->HitYOffset+Hero->DrawYOffset)+(Hero->HitHeight))) ) return false;
 	else unless ( (Distance(CenterLinkX(), CenterLinkY(), (ComboX(cmb)+8), (ComboY(cmb)+8)) < 8) ) return false;
 	return true;
 }
@@ -298,7 +298,7 @@ bool Collision(int cmb, npc n, bool checkcoldetection)
 //Set checkcoldetection to true if you wish to return false from an NPC with ColDetection disabled. 
 bool Collision(int cmb, bool checkcoldetection) 
 {
-	if ( checkcoldetection && !Link->CollDetection ) return false;
+	if ( checkcoldetection && !Hero->CollDetection ) return false;
 	else return Collision(cmb); 
 }
 
@@ -355,8 +355,8 @@ bool Collision(int cmb, item l, int a1, int b1, int c1, int d1, int a2, int b2, 
 bool Collision(int cmb,  int a1, int b1, int c1, int d1, int a2, int b2, int c2, int d2)
 {
 	return RectCollision( ComboX(cmb)+a1, ComboY(cmb)+b1, (ComboX(cmb)+16)+c1, (ComboY(cmb)+16)+d1, 
-		(Link->X+Link->HitXOffset+Link->DrawXOffset)+a2, (Link->Y+Link->HitYOffset+Link->DrawYOffset)+b2, 
-		((Link->X+Link->HitXOffset+Link->DrawXOffset)+(Link->HitWidth))+c2, ((Link->Y+Link->HitYOffset+Link->DrawYOffset)+(Link->HitHeight))+d2 );
+		(Hero->X+Hero->HitXOffset+Hero->DrawXOffset)+a2, (Hero->Y+Hero->HitYOffset+Hero->DrawYOffset)+b2, 
+		((Hero->X+Hero->HitXOffset+Hero->DrawXOffset)+(Hero->HitWidth))+c2, ((Hero->Y+Hero->HitYOffset+Hero->DrawYOffset)+(Hero->HitHeight))+d2 );
 }
 
 //Returns collision between an lweapon and a combo, only if its direction is 'dir'.
@@ -535,22 +535,22 @@ float Distance2(int x1, int y1, int x2, int y2)
 //Link and an object (X-Axis)
 bool DistX(int a, int distance) 
 {
-	return ( Abs(ComboX(a)-Link->X) < distance );
+	return ( Abs(ComboX(a)-Hero->X) < distance );
 }
 bool DistX<T>(T a, int distance) 
 {
-	return ( Abs(a->X - Link->X) < distance );
+	return ( Abs(a->X - Hero->X) < distance );
 }
 
 //Returns if two pointers are within a proximity of 'distance' in pixels.
 //Link and an object (Y-Axis)
 bool DistY(int a, int distance) 
 {
-	return ( Abs(ComboY(a)-Link->Y) < distance );
+	return ( Abs(ComboY(a)-Hero->Y) < distance );
 }
 bool DistY<T>(T a, int distance) 
 {
-	return ( Abs(a->Y - Link->Y) < distance );
+	return ( Abs(a->Y - Hero->Y) < distance );
 }
 
 //Returns if two pointers are within a proximity of 'distance' in pixels.
@@ -790,34 +790,34 @@ int GetPartialValue(int n, int place, int num)
 //Creates an item on the screen at link's 
 //position, giving it to him,a nd running its pick-up script.
 //itm_id is the item ID number
-//if holdtype is set to a Link->Action for holding up an item
+//if holdtype is set to a Hero->Action for holding up an item
 //then Link will hold the item up as desired.
 void GiveLinkItem(int itm_id, int holdtype)
 {
 	item i = Screen->CreateItem(itm_id);
-	i->X = Link->X;
-	i->Y = Link->Y;
-	i->Z = Link->Z;
+	i->X = Hero->X;
+	i->Y = Hero->Y;
+	i->Z = Hero->Z;
 	if ( holdtype == 1 )
 	{
-		Link->HeldItem = itm_id;
-		if ( Link->Action == LA_SWIMMING ) Link->Action = LA_HOLD1WATER;
-		else if ( Link->Action == LA_DIVING ) Link->Action = LA_HOLD1WATER;
-		else Link->Action = LA_HOLD1LAND;
+		Hero->HeldItem = itm_id;
+		if ( Hero->Action == LA_SWIMMING ) Hero->Action = LA_HOLD1WATER;
+		else if ( Hero->Action == LA_DIVING ) Hero->Action = LA_HOLD1WATER;
+		else Hero->Action = LA_HOLD1LAND;
 	}
 	else if ( holdtype == 2 )
 	{
-		Link->HeldItem = itm_id;
-		if ( Link->Action == LA_SWIMMING ) Link->Action = LA_HOLD2WATER;
-		else if ( Link->Action == LA_DIVING ) Link->Action = LA_HOLD2WATER;
+		Hero->HeldItem = itm_id;
+		if ( Hero->Action == LA_SWIMMING ) Hero->Action = LA_HOLD2WATER;
+		else if ( Hero->Action == LA_DIVING ) Hero->Action = LA_HOLD2WATER;
 		else holdtype = LA_HOLD2LAND;
 	}
 	else
 	{
 		if ( holdtype == LA_HOLD1LAND || holdtype == LA_HOLD2LAND || holdtype == LA_HOLD1WATER || holdtype == LA_HOLD2WATER ) 
 		{
-			Link->HeldItem = itm_id;
-			Link->Action = holdtype;
+			Hero->HeldItem = itm_id;
+			Hero->Action = holdtype;
 		}
 	}
 }
@@ -852,77 +852,77 @@ int GreatestIndex(int[] arr)
 //Read link's HitBox values
 int HitboxBottom() 
 {
-	return (Link->Y + Link->HitYOffset + Link->HitHeight - 1);
+	return (Hero->Y + Hero->HitYOffset + Hero->HitHeight - 1);
 }
 
 int HitboxLeft() 
 {
-	return (Link->X + Link->HitXOffset);
+	return (Hero->X + Hero->HitXOffset);
 }
 
 int HitboxRight() 
 {
-	return (Link->X + Link->HitXOffset + Link->HitWidth - 1);
+	return (Hero->X + Hero->HitXOffset + Hero->HitWidth - 1);
 }
 
 int HitboxTop() 
 {
-	return (Link->Y + Link->HitYOffset);
+	return (Hero->Y + Hero->HitYOffset);
 }
 
 void HoldUpItem(int id, int twohands)
 {
-	int oldaction = Link->Action;
-	Link->HeldItem = id;
+	int oldaction = Hero->Action;
+	Hero->HeldItem = id;
 	switch(oldaction)
 	{
 		case LA_SWIMMING:
 		case LA_DIVING:
 		case LA_GOTHURTWATER:
 		{
-			Link->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1WATER,LA_HOLD2WATER);
+			Hero->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1WATER,LA_HOLD2WATER);
 			break;
 		}
 		default:
-			Link->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1LAND,LA_HOLD2LAND);
+			Hero->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1LAND,LA_HOLD2LAND);
 			break;
 	}
 }
 
 void HoldUpItem(itemsprite i, int twohands)
 {
-	int oldaction = Link->Action;
-	Link->HeldItem = i->ID;
+	int oldaction = Hero->Action;
+	Hero->HeldItem = i->ID;
 	switch(oldaction)
 	{
 		case LA_SWIMMING:
 		case LA_DIVING:
 		case LA_GOTHURTWATER:
 		{
-			Link->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1WATER,LA_HOLD2WATER);
+			Hero->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1WATER,LA_HOLD2WATER);
 			break;
 		}
 		default:
-			Link->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1LAND,LA_HOLD2LAND);
+			Hero->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1LAND,LA_HOLD2LAND);
 			break;
 	}
 }
 
 void HoldUpItem(itemdata i, int twohands)
 {
-	int oldaction = Link->Action;
-	Link->HeldItem = i->ID;
+	int oldaction = Hero->Action;
+	Hero->HeldItem = i->ID;
 	switch(oldaction)
 	{
 		case LA_SWIMMING:
 		case LA_DIVING:
 		case LA_GOTHURTWATER:
 		{
-			Link->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1WATER,LA_HOLD2WATER);
+			Hero->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1WATER,LA_HOLD2WATER);
 			break;
 		}
 		default:
-			Link->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1LAND,LA_HOLD2LAND);
+			Hero->Action = Clamp(LA_HOLD1LAND+twohands,LA_HOLD1LAND,LA_HOLD2LAND);
 			break;
 	}
 }
@@ -1012,46 +1012,46 @@ int LeastIndex(int[] arr)
 //Returns if Link is facing an object. 
 bool LinkFacing(ffc f)
 {
-	if ( Link->Dir == DIR_UP && Link->Y > f->Y ) return true;
-	if ( Link->Dir == DIR_DOWN && Link->Y < f->Y ) return true;
-	if ( Link->Dir == DIR_RIGHT && Link->X < f->X ) return true;
-	if ( Link->Dir == DIR_LEFT && Link->X > f->X ) return true;
+	if ( Hero->Dir == DIR_UP && Hero->Y > f->Y ) return true;
+	if ( Hero->Dir == DIR_DOWN && Hero->Y < f->Y ) return true;
+	if ( Hero->Dir == DIR_RIGHT && Hero->X < f->X ) return true;
+	if ( Hero->Dir == DIR_LEFT && Hero->X > f->X ) return true;
 	return false;
 }
 
 bool LinkFacing(npc f)
 {
-	if ( Link->Dir == DIR_UP && Link->Y > f->Y ) return true;
-	if ( Link->Dir == DIR_DOWN && Link->Y < f->Y ) return true;
-	if ( Link->Dir == DIR_RIGHT && Link->X < f->X ) return true;
-	if ( Link->Dir == DIR_LEFT && Link->X > f->X ) return true;
+	if ( Hero->Dir == DIR_UP && Hero->Y > f->Y ) return true;
+	if ( Hero->Dir == DIR_DOWN && Hero->Y < f->Y ) return true;
+	if ( Hero->Dir == DIR_RIGHT && Hero->X < f->X ) return true;
+	if ( Hero->Dir == DIR_LEFT && Hero->X > f->X ) return true;
 	return false;
 }
 
 bool LinkFacing(lweapon f)
 {
-	if ( Link->Dir == DIR_UP && Link->Y > f->Y ) return true;
-	if ( Link->Dir == DIR_DOWN && Link->Y < f->Y ) return true;
-	if ( Link->Dir == DIR_RIGHT && Link->X < f->X ) return true;
-	if ( Link->Dir == DIR_LEFT && Link->X > f->X ) return true;
+	if ( Hero->Dir == DIR_UP && Hero->Y > f->Y ) return true;
+	if ( Hero->Dir == DIR_DOWN && Hero->Y < f->Y ) return true;
+	if ( Hero->Dir == DIR_RIGHT && Hero->X < f->X ) return true;
+	if ( Hero->Dir == DIR_LEFT && Hero->X > f->X ) return true;
 	return false;
 }
 
 bool LinkFacing(eweapon f)
 {
-	if ( Link->Dir == DIR_UP && Link->Y > f->Y ) return true;
-	if ( Link->Dir == DIR_DOWN && Link->Y < f->Y ) return true;
-	if ( Link->Dir == DIR_RIGHT && Link->X < f->X ) return true;
-	if ( Link->Dir == DIR_LEFT && Link->X > f->X ) return true;
+	if ( Hero->Dir == DIR_UP && Hero->Y > f->Y ) return true;
+	if ( Hero->Dir == DIR_DOWN && Hero->Y < f->Y ) return true;
+	if ( Hero->Dir == DIR_RIGHT && Hero->X < f->X ) return true;
+	if ( Hero->Dir == DIR_LEFT && Hero->X > f->X ) return true;
 	return false;
 }
 
 bool LinkFacing(item f)
 {
-	if ( Link->Dir == DIR_UP && Link->Y > f->Y ) return true;
-	if ( Link->Dir == DIR_DOWN && Link->Y < f->Y ) return true;
-	if ( Link->Dir == DIR_RIGHT && Link->X < f->X ) return true;
-	if ( Link->Dir == DIR_LEFT && Link->X > f->X ) return true;
+	if ( Hero->Dir == DIR_UP && Hero->Y > f->Y ) return true;
+	if ( Hero->Dir == DIR_DOWN && Hero->Y < f->Y ) return true;
+	if ( Hero->Dir == DIR_RIGHT && Hero->X < f->X ) return true;
+	if ( Hero->Dir == DIR_LEFT && Hero->X > f->X ) return true;
 	return false;
 }
 
@@ -1059,10 +1059,10 @@ bool LinkFacing(int combo_pos)
 {
 	int posX = ComboX(combo_pos);
 	int posY = ComboY(combo_pos);
-	if ( Link->Dir == DIR_UP && Link->Y > posY ) return true;
-	if ( Link->Dir == DIR_DOWN && Link->Y < posY ) return true;
-	if ( Link->Dir == DIR_RIGHT && Link->X < posX ) return true;
-	if ( Link->Dir == DIR_LEFT && Link->X > posX ) return true;
+	if ( Hero->Dir == DIR_UP && Hero->Y > posY ) return true;
+	if ( Hero->Dir == DIR_DOWN && Hero->Y < posY ) return true;
+	if ( Hero->Dir == DIR_RIGHT && Hero->X < posX ) return true;
+	if ( Hero->Dir == DIR_LEFT && Hero->X > posX ) return true;
 	return false;
 }
 
@@ -1220,15 +1220,15 @@ int LWeaponToEWeaponID(int type)
 
 //M
 
-//Match the present Link->Action to those on array 'list'.
+//Match the present Hero->Action to those on array 'list'.
 //Returns true of any of the entries on the list match. 
-//Checks if the present Link->Action is one from a predefined list.
+//Checks if the present Hero->Action is one from a predefined list.
 bool MatchAction(int[] list)
 {
 	bool match = false;
 	for ( int q = SizeOfArray(list)-1; q >=0 ; --q ) 
 	{
-		if ( Link->Action == list[q] ) match = true;
+		if ( Hero->Action == list[q] ) match = true;
 	}
 	return match;
 }
@@ -1482,7 +1482,7 @@ void NoInput()
 //Kills inputs from A, B, L, R, Start, Map, and Ex buttons. 
 void NoInput(bool stick)
 { 
-	int max = ( stick ) ? CB_MAX : 14;
+	int max = ( stick ) ? CB_MAX : CB_STICKUP;
 	for ( int q = CB_UP; q < max; ++q )
 	{
 		Input->Button[q] = false;
@@ -1493,19 +1493,19 @@ void NoInput(bool stick)
 //Negates engine knockback for Link on land, or in water.
 void NoLinkKnockback()
 {
-	if ( Link->Action == LA_GOTHURTLAND || Link->Action == LA_GOTHURTWATER ) Link->HitDir = -1;
+	if ( Hero->Action == LA_GOTHURTLAND || Hero->Action == LA_GOTHURTWATER ) Hero->HitDir = -1;
 }
 
 //Negates engine knockback for Link only on land.
 void NoLinkKnockbackLand()
 {
-	if ( Link->Action == LA_GOTHURTLAND ) Link->HitDir = -1;
+	if ( Hero->Action == LA_GOTHURTLAND ) Hero->HitDir = -1;
 }
 
 //Negates engine knockback for Link only in water.
 void NoLinkKnockbackWater()
 {
-	if ( Link->Action == LA_GOTHURTWATER ) Link->HitDir = -1;
+	if ( Hero->Action == LA_GOTHURTWATER ) Hero->HitDir = -1;
 }
 
 //Kills presses from A, B, L, R, Start, Map, and Ex buttons. 
@@ -1521,7 +1521,7 @@ void NoPress()
 //Kills presses from A, B, L, R, Start, Map, and Ex buttons. 
 void NoPress(bool stick)
 { 
-	int max = ( stick ) ? CB_MAX : 14;
+	int max = ( stick ) ? CB_MAX : CB_STICKUP;
 	for ( int q = CB_UP; q < max; ++q )
 	{
 		Input->Press[q] = false;
@@ -1729,27 +1729,27 @@ int ProximityX(int b, int a)
 
 int ProximityX(ffc a) 
 {
-	return ( Abs(Link->X - a->X) );
+	return ( Abs(Hero->X - a->X) );
 }
 
 int ProximityX(lweapon a) 
 {
-	return ( Abs(Link->X - a->X) );
+	return ( Abs(Hero->X - a->X) );
 }
 
 int ProximityX(eweapon a) 
 {
-	return ( Abs(Link->X - a->X) );
+	return ( Abs(Hero->X - a->X) );
 }
 
 int ProximityX(npc a) 
 {
-	return ( Abs(Link->X - a->X) );
+	return ( Abs(Hero->X - a->X) );
 }
 
 int ProximityX(item a) 
 {
-	return ( Abs(Link->X - a->X) );
+	return ( Abs(Hero->X - a->X) );
 }
 
 
@@ -1953,7 +1953,7 @@ int ProximityX(int b, int a, bool center)
 
 int ProximityX(int a) 
 {
-	return ( Abs(Link->X - ComboX(a)) );
+	return ( Abs(Hero->X - ComboX(a)) );
 }
 
 
@@ -2153,32 +2153,32 @@ int ProximityY(int b, int a)
 
 int ProximityY(ffc a) 
 {
-	return ( Abs(Link->Y - a->Y) );
+	return ( Abs(Hero->Y - a->Y) );
 }
 
 int ProximityY(lweapon a) 
 {
-	return ( Abs(Link->Y - a->Y) );
+	return ( Abs(Hero->Y - a->Y) );
 }
 
 int ProximityY(eweapon a) 
 {
-	return ( Abs(Link->Y - a->Y) );
+	return ( Abs(Hero->Y - a->Y) );
 }
 
 int ProximityY(npc a) 
 {
-	return ( Abs(Link->Y - a->Y) );
+	return ( Abs(Hero->Y - a->Y) );
 }
 
 int ProximityY(item a) 
 {
-	return ( Abs(Link->Y - a->Y) );
+	return ( Abs(Hero->Y - a->Y) );
 }
 
 int ProximityY(int a) 
 {
-	return ( Abs(Link->Y - ComboY(a)) );
+	return ( Abs(Hero->Y - ComboY(a)) );
 }
 
 //Proximity from center of object's hitbox:
@@ -2461,7 +2461,7 @@ void ScreenToLayer(int sourceMap, int sourceScreen, int drawOpacity, int destLay
 }
 
 //Sets the values for combo at position 'pos' to those specified. Pass -1 to leave a value unchanged.
-void SetCombo(int pos, int data, int type, int flag, int inh_flag, int cset, int solid)
+void SetCombo(int pos, int data, int type, int flag, int inh_flag, int cset, ComboSolidityBitflags solid)
 {
 	if ( data >=0 ) Screen->ComboD[pos] = data;
 	if ( type >= 0 ) Screen->ComboT[pos] = type;
@@ -2473,7 +2473,7 @@ void SetCombo(int pos, int data, int type, int flag, int inh_flag, int cset, int
 
 //Sets the values for a combo on layer 'layer', at position 'pos' to the values specified.
 //Pass -1 to any value to leave it unchanged. 
-void SetLayerComboValues(int layer, int pos, int data, int type, int flag, int inh_flag, int cset, int solid)
+void SetLayerComboValues(int layer, int pos, int data, int type, int flag, int inh_flag, int cset, ComboSolidityBitflags solid)
 {
 	if ( data >=0 ) SetLayerComboD(layer,pos,data);
 	if ( type >= 0 ) SetLayerComboT(layer,pos,type);

@@ -56,7 +56,7 @@ RETURNFUNC; Func[void addHeader(char32[])] Body End
 PUSHARGSV 0 0.0003; Func[void addLine(char32[], int, int, int, int)] Body Start
 SETR D4 SP2
 STOREV 0 0.0002
-LOAD D2 0.0005; switch() #56 Key
+LOAD D2 0.0005; switch() #55 Key
 SETR SWITCHKEY D2; Store key
 COMPAREV SWITCHKEY 0
 GOTOCMP 40 ==; case '0'
@@ -64,7 +64,7 @@ COMPAREV SWITCHKEY 2
 GOTOCMP 46 ==; case '20000'
 COMPAREV SWITCHKEY 1
 GOTOCMP 53 ==; case '10000'
-GOTO 53; switch() #56 NoMatch
+GOTO 53; switch() #55 NoMatch
 SETR D2 GD2; Case block
 PUSHR D2
 POP D0

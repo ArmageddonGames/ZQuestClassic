@@ -1,6 +1,6 @@
 script typedef itemdata item;
 
-// Item class ids, used by [itemdata::Family].
+// Item classes, used by [itemdata::Type].
 enum ItemClass {
 	IC_SWORD              = 0,
 	IC_BRANG              = 1,
@@ -146,18 +146,16 @@ class itemdata {
 	// @delete
 	internal itemdata();
 
-	// The type [itemdata] of the item. Uses the `IC_` constants.
-	//
-	// @zasm_var IDATAFAMILY
-	internal int Family;
-
-	// The type [itemdata] of the item. Uses the `IC_` constants.
-	//
+	// @value [ItemClass]
 	// @zasm_var IDATAFAMILY
 	internal int Type;
 
-	// The level of the item.
+	// Exactly the same as [Type] - use that instead.
 	//
+	// @value [ItemClass]
+	// @zasm_var IDATAFAMILY
+	internal int Family;
+
 	// @zasm_var IDATALEVEL
 	internal int Level;
 
@@ -186,8 +184,7 @@ class itemdata {
 
 	// The counter to increase when this item is picked up.
 	//
-	// Valid values: [CounterIndex] (`CR_`).
-	//
+	// @value [CounterIndex]
 	// @zasm_var IDATACOUNTER
 	internal int Counter;
 
@@ -257,9 +254,9 @@ class itemdata {
 	// @zasm_var IDATAPSTRING
 	internal int PickupString;
 
-	// The flags associated with the pickup string, as bitwise flags. Use the
-	// `IPSTR_` constants to access this.
+	// The bitflags associated with the pickup string.
 	//
+	// @value [PickupStringBitflags]
 	// @zasm_var IDATAPFLAGS
 	internal int PickupStringFlags;
 
@@ -293,9 +290,9 @@ class itemdata {
 	// @zasm_var IDATATILE
 	internal int Tile;
 
-	// Misc flags for the item graphics, bitwise flagset. Use the `IMISC_`
-	// constants to access.
+	// Misc bitflags for the item graphics.
 	//
+	// @value [ItemMiscBitflags]
 	// @zasm_var IDATAMISC
 	internal int MiscFlags;
 
@@ -489,15 +486,16 @@ class itemdata {
 	// @zasm_var IDATATILEH
 	internal int TileHeight;
 
-	// The item pickup flags, as a bitwise flagset. Use the `IP_` constants to
-	// access. Take care when using any `INTERNAL` flags.
+	// The item pickup bitflags.
 	//
+	// @value [ItemPickupBitflags]
 	// @zasm_var IDATAPICKUP
 	internal int Pickup;
 
-	// A bitwise flagset representing all the checkboxes for which sizes to
-	// apply from the itemdata. Use the `SZFLAG_` constants to access.
+	// Bitwise flags representing all the checkboxes for which sizes to
+	// apply from the itemdata.
 	//
+	// @value [SizeOverrideBitflags]
 	// @zasm_var IDATAOVERRIDEFL
 	internal int SizeFlags;
 
@@ -512,8 +510,9 @@ class itemdata {
 	internal int WeaponTileHeight;
 
 	// A bitwise flagset representing all the checkboxes for which sizes to
-	// apply from the itemdata. Use the `SZFLAG_` constants to access.
+	// apply from the itemdata.
 	//
+	// @value [SizeOverrideBitflags]
 	// @zasm_var IDATAOVERRIDEFLWEAP
 	internal int WeaponSizeFlags;
 
@@ -561,12 +560,13 @@ class itemdata {
 	// The sprites used for making the weapon change appearance when lit on
 	// fire.
 	//
+	// @index [ItemBurnIndex]
 	// @zasm_var IDATABURNINGSPR
 	internal int BurnSprites[];
 
-	// The burning light radii from `Graphics->Sprites->Burning`. Use the
-	// `ITM_BURNSPR_` constants.
+	// The burning light radii from `Graphics->Sprites->Burning`.
 	//
+	// @index [ItemBurnIndex]
 	// @zasm_var IDATABURNINGLIGHTRAD
 	internal int BurnLightRadius[];
 

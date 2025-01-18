@@ -27,7 +27,7 @@ enum EnemyPattern
 };
 
 // Indices for generic counters.
-// Use with [itemdata::Counter], [Game->Counter], [Game->MCounter] and [Game->DCounter]
+// Used with [itemdata::Counter], [Game->Counter], [Game->MCounter] and [Game->DCounter].
 enum CounterIndex
 {
 	CR_NONE = -1,
@@ -95,7 +95,7 @@ enum SwitchEffect
 	SW_EFF_RISE
 };
 
-// Use with [Screen->SetSideWarp] and [Link->WarpEx]
+// Used with [Screen->SetSideWarp] and [Hero->WarpEx]
 enum WarpType
 {
 	WT_CAVE,
@@ -389,3 +389,1531 @@ enum WarpIndex
 // Opacity options. Use with drawing commands.
 const int OP_TRANS              = 64;
 const int OP_OPAQUE             = 128;
+
+// TODO ! split up to appropriate binding file / std_zh
+
+// Sound effect IDs. Used with [Audio->PlaySound].
+enum SoundEffect
+{
+	SFX_ARROW                      = 1,  // Arrow is fired.
+	SFX_BEAM                       = 2,  // Sword beam is fired.
+	SFX_BOMB                       = 3,  // Bomb explodes.
+	SFX_BRANG                      = 4,  // Boomerang spinning.
+	SFX_CHARGE1                    = 35, // Sword powering up.
+	SFX_CHARGE2                    = 36, // Sword powering up again (Hurricane Spin).
+	SFX_CURSOR                     = 5,  // Subscreen cursor.
+	SFX_CLINK                      = 6,  // Shield is hit.
+	SFX_CLEARED                    = 7,  // Chime when screen item appears.
+	SFX_DINSFIRE                   = 37, // Din's Fire blast.
+	SFX_DODONGO                    = 8,  // Dodongo's roar.
+	SFX_SHUTTER                    = 9,  // Shutter bang.
+	SFX_EDEAD                      = 10, // Enemy is killed.
+	SFX_EHIT                       = 11, // Enemy is hit.
+	SFX_LOWHP                      = 12, // Low hearts warning beep.
+	SFX_FALL                       = 38, // Enemy falls from ceiling (unused).
+	SFX_FARORESWIND                = 39, // Farore's Wind spell.
+	SFX_FIRE                       = 13, // Flame roar.
+	SFX_FIREBALL                   = 40, // Enemy fireball.
+	SFX_GANON                      = 14, // Music when Ganon appears/dies.
+	SFX_GASP                       = 15, // Boss is hit.
+	SFX_GRASSCUT                   = 41, // Grass or bush slashed.
+	SFX_HAMMER                     = 16, // Hammer pound.
+	SFX_HAMMERPOST                 = 42, // Pounded a post.
+	SFX_HOOKSHOT                   = 17, // Hookshot chain rattle.
+	SFX_HOVER                      = 43, // Hover boots.
+	SFX_ICE                        = 44, // Unused.
+	SFX_JUMP                       = 45, // Jumping.
+	SFX_LENSOFF                    = 46, // Lens of Truth off.
+	SFX_LENSON                     = 47, // Lens of Truth on.
+	SFX_MSG                        = 18, // Message typing.
+	SFX_NAYRUSLOVE1                = 48, // Nayru's Love shield hum.
+	SFX_NAYRUSLOVE2                = 49, // Nayru's Love shield running out.
+	SFX_OUCH                       = 19, // Link is hit.
+	SFX_PICKUP                     = 20, // Chime when item is held above head.
+	SFX_PLACE                      = 21, // Bomb is placed.
+	SFX_PLINK                      = 22, // Heart/Rupee is collected.
+	SFX_PUSHBLOCK                  = 50, // Pushed a block.
+	SFX_REFILL                     = 23, // Hearts being refilled.
+	SFX_ROAR                       = 24, // Aquamentus, Gleeok and Ganon's roar.
+	SFX_ROCK                       = 51, // Octorok rock is fired.
+	SFX_ROCKETDOWN                 = 52, // Spell rocket descends.
+	SFX_ROCKETUP                   = 53, // Spell rocket launched.
+	SFX_SCALE                      = 25, // Chime when fairy appears/is picked up.
+	SFX_SEA                        = 26, // "Ocean SFX" ambience.
+	SFX_SECRET                     = 27, // Chime when secret is discovered.
+	SFX_SPINATTACK                 = 54, // Sword spin.
+	SFX_SPIRAL                     = 28, // Link dies.
+	SFX_SPLASH                     = 55, // Splashing in shallow water.
+	SFX_STAIRS                     = 29, // Link marches down stairs.
+	SFX_SUMMON                     = 56, // Summoner magic.
+	SFX_SWORD                      = 30, // Sword swipe.
+	SFX_TAP1                       = 57, // Sword taps wall.
+	SFX_TAP2                       = 58, // Sword taps bombable wall.
+	SFX_PATRA                      = 31, // Patra and Manhandla's shriek.
+	SFX_WAND                       = 32, // Magic is fired by Wizzrobes or Link.
+	SFX_WHIRLWIND                  = 59, // Whistle whirlwind.
+	SFX_WHISTLE                    = 33, // Whistle is played.
+	SFX_ZELDA                      = 34, // Music when ending sequence begins.
+};
+
+// Used with [eweapon::UseSprite], [lweapon::UseSprite], and [portal::UseSprite].
+enum SpriteID
+{
+	SP_ARROW_ENEMY                 = 19,
+	SP_ARROW1                      = 10, // Wooden Arrow.
+	SP_ARROW2                      = 11, // Silver Arrow.
+	SP_ARROW3                      = 34, // Golden Arrow.
+	SP_BAIT                        = 14, // Enemy bait.
+	SP_BOMB_ENEMY                  = 76, // Bomb (Enemy, normal).
+	SP_SBOMB_ENEMY                 = 77, // Bomb (Enemy, Super).
+	SP_BOMB                        = 7,  // Normal Bomb.
+	SP_SBOMB                       = 8,  // Super Bomb.
+	SP_BRANG1                      = 4,  // Wooden Boomerang.
+	SP_BRANG2                      = 5,  // Magical Boomerang.
+	SP_BRANG3                      = 6,  // Fire Boomerang.
+	SP_CANEOFBYRNA                 = 69, // Cane of Byrna Object.
+	SP_BYRNABEAM                   = 87, // Cane of Byrna Orbiter.
+	SP_BYRNASLASH                  = 70, // Cane of Byrna Slashing Sprite.
+	SP_DINSFIRE_FALL               = 39, // Din's Fire (Falling).
+	SP_DINSFIRE_RISE               = 38, // Din's Fire (Rising).
+	SP_DINSFIRE_TRAIL_FALL         = 41, // Din's Fire (Trail, Falling).
+	SP_DINSFIRE_TRAIL_RISE         = 40, // Din's Fire (Trail, Rising).
+	SP_BOMB_ENEMY_EXPLOSION        = 78, // Normal Bomb Exploion (Enemy).
+	SP_SBOMB_ENEMY_EXPLOSION       = 79, // Super Bomb Explosion (Enemy).
+	SP_BOMB_EXPLOSION              = 9,  // Normal Bomb Explosion.
+	SP_SBOMB_EXPLOSION             = 75, // Super Bomb Explosion.
+	SP_FIRE_ENEMY                  = 35, // Fire (Enemy).
+	SP_FIRE2_ENEMY                 = 81, // Fire 2 (Enemy).
+	SP_FIRETRAIL2                  = 82, // Fire Trail 2 (Enemy). Unused.
+	SP_FIRETRAIL                   = 80, // Fire Trail (Enemy).
+	SP_FIREBALL                    = 17, // Fireball (Enemy).
+	SP_FLAME                       = 12, // Candle Fire.
+	SP_FIRE                        = 12, // Candle Fire.
+	SP_HAMMER                      = 25, // Hammer.
+	SP_HOOKSHOT1_CHAIN_H           = 27, // Hookshot (Short, Chain, Horizontal).
+	SP_HOOKSHOT1_CHAIN_V           = 42, // Hookshot (Short, Chain, Vertical).
+	SP_HOOKSHOT1_HANDLE            = 28, // Hookshot Handle (Short).
+	SP_HOOKSHOT1_HEAD              = 26, // Hookshot Head (Short).
+	SP_HOOKSHOT2_CHAIN_H           = 72, // Hookshot (Short, Chain, Horizontal).
+	SP_HOOKSHOT2_CHAIN_V           = 74, // Hookshot (Short, Chain, Vertical).
+	SP_HOOKSHOT2_HANDLE            = 73, // Hookshot Handle (Short).
+	SP_HOOKSHOT2_HEAD              = 71, // Hookshot Head (Short).
+	SP_ICE                         = 83, // Ice Magic (Enemy, Unused).
+	SP_MAGIC_ENEMY                 = 21, // Magic (Enemy).
+	SP_MAGIC_FIRE                  = 85, // Magic (Fire).
+	SP_MAGIC                       = 16, // Magic (Wand).
+	SP_MISC44                      = 44, // Misc 44, unused.
+	SP_MISC45                      = 45, // Misc 45, unused.
+	SP_MISC57                      = 57, // Misc 57, unused.
+	SP_MISC24                      = 24, // Misc 24, unused.
+	SP_MISC_ARROW2                 = 29, // Silver Arrow Sparkles.
+	SP_MISC_ARROW3                 = 30, // Golden Arrow Sparkles.
+	SP_MISC_BRANG2                 = 31, // Magic Boomerang Sparkles.
+	SP_MISC_BRANG3                 = 32, // Fire Boomerang Sparkles.
+	SP_MISC_BUSH                   = 52, // Bush Leaf Clippings.
+	SP_MISC_DEATH                  = 23, // Link Death Winkout.
+	SP_MISC_FLOWER                 = 53, // Flower Clippings.
+	SP_MISC_GRASS                  = 54, // Grass Clippings.
+	SP_MISC_HAMMER                 = 33, // Hammer Impact.
+	SP_MISC_HOVER                  = 84, // Hover Boots Glow.
+	SP_MISC_MAGICMETER             = 37, // Magic Meter.
+	SP_MISC_MORE                   = 43, // More Indicator.
+	SP_MISC_QHEART                 = 86, // Quarter Heart.
+	SP_MISC_RIPPLE                 = 56, // Ripples.
+	SP_MISC_SHADOW2                = 51, // Shadow (Large).
+	SP_MISC_SHADOW1                = 50, // Shadow (Small).
+	SP_SPAWN                       = 22, // Enemy Spawn Poof.
+	SP_MISC_SSVINE                 = 68, // Subscreen Vine.
+	SP_TALLGRASS                   = 55, // Tall Grass Movement.
+	SP_NAYRU_LEFT                  = 58, // Nayru's Love (Left).
+	SP_NAYRU_LEFT2                 = 59, // Nayru's Love (Left, Returning).
+	SP_NAYRU_RIGHT                 = 62, // Nayru's Love (Right).
+	SP_NAYRU_RIGHT2                = 63, // Nayru's Love (Right, Returning).
+	SP_NAYRU_BACK                  = 67, // Nayru's Love Shield (Back).
+	SP_NAYRU_FRONT                 = 66, // Nayru's Love Shield (Front).
+	SP_NAYRU_TRAIL_LEFT            = 60, // Nayru's Love Trail (Left).
+	SP_NAYRU_TRAIL_LEFT2           = 61, // Nayru's Love Trail (Left, Returning).
+	SP_NAYRU_TRAIL_RIGHT           = 64, // Nayru's Love Trail (Right).
+	SP_NAYRU_TRAIL_RIGHT2          = 65, // Nayru's Love Trail (Right, Returning).
+	SP_ROCK                        = 18, // Rock.
+	SP_SWORD_ENEMY                 = 20, // Enemy Sword Beam.
+	SP_SWORD1                      = 0,  // Wooden Sword.
+	SP_SLASH1                      = 46, // Wooden Sword Slash.
+	SP_SWORD2                      = 1,  // White Sword.
+	SP_SLASH2                      = 47, // White Sword Slash.
+	SP_SWORD3                      = 2,  // Magical Sword.
+	SP_SLASH3                      = 48, // Magical Sword Slash.
+	SP_SWORD4                      = 3,  // Master Sword.
+	SP_SLASH4                      = 49, // Master Sword Slash.
+	SP_WAND                        = 15, // Wand Object.
+	SP_WHIRL                       = 13, // Whiste Whirlwind.
+	SP_WIND                        = 36, // Wind Magic (Enemy).
+};
+
+// Extra Directions. Used with some stuff?
+// @deprecated Use [Direction] instead!
+enum Dir2
+{
+	DIR2_UP                        = 8,
+	DIR2_RIGHTUP                   = 9,
+	DIR2_RIGHT                     = 10,
+	DIR2_RIGHTDOWN                 = 11,
+	DIR2_DOWN                      = 12,
+	DIR2_LEFTDOWN                  = 13,
+	DIR2_LEFT                      = 14,
+	DIR2_LEFTUP                    = 15,
+	DIR2_UPRIGHT                   = 9,
+	DIR2_DOWNRIGHT                 = 11,
+	DIR2_DOWNLEFT                  = 13,
+	DIR2_UPLEFT                    = 15,
+};
+
+// Sprite rendering extend modes. Used with [sprite::Extend].
+enum ExtendMode
+{
+	EXT_NONE                       = 0, // Not extended.
+	EXT_16X32                      = 1, // Sprite is extended as 16x32, or Link is extended in Sprites->Link to 16x32.
+	EXT_32X32                      = 2, // Sprite is extended as 32x32, or Link is extended in Sprites->Link to 32x32.
+	EXT_NORMAL                     = 3, // Extended.
+	EXT_EXTENDED                   = 3, // Extended.
+	EXT_NOSHADOW                   = 4, // Extended. NPC has no shadow.
+};
+
+// Level item flags. Used with [Game->LItems].
+enum LevelItemBitflags
+{
+	LI_TRIFORCE                    = 0x01, // The Triforce of this Level has been obtained.
+	LI_MAP                         = 0x02, // The Dungeon Map of this Level has been obtained.
+	LI_COMPASS                     = 0x04, // The Compass of this Level has been obtained.
+	LI_BOSS                        = 0x08, // A "Dungeon Boss" enemy has been slain.
+	LI_BOSSKEY                     = 0x10, // The Boss Key of this Level has been obtained.
+};
+
+// Mouse button bitflags, used with [Hero->InputMouseB].
+// @deprecated Use [MouseIndex] and [Input->Mouse] instead!
+enum MouseButtonBitflags
+{
+	MB_LEFTCLICK                   = 0x1,
+	MB_RIGHTCLICK                  = 0x2,
+	MB_MIDDLECLICK                 = 0x4,
+};
+
+// Controller buttons.
+enum Button
+{
+	CB_UP                          = 0,
+	CB_DOWN                        = 1,
+	CB_LEFT                        = 2,
+	CB_RIGHT                       = 3,
+	CB_A                           = 4,
+	CB_B                           = 5,
+	CB_START                       = 6,
+	CB_L                           = 7,
+	CB_R                           = 8,
+	CB_MAP                         = 9,
+	CB_EX1                         = 10,
+	CB_X                           = 10,
+	CB_EX2                         = 11,
+	CB_Y                           = 11,
+	CB_EX3                         = 12,
+	CB_EX4                         = 13,
+	CB_STICKUP                     = 14,
+	CB_STICKDOWN                   = 15,
+	CB_STICKLEFT                   = 16,
+	CB_STICKRIGHT                  = 17,
+	CB_AXIS_UP                     = 14,
+	CB_AXIS_DOWN                   = 15,
+	CB_AXIS_LEFT                   = 16,
+	CB_AXIS_RIGHT                  = 17,
+	CB_MAX                         = 18,
+};
+
+// Item IDs. Used with [Screen->CreateItem] and [Hero->Item].
+// These are DEFAULT values, and may not be correct for custom quests which
+// have overridden item action data.
+enum ItemID
+{
+	I_AMULET1                      = 50,
+	I_AMULET2                      = 63,
+	I_ARROW1                       = 13,
+	I_ARROW2                       = 14,
+	I_ARROW3                       = 57,
+	I_ARROWAMMO1                   = 70,
+	I_ARROWAMMO10                  = 72,
+	I_ARROWAMMO30                  = 73,
+	I_ARROWAMMO5                   = 71,
+	I_BAIT                         = 16,
+	I_BOMB                         = 3,
+	I_BOMBAMMO1                    = 77,
+	I_BOMBAMMO30                   = 80,
+	I_BOMBAMMO4                    = 78,
+	I_BOMBAMMO8                    = 79,
+	I_BOMBBAG1                     = 81,
+	I_BOMBBAG2                     = 82,
+	I_BOMBBAG3                     = 83,
+	I_BOMBBAG4                     = 106,
+	I_BOOK                         = 32,
+	I_BOOTS                        = 55,
+	I_BOSSKEY                      = 67,
+	I_BOW1                         = 15,
+	I_BOW2                         = 68,
+	I_BRACELET1                    = 107,
+	I_BRACELET2                    = 19,
+	I_BRACELET3                    = 56,
+	I_BRANG1                       = 23,
+	I_BRANG2                       = 24,
+	I_BRANG3                       = 35,
+	I_CANDLE1                      = 10,
+	I_CANDLE2                      = 11,
+	I_CBYRNA                       = 88,
+	I_CHARGERING1                  = 101,
+	I_CHARGERING2                  = 102,
+	I_CLOCK                        = 4,
+	I_COMPASS                      = 22,
+	I_CROSSSCROLL                  = 95,
+	I_DINSFIRE                     = 64,
+	I_DUST_PILE                    = 43,
+	I_FAIRY                        = 34,
+	I_FAIRYSTILL                   = 69,
+	I_FARORESWIND                  = 65,
+	I_FLIPPERS                     = 51,
+	I_HAMMER                       = 54,
+	I_HCPIECE                      = 49,
+	I_HEART                        = 2,
+	I_HEARTCONTAINER               = 28,
+	I_HEARTRING1                   = 112,
+	I_HEARTRING2                   = 113,
+	I_HEARTRING3                   = 114,
+	I_HOOKSHOT1                    = 52,
+	I_HOOKSHOT2                    = 89,
+	I_HOVERBOOTS                   = 92,
+	I_KEY                          = 9,
+	I_KILLALL                      = 62,
+	I_LADDER1                      = 27,
+	I_LADDER2                      = 108,
+	I_LENS                         = 53,
+	I_LETTER                       = 12,
+	I_LETTERUSED                   = 90,
+	I_LEVELKEY                     = 84,
+	I_MAGICCONTAINER               = 58,
+	I_MAGICJAR1                    = 59,
+	I_MAGICJAR2                    = 60,
+	I_MAGICKEY                     = 33,
+	I_MAGICRING1                   = 115,
+	I_MAGICRING2                   = 116,
+	I_MAGICRING3                   = 117,
+	I_MAGICRING4                   = 118,
+	I_MAP                          = 21,
+	I_MISC1                        = 46,
+	I_MISC2                        = 47,
+	I_NAYRUSLOVE                   = 66,
+	I_PERILRING                    = 121,
+	I_PERILSCROLL                  = 103,
+	I_POTION1                      = 29,
+	I_POTION2                      = 30,
+	I_QUAKESCROLL1                 = 96,
+	I_QUAKESCROLL2                 = 97,
+	I_QUIVER1                      = 74,
+	I_QUIVER2                      = 75,
+	I_QUIVER3                      = 76,
+	I_QUIVER4                      = 105,
+	I_RAFT                         = 26,
+	I_RING1                        = 17,
+	I_RING2                        = 18,
+	I_RING3                        = 61,
+	I_ROCSFEATHER                  = 91,
+	I_RUPEE1                       = 0,
+	I_RUPEE10                      = 86,
+	I_RUPEE100                     = 87,
+	I_RUPEE20                      = 38,
+	I_RUPEE200                     = 40,
+	I_RUPEE5                       = 1,
+	I_RUPEE50                      = 39,
+	I_SBOMB                        = 48,
+	I_SELECTA                      = 45,
+	I_SELECTB                      = 85,
+	I_SHIELD1                      = 93,
+	I_SHIELD2                      = 8,
+	I_SHIELD3                      = 37,
+	I_SPINSCROLL1                  = 94,
+	I_SPINSCROLL2                  = 98,
+	I_STOMPBOOTS                   = 120,
+	I_STONEAGONY                   = 119,
+	I_SWORD1                       = 5,
+	I_SWORD2                       = 6,
+	I_SWORD3                       = 7,
+	I_SWORD4                       = 36,
+	I_TRIFORCE                     = 20,
+	I_TRIFORCEBIG                  = 44,
+	I_WALLET500                    = 41,
+	I_WALLET999                    = 42,
+	I_WALLETA                      = 104,
+	I_WAND                         = 25,
+	I_WEALTHMEDAL                  = 109,
+	I_WEALTHMEDAL2                 = 110,
+	I_WEALTHMEDAL3                 = 111,
+	I_WHIMSICALRING                = 122,
+	I_WHISPRING1                   = 99,
+	I_WHISPRING2                   = 100,
+	I_WHISTLE                      = 31,
+};
+
+// Item pickup bitflags. Used with [item::Pickup].
+// Many values are reserved for internal usage, and have no effect.
+enum ItemPickupBitflags
+{
+	IP_BIGRANGE                    = 0x0001, // INTERNAL Collision rectangle is large.
+	IP_HOLDUP                      = 0x0002, // Link holds it up when collecting it.
+	IP_ST_ITEM                     = 0x0004, // Sets the screen state "Item" when collected.
+	IP_DUMMY                       = 0x0008, // A 'dummy' item, such as rupee markers in shops. Can't be collected and ignores gravity.
+	IP_CHECK                       = 0x0010, // INTERNAL Check restrictions (money in a shop, etc.).
+	IP_MONEY                       = 0x0020, // INTERNAL This item causes money loss (bomb upgrade, swindle room, etc.).
+	IP_FADE                        = 0x0040, // INTERNAL Blinks if fadeclk>0.
+	IP_ENEMYCARRIED                = 0x0080, // The item-carrying NPC carries it. If no NPC has an item, the most recently created NPC carries it.
+	IP_TIMEOUT                     = 0x0100, // Disappears after 512 frames. Can be collected by melee weapons if the related quest rule is not set.
+	IP_BIGTRIFORCE                 = 0x0200, // INTERNAL Large collision rectangle (used for large triforce).
+	IP_NODRAW                      = 0x0400, // INTERNAL Don't draw this (for underwater items).
+	IP_ST_SPECIALITEM              = 0x0800, // Sets the screen state "Special Item" when collected.
+	IP_TRIGGERSECRETS              = 0x1000, // Triggers screen secrets when collected.
+	IP_ALWAYSGRAB                  = 0x2000, // Item is always able to be picked up (ex. brang/hshot/arrows/melee weapons).
+};
+
+// LWeapon types. Use with Screen->CreateLWeapon() and Screen->LoadLWeapon().
+enum LWeaponType
+{
+	LW_SWORD                       = 1,  // This cannot be created.
+	LW_WAND                        = 12, // This cannot be created.
+	LW_CANDLE                      = 12, // This cannot be created.
+	LW_HAMMER                      = 19, // This cannot be created.
+	LW_HOOKSHOT                    = 20, // This cannot be created.
+	LW_CANEOFBYRNA                 = 27, // This cannot be created.
+	LW_BUGNET                      = 52, // This cannot be created.
+	LW_ARROW                       = 8,
+	LW_BEAM                        = 2,  // Sword beam.
+	LW_BRANG                       = 3,
+	LW_BOMB                        = 6,
+	LW_BOMBBLAST                   = 4,  // Bomb explosion.
+	LW_SBOMB                       = 7,
+	LW_SBOMBBLAST                  = 5,  // Super Bomb explosion.
+	LW_FIRE                        = 9,
+	LW_WHISTLE                     = 10, // Whistle music - kills Digdogger.
+	LW_BAIT                        = 11,
+	LW_MAGIC                       = 13, // Wand magic.
+	LW_WIND                        = 15, // Whistle whirlwind.
+	LW_REFMAGIC                    = 16, // Reflected wand magic.
+	LW_REFFIREBALL                 = 17, // Reflected fireball.
+	LW_REFROCK                     = 18, // Reflected rock.
+	LW_REFBEAM                     = 28, // Reflected sword beam.
+	LW_SPARKLE                     = 23,
+	LW_FIRESPARKLE                 = 24, // Damages enemies.
+	LW_SCRIPT1                     = 31, // Dummy weapon, for use with scripts.
+	LW_SCRIPT2                     = 32,
+	LW_SCRIPT3                     = 33,
+	LW_SCRIPT4                     = 34,
+	LW_SCRIPT5                     = 35,
+	LW_SCRIPT6                     = 36,
+	LW_SCRIPT7                     = 37,
+	LW_SCRIPT8                     = 38,
+	LW_SCRIPT9                     = 39,
+	LW_SCRIPT10                    = 40,
+	LW_ICE                         = 41, // Unimplemented.
+	LW_THROWN                      = 44,
+	LW_REFARROW                    = 53,
+	LW_REFFIRE                     = 54,
+	LW_REFFIRE2                    = 55,
+};
+
+// EWeapon types. Used with [Screen->CreateEWeapon] and [Screen->LoadEWeapon].
+enum EWeaponType
+{
+	EW_ARROW                       = 130,
+	EW_BRANG                       = 131,
+	EW_BEAM                        = 132, // Sword beam.
+	EW_ROCK                        = 133,
+	EW_MAGIC                       = 134,
+	EW_FIREBALL                    = 129,
+	EW_FIREBALL2                   = 145, // Arcing boss fireball.
+	EW_BOMB                        = 137, // Projectile bomb.
+	EW_BOMBBLAST                   = 135, // Bomb explosion.
+	EW_SBOMB                       = 138, // Projectile super bomb.
+	EW_SBOMBBLAST                  = 136, // Super bomb explosion.
+	EW_FIRETRAIL                   = 139,
+	EW_FIRE                        = 140,
+	EW_WIND                        = 141, // Wind wizzrobe magic.
+	EW_FIRE2                       = 142,
+	EW_SCRIPT1                     = 31,  // Dummy weapon, for use with scripts.
+	EW_SCRIPT2                     = 32,
+	EW_SCRIPT3                     = 33,
+	EW_SCRIPT4                     = 34,
+	EW_SCRIPT5                     = 35,
+	EW_SCRIPT6                     = 36,
+	EW_SCRIPT7                     = 37,
+	EW_SCRIPT8                     = 38,
+	EW_SCRIPT9                     = 39,
+	EW_SCRIPT10                    = 40,
+};
+
+// Enemy IDs. Used with [Screen->CreateNPC].
+enum NPCID
+{
+	NPC_ABEI                       = 1,
+	NPC_AMA                        = 2,
+	NPC_MERCHANT                   = 3,
+	NPC_MOBLIN                     = 4,
+	NPC_FIRE                       = 5,
+	NPC_FAIRY                      = 6,
+	NPC_GORIYA                     = 7,
+	NPC_ZELDA                      = 8,
+	NPC_ABEI2                      = 9,
+	NPC_AQUAMENTUSL                = 93,
+	NPC_AQUAMENTUSR                = 58,
+	NPC_ARMOS                      = 37,
+	NPC_BAT                        = 106,
+	NPC_BOMBCHU                    = 160,
+	NPC_BOULDER                    = 135,
+	NPC_BUBBLEITEMP                = 118, // Permanently jinxes.
+	NPC_BUBBLEITEMR                = 119, // Restores item usage.
+	NPC_BUBBLEITEMT                = 117,
+	NPC_BUBBLESWORDP               = 81,  // Permanently jinxes.
+	NPC_BUBBLESWORDR               = 82,  // Restores sword usage.
+	NPC_BUBBLESWORDT               = 51,
+	NPC_CEILINGMASTER              = 101, // This enemy isn't implemented.
+	NPC_DARKNUT1                   = 49,
+	NPC_DARKNUT2                   = 50,
+	NPC_DARKNUT3                   = 92,  // Splits when killed.
+	NPC_DARKNUT4                   = 172, // This enemy isn't implemented.
+	NPC_DARKNUT5                   = 87,  // Sword beams.
+	NPC_DIGDOGGER1                 = 66,  // Splits into 1.
+	NPC_DIGDOGGER3                 = 67,  // Splits into 3.
+	NPC_DIGKID1                    = 68,  // Spawned by NPC_DIGDOGGER1.
+	NPC_DIGKID2                    = 69,  // Spawned by NPC_DIGDOGGER3.
+	NPC_DIGKID3                    = 70,  // Spawned by NPC_DIGDOGGER3.
+	NPC_DIGKID4                    = 71,  // Spawned by NPC_DIGDOGGER3.
+	NPC_DODONGO                    = 60,  // Uses one tile when walking vertically.
+	NPC_DODONGOBS                  = 114, // Uses two tiles when walking vertically.
+	NPC_DODONGOFIRE                = 115, // This enemy isn't implemented.
+	NPC_ENEMYFIRE                  = 85,  // The Fire enemy in Princess Zelda's screen.
+	NPC_FLOORMASTER                = 102, // This enemy isn't implemented.
+	NPC_GANON                      = 78,
+	NPC_GEL                        = 42,
+	NPC_GELFIRE                    = 161,
+	NPC_GELFIRETRIB                = 163,
+	NPC_GELTRIB                    = 88,
+	NPC_GHINI1                     = 35,
+	NPC_GHINI2                     = 36,
+	NPC_GHINIMGC                   = 173, // This enemy isn't implemented.
+	NPC_GIBDO                      = 54,
+	NPC_GLEEOK1                    = 62,
+	NPC_GLEEOK1FIRE                = 109,
+	NPC_GLEEOK2                    = 63,
+	NPC_GLEEOK2FIRE                = 110,
+	NPC_GLEEOK3                    = 64,
+	NPC_GLEEOK3FIRE                = 111,
+	NPC_GLEEOK4                    = 65,
+	NPC_GLEEOK4FIRE                = 112,
+	NPC_GOHMA1                     = 72,
+	NPC_GOHMA2                     = 73,
+	NPC_GOHMA3                     = 121,
+	NPC_GOHMAFIRE                  = 122,
+	NPC_GORIYA1                    = 45,
+	NPC_GORIYA2                    = 46,
+	NPC_GORIYA3                    = 136,
+	NPC_GRAPBUGHP                  = 174, // This enemy isn't implemented.
+	NPC_GRAPBUGMP                  = 175, // This enemy isn't implemented.
+	NPC_ITEMFAIRY                  = 84,
+	NPC_KEESE1                     = 38,
+	NPC_KEESE2                     = 39,
+	NPC_KEESE3                     = 40,
+	NPC_KEESETRIB                  = 90,
+	NPC_LANMOLA1                   = 74,
+	NPC_LANMOLA2                   = 75,
+	NPC_LEEVER1                    = 26,
+	NPC_LEEVER2                    = 27,
+	NPC_LEEVER3                    = 137,
+	NPC_LIKELIKE                   = 53,
+	NPC_LYNEL1                     = 30,
+	NPC_LYNEL2                     = 31,
+	NPC_LYNEL3                     = 168,
+	NPC_MANHANDLA                  = 61,
+	NPC_MANHANDLA2                 = 94,
+	NPC_MOBLIN1                    = 28,
+	NPC_MOBLIN2                    = 29,
+	NPC_MOLDORM                    = 59,
+	NPC_OCTOROCK1F                 = 22,
+	NPC_OCTOROCK1S                 = 20,
+	NPC_OCTOROCK2F                 = 23,
+	NPC_OCTOROCK2S                 = 21,
+	NPC_OCTOROCKBOMBF              = 141,
+	NPC_OCTOROCKBOMBS              = 140,
+	NPC_OCTOROCKFIREF              = 139,
+	NPC_OCTOROCKFIRES              = 138,
+	NPC_OCTOROCKMGC                = 86,
+	NPC_PATRA1                     = 76,
+	NPC_PATRA2                     = 104,
+	NPC_PATRA3                     = 105,
+	NPC_PATRABS                    = 103,
+	NPC_PATRAOVAL                  = 77,
+	NPC_PEAHAT                     = 32,
+	NPC_PEAHATFIRE                 = 169, // This enemy isn't implemented.
+	NPC_POLSVOICE                  = 55,
+	NPC_POLSVOICEBS                = 171, // This enemy isn't implemented.
+	NPC_POLSVOICEMGC               = 170,
+	NPC_ROCK                       = 34,
+	NPC_ROPE1                      = 44,
+	NPC_ROPE2                      = 80,
+	NPC_SHOOTFBALL                 = 83,
+	NPC_SHOOTFLAME                 = 158,
+	NPC_SHOOTFLAME2                = 159,
+	NPC_SHOOTMAGIC                 = 154,
+	NPC_SHOOTROCK                  = 155,
+	NPC_SHOOTSPEAR                 = 156,
+	NPC_SHOOTSWORD                 = 157,
+	NPC_SPINTILE                   = 166,
+	NPC_SPINTILERND                = 167, // Random spin tile.
+	NPC_STALFOS1                   = 41,
+	NPC_STALFOS2                   = 79,
+	NPC_STALFOS3                   = 120,
+	NPC_TEKTITE1                   = 24,
+	NPC_TEKTITE2                   = 25,
+	NPC_TEKTITE3                   = 165, // This enemy isn't implemented.
+	NPC_TRAP                       = 47,
+	NPC_TRAP8WAY                   = 142, // This enemy isn't implemented.
+	NPC_TRAPBACKSLASHC             = 146, // This enemy isn't implemented.
+	NPC_TRAPBACKSLASHLOS           = 147, // This enemy isn't implemented.
+	NPC_TRAPCCLOCKWISEC            = 150, // This enemy isn't implemented.
+	NPC_TRAPCCLOCKWISELOS          = 151, // This enemy isn't implemented.
+	NPC_TRAPCLOCKWISEC             = 148, // This enemy isn't implemented.
+	NPC_TRAPCLOCKWISELOS           = 149, // This enemy isn't implemented.
+	NPC_TRAPDIAG                   = 143, // This enemy isn't implemented.
+	NPC_TRAPHORIZC                 = 97,
+	NPC_TRAPHORIZLOS               = 95,
+	NPC_TRAPSLASHC                 = 144, // This enemy isn't implemented.
+	NPC_TRAPSLASHLOS               = 145,
+	NPC_TRAPVERTC                  = 98,
+	NPC_TRAPVERTLOS                = 96,
+	NPC_TRIGGER                    = 116,
+	NPC_VIRE                       = 52,
+	NPC_VIRETRIB                   = 91,
+	NPC_WALLMASTER                 = 48,
+	NPC_WIZZROBE1                  = 56,  // Teleports.
+	NPC_WIZZROBE2                  = 57,  // Phases through blocks.
+	NPC_WIZZROBEBAT                = 107,
+	NPC_WIZZROBEBAT2               = 108, // This enemy isn't implemented.
+	NPC_WIZZROBEFIRE               = 99,
+	NPC_WIZZROBEICE                = 153, // This enemy isn't implemented.
+	NPC_WIZZROBEMIRR               = 113,
+	NPC_WIZZROBESUMM               = 152,
+	NPC_WIZZROBEWIND               = 100,
+	NPC_ZOL                        = 43,
+	NPC_ZOLFIRE                    = 162,
+	NPC_ZOLFIRETRIB                = 164,
+	NPC_ZOLTRIB                    = 89,
+	NPC_ZORA                       = 33,
+};
+
+// NPC Misc. Flags.
+enum EnemyMiscBitflags
+{
+	NPCMF_0POWERWEAPS              = 0x0001, // Damaged by 0-Power Weapons.
+	NPCMF_ISINVISIBLE              = 0x0002, // Is Invisible.
+	NPCMF_NEVERRETURNS             = 0x0004, // Never Returns After Death.
+	NPCMF_NOT_BEATABLE             = 0x0008, // Doesn't Count as beatable Enemy.
+	NPCMF_SPAWNFLICKER             = 0x0010, // Unused.
+	NPCMF_ONLY_LENS                = 0x0020, // Only Seen By Lens of truth.
+	NPCMF_FLASHING                 = 0x0040, // Is Flashing.
+	NPCMF_FLICKERING               = 0x0080, // Is Flickering.
+	NPCMF_TRANSLUCENT              = 0x0100, // Is translucent.
+	NPCMF_SHIELDED_FRONT           = 0x0200, // Shielded on Front.
+	NPCMF_SHIELDED_LEFT            = 0x0400, // Shielded on Left.
+	NPCMF_SHIELDED_RIGHT           = 0x0800, // Shielded on Right.
+	NPCMF_SHIELDED_BACK            = 0x1000, // Shielded on Back.
+	NPCMF_HAMMERBREAKS             = 0x2000, // Hammer Can break Shield.
+};
+
+// NPC Spawn Flags.
+enum EnemySpawnBitflags
+{
+	NPCSF_ZORA                     = 0x0001, // Spawned by Zora Screen Flag.
+	NPCSF_FALLINGROCK              = 0x0002, // Spawned by Falling Rocks Screen Flag.
+	NPCSF_CORNERTRAP               = 0x0004, // Spawned by Corner Traps Screen Flag.
+	NPCSF_HORIZTRAP                = 0x0008, // Spawned by Horiz Trap Combo Type or Flag.
+	NPCSF_VERTTRAP                 = 0x0010, // Spawned by Vert Trap Combo Type or Flag.
+	NPCSF_4WAYTRAP                 = 0x0020, // Spawned by 4-Way Trap Combo Type or Flag.
+	NPCSF_LRTRAP                   = 0x0040, // Spawned by LR Trap Combo Type or Flag.
+	NPCSF_UPTRAP                   = 0x0080, // Spawned by UD Trap Combo Type or Flag.
+	NPCSF_MIDTRAP                  = 0x0100, // Spawned by Middle Traps Screen Flag.
+	NPCSF_STATUEFIRE               = 0x0200, // Spawned by Statue Fire Screen Flag.
+	NPCSF_ARMOS                    = 0x0400, // Spawned by Armos Combo Type.
+	NPCSF_GRAVE                    = 0x0800, // Spawned by Grave Combo Type.
+	NPCSF_GANONROOM                = 0x1000, // Spawned by Ganon Room Type.
+	NPCSF_SPAWNANIM                = 0x2000, // Spawn Animation Type.
+};
+
+// Font types. Use with [Screen->DrawCharacter], [Screen->DrawString], [bitmap::DrawString], etc.
+// Some of these fonts may not represent normal ascii characters, and all of these are
+// completely undocumented. Use at your own peril.
+enum FontType
+{
+	FONT_Z1                        = 0,
+	FONT_Z3                        = 1,
+	FONT_Z3SMALL                   = 2,
+	FONT_DEF                       = 3,
+	FONT_L                         = 4,
+	FONT_L2                        = 5,
+	FONT_P                         = 6,
+	FONT_MATRIX                    = 7,
+	FONT_ZTIME                     = 8,
+	FONT_S                         = 9,
+	FONT_S2                        = 10,
+	FONT_SP                        = 11,
+	FONT_SUBSCREEN1                = 12,
+	FONT_SUBSCREEN2                = 13,
+	FONT_SUBSCREEN3                = 14,
+	FONT_SUBSCREEN4                = 15,
+	FONT_GBLA                      = 16,
+	FONT_LA                        = 16,
+	FONT_GORON                     = 17,
+	FONT_ZORAN                     = 18,
+	FONT_HYLIAN1                   = 19,
+	FONT_HYLIAN2                   = 20,
+	FONT_HYLIAN3                   = 21,
+	FONT_HYLIAN4                   = 22,
+	FONT_GBORACLE                  = 23,
+	FONT_GBORACLEP                 = 24,
+	FONT_DSPHANTOM                 = 25,
+	FONT_DSPHANTOMP                = 26,
+	FONT_ATARI800                  = 27,
+	FONT_ACORN                     = 28,
+	FONT_ADOS                      = 29,
+	FONT_ALLEGRO                   = 30,
+	FONT_APPLE2                    = 31,
+	FONT_APPLE2_80COL              = 32,
+	FONT_APPLE2GS                  = 33,
+	FONT_AQUARIUS                  = 34,
+	FONT_ATARI400                  = 35,
+	FONT_C64                       = 36,
+	FONT_C64_HIRES                 = 37,
+	FONT_CGA                       = 38,
+	FONT_COCO                      = 39,  // Invrse chars for upper.
+	FONT_COCO2                     = 40,  // Upper and lower.
+	FONT_COUPE                     = 41,
+	FONT_CPC                       = 42,  // Amstrad.
+	FONT_FANTASY                   = 43,
+	FONT_FDS_KANA                  = 44,
+	FONT_FDSLIKE                   = 45,
+	FONT_FDS_ROMAN                 = 46,
+	FONT_FF                        = 47,  // Final Fantasy.
+	FONT_FUTHARK                   = 48,  // Runes.
+	FONT_GAIA                      = 49,
+	FONT_HIRA                      = 50,
+	FONT_JP                        = 51,
+	FONT_KONG                      = 52,
+	FONT_MANA                      = 53,
+	FONT_MARIOLAND                 = 54,
+	FONT_MOT                       = 55,  // Motorola.
+	FONT_MSX0                      = 56,  // MSX, Mode 0.
+	FONT_MSX1                      = 57,  // MSX, Mod 1.
+	FONT_PET                       = 58,
+	FONT_PSTART                    = 59,  // Nintendo-esque.
+	FONT_SATURN                    = 60,  // Mr. Saturn.
+	FONT_SCIFI                     = 61,
+	FONT_SHERWOOD                  = 62,
+	FONT_SINQL                     = 63,  // Sinclair QL.
+	FONT_SPECTRUM                  = 64,
+	FONT_SPECTRUM_LG               = 65,
+	FONT_TI99                      = 66,
+	FONT_TRS                       = 67,
+	FONT_Z2                        = 68,  // Zelda 2 plus custom lowercase.
+	FONT_ZX                        = 69,
+	FONT_LISA                      = 70,  // Lisa OS System Font.
+	FONT_NFONT                     = 71,
+	FONT_S3                        = 72,
+	FONT_CV3                       = 73,
+	FONT_CHRONO                    = 74,
+	FONT_NFONT2                    = 75,
+	FONT_BAK                       = 76,
+	FONT_GUNSTAR                   = 77,
+	FONT_SMW_CREDITS               = 78,
+	FONT_WL4                       = 79,
+	FONT_BSZ                       = 80,
+	FONT_BSZ_PROP                  = 81,
+	FONT_FF6                       = 82,
+	FONT_EVO_EDEN                  = 83,
+	FONT_SMT                       = 84,
+	FONT_ACTRAISER                 = 85,
+	FONT_BAK_RUNES                 = 86,
+	FONT_BAK_SMALL                 = 87,
+	FONT_DISORIENT                 = 88,
+	FONT_DOOM                      = 89,
+	FONT_DRACULA                   = 90,
+	FONT_EJIM                      = 91,
+	FONT_FALLOUT                   = 92,
+	FONT_GRADIUS                   = 93,
+	FONT_LAMU_MSX                  = 94,
+	FONT_MEGAMAN                   = 95,
+	FONT_WINGDINGS                 = 96,
+	FONT_PKMN2                     = 97,
+	FONT_SMRPG                     = 98,
+	FONT_UNDERTALE                 = 99,
+	FONT_SMW                       = 100,
+};
+
+// PrintString Text Formats. Use with [Screen->DrawString].
+enum TextFormatAlign
+{
+	TF_NORMAL                      = 0, // Treats the left-most char as (x).
+	TF_CENTERED                    = 1, // Prints the string centered on (x).
+	TF_RIGHT                       = 2, // Treats the right-most char as (x).
+};
+
+// Polygon rendering modes. Use with Screen->"Psuedo 3D" or "*3D" drawing functions. ie; Polygon, Quad, or Triangle
+// For more detail on these polygon rendering modes, see https://github.com/ZQuestClassic/ZQuestClassic/blob/main/third_party/allegro_legacy/docs/src/allegro._tx#L7808.
+enum PolygonRenderMode
+{
+	PT_FLAT                        = 0,  // Single color shading.
+	PT_FLATSHADED                  = 1,  // "" with flat shading (*3D only).
+	PT_COLSHADED                   = 2,  // "" with color shading (*3D only).
+	PT_TEXTURE                     = 3,  // Texture mapped polygon using 2d linear interpolation.
+	PT_PTEXTURE                    = 4,  // "".
+	PT_MASKTEXTURE                 = 5,  // Transparent texture mapped polygon using 2d linear interpolation.
+	PT_MASKPTEXTURE                = 6,  // "".
+	PT_LITTEXTURE                  = 7,  // "" with lighting (*3D only).
+	PT_LITPTEXTURE                 = 8,  // "" (*3D only).
+	PT_MASKLITTEXTURE              = 9,  // "" with transparency.
+	PT_MASKLITPTEXTURE             = 10, // "".
+	PT_TRANSTEXTURE                = 11, // Translucent texture mapped polygon using 2d linear interpolation.
+	PT_TRANSPTEXTURE               = 12, // "".
+	PT_MASKTRANSTEXTURE            = 13, // Translucent and transparent texture mapped polygon using 2d linear interpolation.
+	PT_MASKTRANSPTEXTURE           = 14, // "".
+};
+
+// Screen Enemy Flag categories, handled in the same way as the SF_ constants.
+// Used with [Screen->EFlags].
+enum ScreenEnemyFlagIndex
+{
+	SEF_SPAWN                      = 0, // Corresponds to [ScreenEnemyFlagSpawn].
+	SEF_LIST1                      = 1, // Corresponds to [ScreenEnemyFlagList1].
+	SEF_LIST2                      = 2, // Corresponds to [ScreenEnemyFlagList2].
+};
+
+// Used with [Screen->RoomType], [mapdata::RoomType].
+enum RoomType
+{
+	RT_DOORREPAIR                  = 5,
+	RT_FEEDTHEGORIYA               = 7,
+	RT_GAMBLE                      = 4,
+	RT_GANON                       = 15,
+	RT_ITEMPOND                    = 17, // Doesn't work.
+	RT_LEARNSLASH                  = 19,
+	RT_LEVEL9ENTRANCE              = 8,
+	RT_MAGICUPGRADE                = 18,
+	RT_MONEYORLIFE                 = 12,
+	RT_MOREARROWS                  = 20,
+	RT_MOREBOMBS                   = 11,
+	RT_NONE                        = 0,
+	RT_PAYFORINFO                  = 2,
+	RT_POTIONORHEART               = 6,
+	RT_POTIONSHOP                  = 9,
+	RT_SECRETMONEY                 = 3,
+	RT_SHOP                        = 10,
+	RT_SPECIALITEM                 = 1,
+	RT_STAIRWARP                   = 14,
+	RT_TAKEONEITEM                 = 21,
+	RT_TENRUPEES                   = 13,
+	RT_ZELDA                       = 16,
+};
+
+// Used with [Game->DMapFlags].
+// @deprecated Use [DMapFlag] and [dmapdata::Flagset] instead!
+enum DMapBitflags
+{
+	DMF_CAVESNOTCELLARS            = 0x0001,  // Use caves instead of item cellars.
+	DMF_3STAIRWARPS                = 0x0002,  // Allow 3-stair warps.
+	DMF_WWIND                      = 0x0004,  // Allow whistle whirlwinds.
+	DMF_GUYCAVES                   = 0x0008,  // Special rooms and guys are in caves only.
+	DMF_NOCOMPASS                  = 0x0010,  // Don't display compass marker in minimap.
+	DMF_WAVY                       = 0x0020,  // Underwater wave effect.
+	DMF_WWINDRET                   = 0x0040,  // Whistle whirlwind returns Link to beginning.
+	DMF_ALWAYSINTROMSG             = 0x0080,  // Always display intro string.
+	DMF_VIEWMAP                    = 0x0100,  // View overworld map by pressing 'Map'.
+	DMF_DMAPMAP                    = 0x0200,  // ...But only show screens marked in minimap.
+	DMF_MINIMAPCOLORFIX            = 0x0400,  // Use minimap foreground color 2.
+	DMF_MINIMAPCOLOURFIX           = 0x0400,  // Use minimap foreground color 2.
+	DMF_SCRIPT1                    = 0x0800,  // DMap Script Flags.
+	DMF_SCRIPT2                    = 0x1000,
+	DMF_SCRIPT3                    = 0x2000,
+	DMF_SCRIPT4                    = 0x4000,
+	DMF_SCRIPT5                    = 0x8000,
+	DMF_SIDEVIEW                   = 0x10000,
+	DMF_LAYER3ISBACKGROUND         = 0x20000,
+};
+
+// Door Positions; indices of Screen->Door[].
+enum DoorIndex
+{
+	DOOR_UP                        = 0,
+	DOOR_DOWN                      = 1,
+	DOOR_LEFT                      = 2,
+	DOOR_RIGHT                     = 3,
+};
+
+// Door types. Use with Screen->Door[].
+enum DoorType
+{
+	D_WALL                         = 0,
+	D_OPEN                         = 1,
+	D_LOCKED                       = 2,
+	D_UNLOCKED                     = 3,  // A locked door that has been opened.
+	D_SHUTTER                      = 4,  // Defeat enemies to unlock this door.
+	D_BOMB                         = 6,  // A door that changes when bombed.
+	D_BOMBED                       = 7,  // A door that has been bombed.
+	D_WALKTHRU                     = 8,  // Push against the wall to pass through.
+	D_BOSSLOCKED                   = 10,
+	D_BOSSUNLOCKED                 = 11, // A boss door that has been opened.
+	D_OPENSHUTTER                  = 12, // A shutter that has been opened.
+	D_1WAYSHUTTER                  = 14, // A shutter that locks behind you and never opens.
+	D_NONE                         = 16, // No door at all. Hero will not auto-walk.
+};
+
+// Sprite lists. Used with [Screen->ClearSprites].
+enum SpriteList
+{
+	SL_GUYS                        = 0, // Enemies.
+	SL_ITEMS                       = 1, // Items.
+	SL_EWPNS                       = 2, // Enemy weapons.
+	SL_LWPNS                       = 3, // Link's weapons.
+	SL_DECORATIONS                 = 4, // Grass clippings, Hover boots glow, etc.
+	SL_PARTICLES                   = 5, // Farore's Wind particles.
+};
+
+// Combo flags. Use with Screen->ComboF[].
+enum ComboFlag
+{
+	CF_NONE                        = 0,
+	CF_PUSHUPDOWN                  = 1,
+	CF_PUSH4WAY                    = 2,
+	CF_WHISTLE                     = 3,
+	CF_CANDLE1                     = 4,
+	CF_ARROW                       = 5,
+	CF_BOMB                        = 6,
+	CF_FAIRY                       = 7,
+	CF_RAFT                        = 8,
+	CF_ARMOSSECRET                 = 9,
+	CF_ARMOSITEM                   = 10,
+	CF_SBOMB                       = 11,
+	CF_RAFTBRANCH                  = 12,
+	CF_DIVEITEM                    = 13,
+	CF_LENSMARKER                  = 14,
+	CF_ZELDA                       = 15,
+	CF_SECRETS01                   = 16,
+	CF_SECRETS02                   = 17,
+	CF_SECRETS03                   = 18,
+	CF_SECRETS04                   = 19,
+	CF_SECRETS05                   = 20,
+	CF_SECRETS06                   = 21,
+	CF_SECRETS07                   = 22,
+	CF_SECRETS08                   = 23,
+	CF_SECRETS09                   = 24,
+	CF_SECRETS10                   = 25,
+	CF_SECRETS11                   = 26,
+	CF_SECRETS12                   = 27,
+	CF_SECRETS13                   = 28,
+	CF_SECRETS14                   = 29,
+	CF_SECRETS15                   = 30,
+	CF_SECRETS16                   = 31,
+	CF_TRAPH                       = 32,
+	CF_TRAPV                       = 33,
+	CF_TRAP4WAY                    = 34,
+	CF_TRAPLR                      = 35,
+	CF_TRAPUD                      = 36,
+	CF_ENEMY0                      = 37,
+	CF_ENEMY1                      = 38,
+	CF_ENEMY2                      = 39,
+	CF_ENEMY3                      = 40,
+	CF_ENEMY4                      = 41,
+	CF_ENEMY5                      = 42,
+	CF_ENEMY6                      = 43,
+	CF_ENEMY7                      = 44,
+	CF_ENEMY8                      = 45,
+	CF_ENEMY9                      = 46,
+	CF_PUSHLR                      = 47,
+	CF_PUSHUP                      = 48,
+	CF_PUSHDOWN                    = 49,
+	CF_PUSHLEFT                    = 50,
+	CF_PUSHRIGHT                   = 51,
+	CF_PUSHUPDOWNNS                = 52,
+	CF_PUSHLEFTRIGHTNS             = 53,
+	CF_PUSH4WAYNS                  = 54,
+	CF_PUSHUPNS                    = 55,
+	CF_PUSHDOWNNS                  = 56,
+	CF_PUSHLEFTNS                  = 57,
+	CF_PUSHRIGHTNS                 = 58,
+	CF_PUSHUPDOWNINS               = 59,
+	CF_PUSHLEFTRIGHTINS            = 60,
+	CF_PUSH4WAYINS                 = 61,
+	CF_PUSHUPINS                   = 62,
+	CF_PUSHDOWNINS                 = 63,
+	CF_PUSHLEFTINS                 = 64,
+	CF_PUSHRIGHTINS                = 65,
+	CF_BLOCKTRIGGER                = 66,
+	CF_NOBLOCKS                    = 67,
+	CF_BRANG1                      = 68,
+	CF_BRANG2                      = 69,
+	CF_BRANG3                      = 70,
+	CF_ARROW2                      = 71,
+	CF_ARROW3                      = 72,
+	CF_CANDLE2                     = 73,
+	CF_WANDFIRE                    = 74,
+	CF_DINSFIRE                    = 75,
+	CF_WANDMAGIC                   = 76,
+	CF_REFMAGIC                    = 77,
+	CF_REFFIREBALL                 = 78,
+	CF_SWORD1                      = 79,
+	CF_SWORD2                      = 80,
+	CF_SWORD3                      = 81,
+	CF_SWORD4                      = 82,
+	CF_SWORD1BEAM                  = 83,
+	CF_SWORD2BEAM                  = 84,
+	CF_SWORD3BEAM                  = 85,
+	CF_SWORD4BEAM                  = 86,
+	CF_HOOKSHOT                    = 87,
+	CF_WAND                        = 88,
+	CF_HAMMER                      = 89,
+	CF_STRIKE                      = 90,
+	CF_BLOCKHOLE                   = 91,
+	CF_MAGICFAIRY                  = 92,
+	CF_ALLFAIRY                    = 93,
+	CF_SINGLE                      = 94,
+	CF_SINGLE16                    = 95,
+	CF_NOENEMY                     = 96,
+	CF_NOGROUNDENEMY               = 97,
+	CF_SCRIPT1                     = 98,
+	CF_SCRIPT2                     = 99,
+	CF_SCRIPT3                     = 100,
+	CF_SCRIPT4                     = 101,
+	CF_SCRIPT5                     = 102,
+	CF_RAFTBOUNCE                  = 103,
+	CF_PUSHED                      = 104,
+	CF_SCRIPT6                     = 105,
+	CF_SCRIPT7                     = 106,
+	CF_SCRIPT8                     = 107,
+	CF_SCRIPT9                     = 108,
+	CF_SCRIPT10                    = 109,
+	CF_SCRIPT11                    = 110,
+	CF_SCRIPT12                    = 111,
+	CF_SCRIPT13                    = 112,
+	CF_SCRIPT14                    = 113,
+	CF_SCRIPT15                    = 114,
+	CF_SCRIPT16                    = 115,
+	CF_SCRIPT17                    = 116,
+	CF_SCRIPT18                    = 117,
+	CF_SCRIPT19                    = 118,
+	CF_SCRIPT20                    = 119,
+	CF_SCRIPT_PIT                  = 120, // Pit or Hole (Scripted).
+	CF_SCRIPT_PIT_FALL             = 121, // Pit or Hole, Fall Down Floor (Scripted).
+	CF_SCRIPT_LAVA                 = 122, // Fire or Lava (Scripted).
+	CF_SCRIPT_ICE                  = 123, // Ice (Scripted).
+	CF_SCRIPT_ICE_DMG              = 124, // Ice, Damaging (Scripted).
+	CF_SCRIPT_DAMAGE_1             = 125, // Damage-1 (Scripted).
+	CF_SCRIPT_DAMAGE_2             = 126, // Damage-2 (Scripted).
+	CF_SCRIPT_DAMAGE_4             = 127, // Damage-4 (Scripted).
+	CF_SCRIPT_DAMAGE_8             = 128, // Damage-8 (Scripted).
+	CF_SCRIPT_DAMAGE_16            = 129, // Damage-16 (Scripted).
+	CF_SCRIPT_DAMAGE_32            = 130, // Damage-32 (Scripted).
+	CF_SCRIPT_FREEZE_SCREEN        = 131, // Freeze Screen (Unimplemented).
+	CF_SCRIPT_FREEZE_SCREEN_EXCEPT_FFCS = 132, // Freeze Screen, Except FFCs (Unimplemented).
+	CF_SCRIPT_FREEZE_FFCS_ONLY     = 133, // Freeze FFCs Only (Unimplemented).
+	CF_LW_SCRIPT1                  = 134, // Trigger LW_SCRIPT1 (Unimplemented).
+	CF_LW_SCRIPT2                  = 135, // Trigger LW_SCRIPT2 (Unimplemented).
+	CF_LW_SCRIPT3                  = 136, // Trigger LW_SCRIPT3 (Unimplemented).
+	CF_LW_SCRIPT4                  = 137, // Trigger LW_SCRIPT4 (Unimplemented).
+	CF_LW_SCRIPT5                  = 138, // Trigger LW_SCRIPT5 (Unimplemented).
+	CF_LW_SCRIPT6                  = 139, // Trigger LW_SCRIPT6 (Unimplemented).
+	CF_LW_SCRIPT7                  = 140, // Trigger LW_SCRIPT7 (Unimplemented).
+	CF_LW_SCRIPT8                  = 141, // Trigger LW_SCRIPT8 (Unimplemented).
+	CF_LW_SCRIPT9                  = 142, // Trigger LW_SCRIPT9 (Unimplemented).
+	CF_LW_SCRIPT10                 = 143, // Trigger LW_SCRIPT10 (Unimplemented).
+	CF_SCRIPT_DIG                  = 144, // Dig Spot (Scripted).
+	CF_SCRIPT_DIG_NEXT             = 145, // Dig Spot, Next (Scripted).
+	CF_SCRIPT_DIG_ITEM             = 146, // Dig Spot, Special Item (Scripted).
+	CF_SCRIPT_POT_SLASH            = 147, // Pot, Slashable (Scripted).
+	CF_SCRIPT_POT_LIFT             = 148, // Pot, Liftable (Scripted).
+	CF_SCRIPT_POT_SLASH_OR_LIFT    = 149, // Pot, Slash or Lift (Scripted).
+	CF_SCRIPT_LIFT_NORMAL          = 150, // Rock, Lift Normal (Scripted).
+	CF_SCRIPT_LIFT_HEAVY           = 151, // Rock, Lift Heavy (Scripted).
+	CF_SCRIPT_DROPSET_ITEM         = 152, // Dropset Item (Scripted).
+	CF_SCRIPT_SPECIAL_ITEM         = 153, // Special Item (Scripted).
+	CF_SCRIPT_DROP_KEY             = 154, // Drop Key (Scripted).
+	CF_SCRIPT_DROP_LKEY            = 155, // Drop level-Specific Key (Scripted).
+	CF_SCRIPT_DROP_COMPASS         = 156, // Drop Compass (Scripted).
+	CF_SCRIPT_DROP_MAP             = 157, // Drop Map (Scripted).
+	CF_SCRIPT_DROP_BOSS_KEY        = 158, // Drop Boss Key (Scripted).
+	CF_SCRIPT_SPAWN_NPC            = 159, // Spawn NPC (Scripted).
+	CF_SCRIPT_SWITCHHOOK           = 160, // SwitchHook Spot (Scripted).
+	CF_SCRIPT21                    = 120,
+	CF_SCRIPT22                    = 121,
+	CF_SCRIPT23                    = 122,
+	CF_SCRIPT24                    = 123,
+	CF_SCRIPT25                    = 124,
+	CF_SCRIPT26                    = 125,
+	CF_SCRIPT27                    = 126,
+	CF_SCRIPT28                    = 127,
+	CF_SCRIPT29                    = 128,
+	CF_SCRIPT30                    = 129,
+	CF_SCRIPT31                    = 130,
+	CF_SCRIPT32                    = 144,
+	CF_SCRIPT33                    = 145,
+	CF_SCRIPT34                    = 146,
+	CF_SCRIPT35                    = 147,
+	CF_SCRIPT36                    = 148,
+	CF_SCRIPT37                    = 149,
+	CF_SCRIPT38                    = 150,
+	CF_SCRIPT39                    = 151,
+	CF_SCRIPT40                    = 152,
+	CF_SCRIPT41                    = 153,
+	CF_SCRIPT42                    = 154,
+	CF_SCRIPT43                    = 155,
+	CF_SCRIPT44                    = 156,
+	CF_SCRIPT45                    = 157,
+	CF_SCRIPT46                    = 158,
+	CF_SCRIPT47                    = 159,
+	CF_SCRIPT48                    = 160,
+	CF_SIDEVIEW_LADDER             = 161, // Sideview Ladder.
+	CF_SIDEVIEW_PLATFORM           = 162, // Sideview Platform.
+	CF_NO_ENEMIES_SPAWN            = 163, // No Enemies Spawn.
+	CF_ALL_ENEMIES_SPAWN           = 164, // All Enemies Spawn.
+	CF_SECRETS_NEXT                = 165, // Secrets->Next.
+};
+
+// Used with [ffc::Flags].
+enum FFCFlag
+{
+	FFCF_OVERLAY                   = 0,  // Draw Over (draw between layers 4 and 5).
+	FFCF_TRANS                     = 1,  // Translucent.
+	FFCF_SOLID                     = 2,  // Solidity (Partially Implemented).
+	FFCF_CARRYOVER                 = 3,  // Carry Over.
+	FFCF_STATIONARY                = 4,  // Stationary.
+	FFCF_CHANGER                   = 5,  // Is A Changer.
+	FFCF_PRELOAD                   = 6,  // Run Script On Screen Init.
+	FFCF_LENSVIS                   = 7,  // Only Visible to Lens of Truth.
+	FFCF_RESET                     = 8,  // Script Resets When Carried Over.
+	FFCF_ETHEREAL                  = 9,  // The FFC's Combo Type is ignored.
+	FFCF_IGNOREHOLDUP              = 10, // The FFC is updated while Link is holding up an item.
+	FFCF_IGNORECHANGER             = 11, // The FFC ignores changers.
+	FFCF_IMPRECISIONCHANGER        = 12, // The FFC is affected by changers if it is within 1px on both axis, not subpixel alignment.
+	FFCF_LENSINVIS                 = 13, // Not visible to the lens of truth.
+};
+
+// Used with [mapdata::FFCFlags].
+enum FFCBitflags
+{
+	FFCBF_OVERLAY                  = 0x001,
+	FFCBF_TRANS                    = 0x002,
+	FFCBF_SOLID                    = 0x004,
+	FFCBF_CARRYOVER                = 0x008,
+	FFCBF_STATIONARY               = 0x010,
+	FFCBF_CHANGER                  = 0x020,
+	FFCBF_PRELOAD                  = 0x040,
+	FFCBF_LENSVIS                  = 0x080,
+	FFCBF_RESET                    = 0x100,
+	FFCBF_ETHEREAL                 = 0x200,
+	FFCBF_IGNOREHOLDUP             = 0x400,
+	FFCBF_IGNORECHANGER            = 0x800,
+	FFCBF_IMPRECISIONCHANGER       = 0x1000,
+	FFCBF_LENSINVIS                = 0x2000,
+};
+
+// Used with [AimEWeapon].
+enum AimType
+{
+	AT_NONE                        = 0,
+	AT_4DIR                        = 1,
+	AT_8DIR                        = 2,
+	AT_ANGULAR                     = 3,
+	AT_RAND4DIR                    = 4,
+	AT_RAND8DIR                    = 5,
+	AT_RANDANGULAR                 = 6,
+};
+
+// Used with [Game->GameOverScreen].
+enum GameOverScreenElementIndex
+{
+	GOS_BACKGROUND                 = 0,
+	GOS_TEXT_COLOUR                = 1,
+	GOS_CURSOR_TILE                = 2,
+	GOS_CURSOR_CSET                = 3,
+	GOS_CURSOR_SOUND               = 4,
+	GOS_TEXT_CONTINUE_COLOUR       = 5,
+	GOS_TEXT_SAVE_COLOUR           = 6,
+	GOS_TEXT_RETRY_COLOUR          = 7,
+	GOS_TEXT_CONTINUE_FLASH        = 8,
+	GOS_TEXT_SAVE_FLASH            = 9,
+	GOS_TEXT_RETRY_FLASH           = 10,
+	GOS_MIDI                       = 11,
+	GOS_CUR_FLIP                   = 12,
+	GOS_TEXT_DONTSAVE_COLOUR       = 13,
+	GOS_TEXT_SAVEQUIT_COLOUR       = 14,
+	GOS_TEXT_SAVE2_COLOUR          = 15,
+	GOS_TEXT_QUIT_COLOUR           = 16,
+	GOS_TEXT_DONTSAVE_FLASH        = 17,
+	GOS_TEXT_SAVEQUIT_FLASH        = 18,
+	GOS_TEXT_SAVE2_FLASH           = 19,
+	GOS_TEXT_QUIT_FLASH            = 20,
+	GOS_EXTRA1                     = 21,
+	GOS_EXTRA2                     = 22,
+	GOS_EXTRA3                     = 23,
+};
+
+// Used with [Game->GameOverStrings].
+enum GameOverStringIndex
+{
+	GOSTR_CONTINUE                 = 0, // (Continue:Retry:Save) Screen.
+	GOSTR_SAVE                     = 1, // (Continue:Retry:Save) Screen.
+	GOSTR_RETRY                    = 2, // (Continue:Retry:Save) Screen.
+	GOSTR_DONT_SAVE                = 3, // Savepoint Screen.
+	GOSTR_SAVEANDQUIT              = 4, // Save and Quit Screen.
+	GOSTR_SAVE2                    = 5, // Savepoint Screen.
+	GOSTR_QUIT                     = 6, // Save and Quit Screen.
+};
+
+// Used with the blit drawing functions.
+// Some modes cannot be combined. If a combination is not supported, an error
+// detailing this will be shown in allegro.log.
+enum BlitModeBitflags
+{
+	BITDX_NORMAL                   = 0,
+	BITDX_TRANS                    = 1, // Translucent.
+	BITDX_PIVOT                    = 2, // THe sprite will rotate at a specific point, instead of its center.
+	BITDX_VFLIP                    = 4, // Vertical Flip.
+	BITDX_HFLIP                    = 8, // Horizontal Flip.
+};
+
+// Used with [Hero->SetItemSlot].
+enum ItemRequireBitflags
+{
+	ITM_REQUIRE_NONE               = 0b00,
+	ITM_REQUIRE_INVENTORY          = 0b01,
+	ITM_REQUIRE_A_SLOT_RULE        = 0b10,
+};
+
+// Used with [Input->Mouse].
+enum MouseIndex
+{
+	MOUSE_X                        = 0,
+	MOUSE_Y                        = 1,
+	MOUSE_Z                        = 2,
+	MOUSE_LEFT                     = 3,
+	MOUSE_RIGHT                    = 4,
+	MOUSE_MIDDLE                   = 5,
+};
+
+// Used with [Screen->SecretCombo], [Screen->SecretCSet], [Screen->SecretFlags], and [mapdata].
+enum SecretComboIndex
+{
+	SECCMB_BCANDLE                 = 0,
+	SECCMB_ARROW                   = 1,
+	SECCMB_BOMB                    = 2,
+	SECCMB_STAIRS                  = 3,
+	SECCMB_SECRET01                = 4,
+	SECCMB_SECRET02                = 5,
+	SECCMB_SECRET03                = 6,
+	SECCMB_SECRET04                = 7,
+	SECCMB_SECRET05                = 8,
+	SECCMB_SECRET06                = 9,
+	SECCMB_SECRET07                = 10,
+	SECCMB_SECRET08                = 11,
+	SECCMB_SECRET09                = 12,
+	SECCMB_SECRET10                = 13,
+	SECCMB_SECRET11                = 14,
+	SECCMB_SECRET12                = 15,
+	SECCMB_SECRET13                = 16,
+	SECCMB_SECRET14                = 17,
+	SECCMB_SECRET15                = 18,
+	SECCMB_SECRET16                = 19,
+	SECCMB_RCANDLE                 = 20,
+	SECCMB_WANDFIRE                = 21,
+	SECCMB_DINSFIRE                = 22,
+	SECCMB_SARROW                  = 23,
+	SECCMB_GARROW                  = 24,
+	SECCMB_SBOMB                   = 25,
+	SECCMB_BRANG                   = 26,
+	SECCMB_MBRANG                  = 27,
+	SECCMB_FBRANG                  = 28,
+	SECCMB_WANDMAGIC               = 29,
+	SECCMB_REFMAGIC                = 30,
+	SECCMB_REFFIREBALL             = 31,
+	SECCMB_SWORD                   = 32,
+	SECCMB_WSWORD                  = 33,
+	SECCMB_MSWORD                  = 34,
+	SECCMB_XSWORD                  = 35,
+	SECCMB_SWORDBEAM               = 36,
+	SECCMB_WSWORDBEAM              = 37,
+	SECCMB_MSWORDBEAM              = 38,
+	SECCMB_XSWORDBEAM              = 39,
+	SECCMB_HOOKSHOT                = 40,
+	SECCMB_WAND                    = 41,
+	SECCMB_HAMMER                  = 42,
+	SECCMB_STRIKE                  = 43,
+	SECCMB_SECRETSNEXT             = 44, // Only ->SecretFlags[] has a value for this index.
+	SECCMB_MAX                     = 45,
+};
+
+// Used with [Audio->Volume].
+enum VolumeIndex
+{
+	VOL_MIDI                       = 0,
+	VOL_DIGI                       = 1,
+	VOL_MUSIC                      = 2,
+	VOL_SFX                        = 3,
+};
+
+// Combo Quadrants used for Combo Solidity and CSet2vMasks.
+enum ComboSolidityBitflags
+{
+	CMB_QUADRANT_UL                = 0001b,
+	CMB_QUADRANT_UR                = 0100b,
+	CMB_QUADRANT_DL                = 0010b,
+	CMB_QUADRANT_DR                = 1000b,
+	CMB_QUADRANT_UPLEFT            = 0001b,
+	CMB_QUADRANT_UPRIGHT           = 0100b,
+	CMB_QUADRANT_DOWNLEFT          = 0010b,
+	CMB_QUADRANT_DOWNRIGHT         = 1000b,
+	CMB_QUADRANT_LEFTUP            = 0001b,
+	CMB_QUADRANT_RIGHTUP           = 0100b,
+	CMB_QUADRANT_LEFTDOWN          = 0010b,
+	CMB_QUADRANT_RIGHTDOWN         = 1000b,
+};
+
+// System Real Time Clock (RTC) categories for [GetSystemTime].
+enum RealTimeClockCategory
+{
+	RTC_YEAR                       = 0,
+	RTC_MONTH                      = 1,
+	RTC_DAYOFMONTH                 = 2,
+	RTC_DAYOFWEEK                  = 3,
+	RTC_HOUR                       = 4,
+	RTC_MINUTE                     = 5,
+	RTC_SECOND                     = 6,
+	RTC_DAYOFYEAR                  = 7,
+	RTC_DAYLIGHTTIME               = 8,
+	RTC_LAST                       = 9,
+};
+
+// Warp Effects for Hero->WarpEx.
+enum WarpEffect
+{
+	WARPEFFECT_NONE                = 0,
+	WARPEFFECT_ZAP                 = 1,
+	WARPEFFECT_WAVE                = 2,
+	WARPEFFECT_INSTANT             = 3,
+	WARPEFFECT_OPENWIPE            = 4,
+};
+
+// Bitflags for [Hero->WarpEx].
+enum WarpBitflags
+{
+	WARP_FLAG_SCRIPTDRAW           = 0x001,
+	WARP_FLAG_PLAYSOUNDS           = 0x002,
+	WARP_FLAG_FORCE_RESET_MUSIC    = 0x004,
+	WARP_FLAG_SETENTRANCESCREEN    = 0x008,
+	WARP_FLAG_SETENTRANCEDMAP      = 0x010,
+	WARP_FLAG_SETCONTINUESCREEN    = 0x020,
+	WARP_FLAG_SETCONTINUEDMAP      = 0x040,
+	WARP_FLAG_DONT_RESET_DM_SCRIPT = 0x080,
+	WARP_FLAG_DONT_CLEAR_SPRITES   = 0x100,
+	WARP_FLAG_FORCE_CONTINUE_MUSIC = 0x200,
+	WARP_FLAG_PLAYMUSIC            = WARP_FLAG_FORCE_RESET_MUSIC, // Old name for compat of old scripts.
+	WARP_FLAG_DONTCLEARSPRITES     = 0x100,                       // Manual Sprite Carryover.
+	WARP_FLAG_CLEARITEMS           = 0x200,
+	WARP_FLAG_CLEARGUYS            = 0x400,
+	WARP_FLAG_CLEARLWEAPONS        = 0x800,
+	WARP_FLAG_CLEAREWEAPONS        = 0x1000,
+	WARP_FLAG_CLEARHOOKSHOT        = 0x2000,
+	WARP_FLAG_CLEARDECORATIONS     = 0x4000,
+	WARP_FLAG_CLEARPARTICLES       = 0x8000,
+	WARP_FLAG_NOSTEPFORWARD        = 0x10000,                     // Prevent Stepping forward in dungeon screens (experimental).
+};
+
+// Bitflags for [SaveSRAM] and [LoadSRAM].
+enum StoredMemoryBitflags
+{
+	SRAM_ALL                       = 0,
+	SRAM_NPCDATA                   = 0x01,
+	SRAM_ITEMDATA                  = 0x02,
+	SRAM_SPRITEDATA                = 0x04,
+	SRAM_COMBODATA                 = 0x08,
+	SRAM_DMAPDATA                  = 0x10,
+	SRAM_MAPDATA                   = 0x20,
+};
+
+// Used with [mapdata::NoCarry] and [screendata::NoCarry].
+enum NoCarryBitflags
+{
+	NOCARRY_B_SECRET               = 0x2000,
+	NOCARRY_B_ITEM                 = 0x0010,
+	NOCARRY_B_SPECIALITEM          = 0x0020,
+	NOCARRY_B_LOCKBLOCK            = 0x0100,
+	NOCARRY_B_BOSSLOCKBLOCK        = 0x0200,
+	NOCARRY_B_CHEST                = 0x0400,
+	NOCARRY_B_LOCKEDCHEST          = 0x0800,
+	NOCARRY_B_BOSSCHEST            = 0x1000,
+};
+
+// Used with [mapdata::NoReset] and [screendata::NoReset].
+enum NoResetBitflags
+{
+	NORESET_B_SECRET               = 0x2000,
+	NORESET_B_ITEM                 = 0x0010,
+	NORESET_B_SPECIALITEM          = 0x0020,
+	NORESET_B_LOCKBLOCK            = 0x0100,
+	NORESET_B_BOSSLOCKBLOCK        = 0x0200,
+	NORESET_B_CHEST                = 0x0400,
+	NORESET_B_LOCKEDCHEST          = 0x0800,
+	NORESET_B_BOSSCHEST            = 0x1000,
+	NORESET_B_DOOR_B_UP            = 0x0001,
+	NORESET_B_DOOR_B_DOWN          = 0x0002,
+	NORESET_B_DOOR_B_LEFT          = 0x0004,
+	NORESET_B_DOOR_B_RIGHT         = 0x0008,
+};
+
+enum DMapChartedBitflags
+{
+	CHRT_VISITED                   = 10000000b,
+	CHRT_UP                        = 00000001b,
+	CHRT_DOWN                      = 00000010b,
+	CHRT_LEFT                      = 00000100b,
+	CHRT_RIGHT                     = 00001000b,
+};
+
+enum UnblockableBitflags
+{
+	UNBLOCK_NONE                   = 0000b, // Not unblockable.
+	UNBLOCK_NORM                   = 0001b, // Bypasses normal 'block' defenses.
+	UNBLOCK_IGNR                   = 0010b, // Bypasses 'ignore' defenses.
+	UNBLOCK_SHLD                   = 0100b, // Bypasses enemy/hero 'shields'.
+	UNBLOCK_REFL                   = 1000b, // Bypasses hero 'reflect' on shields.
+	UNBLOCK_ALL                    = 1111b, // All bits set.
+};
+
+// Used with [itemdata::Attributes].
+// @deprecated Use [BlockBitflags] instead!
+enum BlockBitflagsInt
+{
+	BLOCKFLAG_ROCK                 = 0x00001,
+	BLOCKFLAG_ARROW                = 0x00002,
+	BLOCKFLAG_BRANG                = 0x00004,
+	BLOCKFLAG_FIREBALL             = 0x00008,
+	BLOCKFLAG_SWORD                = 0x00010,
+	BLOCKFLAG_MAGIC                = 0x00020,
+	BLOCKFLAG_FLAME                = 0x00040,
+	BLOCKFLAG_SCRIPT               = 0x00080, // Blocks or reflects ALL script weapons.
+	BLOCKFLAG_FIREBALL2            = 0x00100,
+	BLOCKFLAG_LIGHTBEAM            = 0x00200,
+	BLOCKFLAG_SCRIPT1              = 0x00400,
+	BLOCKFLAG_SCRIPT2              = 0x00800,
+	BLOCKFLAG_SCRIPT3              = 0x01000,
+	BLOCKFLAG_SCRIPT4              = 0x02000,
+	BLOCKFLAG_SCRIPT5              = 0x04000,
+	BLOCKFLAG_SCRIPT6              = 0x08000,
+	BLOCKFLAG_SCRIPT7              = 0x10000,
+};
+
+// Used with [itemdata::LAttributes].
+enum BlockBitflags
+{
+	L_BLOCKFLAG_ROCK               = 0x00000001L,
+	L_BLOCKFLAG_ARROW              = 0x00000002L,
+	L_BLOCKFLAG_BRANG              = 0x00000004L,
+	L_BLOCKFLAG_FIREBALL           = 0x00000008L,
+	L_BLOCKFLAG_SWORD              = 0x00000010L,
+	L_BLOCKFLAG_MAGIC              = 0x00000020L,
+	L_BLOCKFLAG_FLAME              = 0x00000040L,
+	L_BLOCKFLAG_SCRIPT             = 0x00000080L, // Blocks or reflects ALL script weapons.
+	L_BLOCKFLAG_FIREBALL2          = 0x00000100L,
+	L_BLOCKFLAG_LIGHTBEAM          = 0x00000200L,
+	L_BLOCKFLAG_SCRIPT1            = 0x00000400L,
+	L_BLOCKFLAG_SCRIPT2            = 0x00000800L,
+	L_BLOCKFLAG_SCRIPT3            = 0x00001000L,
+	L_BLOCKFLAG_SCRIPT4            = 0x00002000L,
+	L_BLOCKFLAG_SCRIPT5            = 0x00004000L,
+	L_BLOCKFLAG_SCRIPT6            = 0x00008000L,
+	L_BLOCKFLAG_SCRIPT7            = 0x00010000L,
+	L_BLOCKFLAG_SCRIPT8            = 0x00020000L,
+	L_BLOCKFLAG_SCRIPT9            = 0x00040000L,
+	L_BLOCKFLAG_SCRIPT10           = 0x00080000L,
+};
+
+// Used with [Hero->HitBy] and [npc::HitBy].
+enum HitIndex
+{
+	HIT_BY_NPC                     = 0,  // [Hero] only.
+	HIT_BY_EWEAPON                 = 1,  // [Hero] only.
+	HIT_BY_LWEAPON                 = 2,
+	HIT_BY_FFC                     = 3,  // Unimplemented.
+	HIT_BY_NPC_UID                 = 4,  // [Hero] only. The scripting UID of the enemy, used with [Screen->LoadNPCByUID].
+	HIT_BY_EWEAPON_UID             = 5,  // [Hero] only.
+	HIT_BY_LWEAPON_UID             = 6,
+	HIT_BY_FFC_UID                 = 7,  // Unimplemented.
+	HIT_BY_LWEAPON_PARENT_ID       = 8,  // The item id of the item that the weapon that hit came from. -1 if the lweapon is script created.
+	HIT_BY_LWEAPON_PARENT_FAMILY   = 9,  // The item class of the item that the weapon that hit came from (see IC_ constants). -1 if the lweapon is script created.
+	HIT_BY_NPC_TYPE                = 10, // [Hero] only. The enemy class of the enemy that hit the [Hero] (see [NPCType] constants).
+	HIT_BY_EWEAPON_TYPE            = 11, // [Hero] only. The ID of the weapon that hit (see LW_ and EW_ constants).
+	HIT_BY_LWEAPON_TYPE            = 12, // The internal UID used by the engine for the thing. Can case these to their respective types example: `npc n = <npc>(Hero->HitBy[HIT_BY_NPC_PTR])`.
+	HIT_BY_NPC_PTR                 = 13,
+	HIT_BY_EWEAPON_PTR             = 14,
+	HIT_BY_LWEAPON_PTR             = 15,
+	HIT_BY_NPC_ID                  = 16, // The ID of the enemy that did the hit.
+};
+
+enum AnimationBitflags
+{
+	AF_FRESH                       = 0x01,
+	AF_CYCLE                       = 0x02,
+	AF_CYCLENOCSET                 = 0x04,
+	AF_TRANSPARENT                 = 0x08,
+	AF_CYCLEUNDERCOMBO             = 0x10,
+};
+
+enum PickupStringBitflags
+{
+	IPSTR_ALWAYS                   = 0x01,
+	IPSTR_ONLYHELD                 = 0x02,
+};
+
+enum ItemMiscBitflags
+{
+	IMISC_FLASH                    = 0x01,
+	IMISC_TWOHAND                  = 0x02,
+	IMISC_HFLIP                    = 0x04,
+	IMISC_VFLIP                    = 0x08,
+};
+
+enum SizeOverrideBitflags
+{
+	SZFLAG_TILEWIDTH               = 0x0001,
+	SZFLAG_TILEHEIGHT              = 0x0002,
+	SZFLAG_HIT_WIDTH               = 0x0004,
+	SZFLAG_HIT_HEIGHT              = 0x0008,
+	SZFLAG_HIT_Z_HEIGHT            = 0x0010,
+	SZFLAG_HIT_X_OFFSET            = 0x0020,
+	SZFLAG_HIT_Y_OFFSET            = 0x0040,
+	SZFLAG_DRAW_X_OFFSET           = 0x0080,
+	SZFLAG_DRAW_Y_OFFSET           = 0x0100,
+	SZFLAG_DRAW_Z_OFFSET           = 0x0200,
+	SZFLAG_ALL                     = 0x03FF,
+};
+
+// Used with [Game->CurrentItemID].
+enum CurrentItemIDBitflags
+{
+	CIID_FLAG_CHECKCOST            = 0x01, // Ignore items whose usecosts are currently not affordable.
+	CIID_FLAG_CHECKJINX            = 0x02, // Ignore items which are currently disabled by jinxes.
+	CIID_FLAG_CHECKBUNNY           = 0x04, // Ignore items which are currently disabled by BunnyClk.
+};
+
+// Used with [subscreenpage::SelectorMove].
+enum MoveSubscreenSelectorBitflags
+{
+	SUBSEL_FLAG_NO_NONEQUIP        = 0x01, // Skip widgets that are "Non-equippable".
+	SUBSEL_FLAG_NEED_ITEM          = 0x02, // Skip widgets that currently have no equippable item.
+};

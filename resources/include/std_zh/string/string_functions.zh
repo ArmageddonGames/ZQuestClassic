@@ -886,8 +886,7 @@ bool IsChar(char32 chr, char32 comp) { return (chr == comp); }
 //	the string using the tokens `%s`, `%f`, and `%d` respectively.
 //	`int args` is an array literal with the following format required:
 //	{ LAYER, X, Y, FONT, TEXT_COLOUR, TEXT_BG_COLOUR, FORMAT, OPCITY }
-
-void ScreenPrint(char32[] s, untyped v, int[] args) //what if we use an array literal for the inputs?. No, then we still don't have overloaded strings
+void ScreenPrint(char32[] s, untyped v, int[] args)
 {
 	int args_size = SizeOfArray(args);
 	if ( args_size < 8 )
