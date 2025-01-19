@@ -26,3 +26,13 @@ ZScript
    :maxdepth: 1
 
    /tutorials/websockets
+
+Docs
+----
+
+Example of the rst markdown used in writing tutorials for the site:
+
+.. toctree::
+	:maxdepth: 1
+	
+	RST Markdown Example </tutorials/rst_example>

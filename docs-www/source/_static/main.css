@@ -1,43 +1,257 @@
 html {
-    --pst-header-height: 5rem;
+	--pst-header-height: 5rem;
 }
 
 .navbar-brand img {
-    padding: 3px;
+	padding: 3px;
 }
 
 .bd-main .bd-content .bd-article-container {
-    max-width: 100%;
+	max-width: 100%;
 }
 
 .bd-sidebar-primary {
-    max-width: 230px;
+	max-width: 230px;
 }
 
 .bd-page-width {
-  max-width: 100%; /* default is 88rem */
+	max-width: 100%; /* default is 88rem */
 }
 
 .classref-enumeration-constant, .classref-comment {
-    margin-left: 30px;
-    margin-bottom: 5px;
+	margin-left: 30px;
+	margin-bottom: 5px;
 }
 
 .classref-enumeration-constant+.classref-comment {
-    margin-left: 60px;
+	margin-left: 60px;
 }
 
 .toctree-grid ul {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 800px;
+	display: grid;
+	gap: 10px;
+	grid-template-columns: repeat(3, 1fr);
+	max-width: 800px;
 }
 
 .del {
-    text-decoration: line-through;
+	text-decoration: line-through;
 }
 
 a.reference[href^="https://github.com"]:not(.github) {
-    font-size: 11px;
+	font-size: 11px;
+}
+
+/* A bit too much padding for my liking... */
+h1, h2, .h1, .h2  {
+	margin: 1.25rem 0 1.05rem
+}
+
+h3, h4, h5, h6,
+.h3, .h4, .h5, .h6 {
+	margin: 0.75rem 0 1.05rem
+}
+
+.line-block {
+	margin-top: 0;
+}
+
+/* Needs top margin to match bottom, or looks wrong in some places */
+p {
+	margin-top: 1.15rem;
+}
+
+/* Customized admonition class */
+.admonition.admonition-plans,
+div.admonition.admonition-plans {
+	border-color: var(--pst-color-accent);
+}
+.admonition.admonition-plans>.admonition-title,
+div.admonition.admonition-plans>.admonition-title {
+	background-color: var(--pst-color-accent-bg);
+}
+.admonition.admonition-plans>.admonition-title:after,
+div.admonition.admonition-plans>.admonition-title:after {
+	color: var(--pst-color-accent);
+	content: '⏩';
+}
+
+/* The default margin just adds a bunch of empty space... */
+pre.hljs {
+	margin: 0;
+}
+
+/* Without this, some elements in footers don't
+   actually look like part of the footer. */
+.footnote > pre.hljs,
+.footnote > details.sd-dropdown,
+.footnote > .admonition {
+	margin: 0 0 0 2em;
+}
+
+/* Why does versionremoved look so different by default?
+   This should make it match the others in style... */
+div.versionremoved {
+	background-color: var(--pst-color-on-background);
+	border-left: .2rem solid;
+	border-color: var(--pst-color-info);
+	border-radius: .25rem;
+	box-shadow: 0 .2rem .5rem var(--pst-color-shadow),0 0 .0625rem var(--pst-color-shadow)!important;
+	break-inside: avoid;
+	margin: 1.5625em auto;
+	overflow: hidden;
+	padding: 0 .6rem;
+	page-break-inside: avoid;
+	position: relative;
+	vertical-align: middle;
+}
+div.versionremoved {
+	background-color: var(--pst-color-info-bg);
+	border-color: var(--pst-color-info);
+}
+div.versionremoved > p {
+	margin-top: .6rem;
+}
+span.versionmodified.removed::before {
+	color: var(--pst-color-info);
+}
+
+/* inline code */
+span.inlinezs,
+span.customzs,
+code.literal.inlinezs,
+code.literal.customzs {
+	border: 1px solid var(--pst-color-border);
+	border-radius: .25rem;
+	padding: 0 .25rem;
+	font-family: var(--pst-font-family-monospace);
+	font-size: .875em;
+	word-wrap: normal;
+	display: inline-block;
+}
+
+/* Make sure inline blocks match our hljs... */
+code.literal {
+	color: #F0F0F0;
+	background: #1B2028;
+}
+html[data-theme="light"] code.literal {
+	color: #101010;
+	background: #F8F8F8;
+}
+
+/* Used for making a normal :ref: the size of a .toctree link */
+.bigref {
+	font-size: 1.1em;
+}
+
+/* A caption, either above or below something */
+.zs_caption {
+	font-size: 80%;
+	font-style: italic;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* Cards that show off script type information */
+.docutils.container.scrinfo_card {
+	padding: 20px;
+	border: 1px solid var(--pst-color-border);
+	border-radius: 10px;
+	margin: 16px 0;
+	background-color: var(--pst-color-on-background);
+}
+
+.scrinfo_card .scrinfo_title {
+	margin-top: 0;
+	text-align: center;
+	font-size: 175%;
+	display: block;
+}
+.scrinfo_row {
+	display: flex;
+	align-items: stretch;
+	& > * {
+		margin: 0;
+	}
+}
+
+.scrinfo_row:has(+.scrinfo_bodybox) {
+	& > .scrinfo_bodybox {
+		padding-bottom: 5px;
+	}
+	& + .scrinfo_bodybox {
+		padding-top: 5px;
+	}
+}
+
+.scrinfo_card .scrinfo_dataline {
+	font-weight: bold;
+	font-size: 90%;
+	margin: 0;
+	display: block;
+}
+
+.scrinfo_card .scrinfo_databox {
+	width: 35%;
+	
+	--data-hpadding: 10px;
+	
+	padding: 5px var(--data-hpadding);
+	border: 1px solid var(--pst-color-border);
+	display: flex;
+	flex-flow: column nowrap;
+	
+	align-content: space-around;
+	justify-content: space-around;
+	
+	& ~ .scrinfo_bodybox {
+		width: 65%; /* The other 65% to the 35% */
+	}
+	& .scrinfo_data_separator {
+		padding: 0;
+		margin: 6px 0;
+		height: 0;
+		position: relative;
+		
+		&::before {
+			width: calc(2 * var(--data-hpadding) + 100%);
+			height: 0;
+			position: absolute;
+			left: calc(-1 * var(--data-hpadding));
+			top: -1px;
+			border-style: dashed;
+			border-color: var(--pst-color-border);
+			border-width: 1px 0;
+			content: '';
+			display: block;
+		}
+	}
+}
+.scrinfo_card .scrinfo_bodybox {
+	padding: 10px 20px;
+	border: 1px solid var(--pst-color-border);
+	display: flex;
+	flex-flow: column nowrap;
+	
+	justify-content: center;
+	align-content: center;
+}
+
+.scrinfo_card .scrinfo_bodybox p {
+	margin: 0.5rem 0;
+	&:first-child {
+		margin-top: 0;
+	}
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+/* direct flags for directives to use */
+.kill_bottom_border {
+	border-bottom-width: 0 !important;
+}
+.kill_top_border {
+	border-top-width: 0 !important;
 }

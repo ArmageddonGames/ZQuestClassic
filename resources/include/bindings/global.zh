@@ -326,8 +326,12 @@ internal void DestroyArray<T>(T[] arr);
 //   ZCLASS_OWN D2
 internal void OwnObject(untyped obj);
 
-// Takes an Object parameter. Globalizes the object, making it no longer owned
-// by any script.
+// Takes an [#zslang_classes|Object] parameter. Globalizes the object, and
+// clears any script ownership over it. The object will be saved to the
+// save file, and cannot be deleted.
+// 
+// Objects that are stored in global variables (or other global objects)
+// are also considered to be global.
 //
 // @zasm
 //   POP D2

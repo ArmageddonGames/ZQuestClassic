@@ -60,14 +60,16 @@ std::vector<ParseCommentResult> parseForSymbolLinks(std::string comment, const A
 		return {};
 
 	// identifier, followed by an optional and non-captured "[]" or "()"
-	static std::string p_ident = "([a-zA-Z_][->:a-zA-Z0-9_]*)(?:\\[\\]|\\(\\))?";
-	static std::string p_link = fmt::format("\\{{@link {}[|]?([^}}]+)?\\}}", p_ident);
-	static std::string p_shorthand = fmt::format("\\[{}\\]", p_ident);
+	static std::string p_ident = "(#?[a-zA-Z_][->:a-zA-Z0-9_]*)(?:\\[\\]|\\(\\))?";
+	static std::string p_link = fmt::format("\\{{@link {}(?:\\|([^}}]+))?\\}}", p_ident);
+	static std::string p_shorthand = fmt::format("\\[{}(?:\\|([^\\]]+))?\\]", p_ident);
 	static std::string p_regex = fmt::format("{}|{}", p_link, p_shorthand);
 	// Supports:
 	// @link {symbol}
 	// @link {symbol|text}
 	// [symbol]
+	// [symbol|text]
+	// 'symbol' is either an internal symbol, or an external docs target starting with '#'
 	static const std::regex r(p_regex);
 	std::sregex_iterator it(comment.begin(), comment.end(), r);
 	std::sregex_iterator end;
@@ -81,20 +83,25 @@ std::vector<ParseCommentResult> parseForSymbolLinks(std::string comment, const A
 		if ((*it)[3].matched)
 		{
 			symbol_name = (*it)[3].str();
+			if((*it)[4].matched)
+				link_text = (*it)[4].str();
 		}
 		else
 		{
 			symbol_name = (*it)[1].str();
-			link_text = (*it)[2].matched ? (*it)[2].str() : "";
+			if((*it)[2].matched)
+				link_text = (*it)[2].str();
 		}
-		ParseCommentResult match{symbol_name, (int)pos, (int)len, link_text, nullptr};
-		matches.push_back(match);
+		matches.emplace_back(symbol_name, (int)pos, (int)len, link_text, nullptr);
 		it++;
 	}
 
 	for (auto it = matches.begin(); it != matches.end(); it++)
 	{
 		auto& [symbol_name, pos, len, link_text, symbol_node] = *it;
+		
+		if(symbol_name.starts_with("#"))
+			continue; // link to external docs, not a symbol
 
 		bool had_link_text = !link_text.empty();
 		if (!had_link_text)

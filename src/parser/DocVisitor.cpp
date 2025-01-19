@@ -65,6 +65,14 @@ static void linkifyString(std::string& string, const AST* node)
 	auto matches = parseForSymbolLinks(string, node, check_params);
 	for (auto it = matches.rbegin(); it != matches.rend(); it++)
 	{
+		if (it->symbol_name.starts_with("#")) // external docs link
+		{
+			if (it->link_text.empty())
+				string.replace(it->pos, it->len, fmt::format("[#{}#]", it->symbol_name.substr(1)));
+			else
+				string.replace(it->pos, it->len, fmt::format("[#{}|{}#]", it->symbol_name.substr(1), it->link_text));
+			continue;
+		}
 		if (!it->symbol_node)
 		{
 			string.replace(it->pos, it->len, fmt::format("`{}`", it->link_text));

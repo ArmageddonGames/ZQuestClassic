@@ -1,0 +1,149 @@
+/**
+ * ZScript Syntax Theme for Highlight.js
+ * Author: EmilyV <https://github.com/EmilyV99>
+ */
+
+.hljs {
+	color: #F0F0F0;
+	background: #1B2028;
+}
+html[data-theme="light"] .hljs {
+	color: #101010;
+	background: #F8F8F8;
+}
+
+.hljs-comment {
+	color: #666666 !important;
+	font-style: italic !important;
+	font-weight: bold !important;
+}
+
+html[data-theme="light"] .hljs-comment {
+	color: #BBBBBB !important;
+}
+
+.hljs-title.param_ {
+	color: #8585D0 !important;
+}
+html[data-theme="light"] .hljs-title.param_ {
+	color: #B01FE0 !important;
+}
+
+.hljs-meta,
+.hljs-meta.annotation,
+.hljs-meta .hljs-keyword {
+	color: #8954A5 !important;
+}
+
+html[data-theme="light"] .hljs-meta,
+html[data-theme="light"] .hljs-meta.annotation,
+html[data-theme="light"] .hljs-meta .hljs-keyword {
+	color: #DC7E05 !important;
+}
+
+.hljs-operator {
+	color: #3FBF49 !important;
+}
+html[data-theme="light"] .hljs-operator {
+	color: #38AF3C !important;
+}
+
+.hljs-keyword,
+.hljs-keyword.global_,
+.hljs-keyword.wait_ {
+	color: #FF4B82 !important;
+}
+html[data-theme="light"] .hljs-keyword,
+html[data-theme="light"] .hljs-keyword.global_,
+html[data-theme="light"] .hljs-keyword.wait_ {
+	color: #E73026 !important;
+}
+
+.hljs-string,
+.hljs-meta .hljs-string {
+	color: #0AB26F !important;
+}
+html[data-theme="light"] .hljs-string,
+html[data-theme="light"] .hljs-meta .hljs-string {
+	color: #8585D0 !important;
+}
+
+.hljs-number,
+.hljs-keyword.literal_ {
+	color: #F8FC11 !important;
+}
+html[data-theme="light"] .hljs-number,
+html[data-theme="light"] .hljs-keyword.literal_ {
+	color: #0000FF !important;
+}
+
+.hljs-type,
+.hljs-type.enum_,
+.hljs-type.class_,
+.hljs-type.script_ {
+	color: #FC9E11 !important;
+}
+html[data-theme="light"] .hljs-type,
+html[data-theme="light"] .hljs-type.enum_,
+html[data-theme="light"] .hljs-type.class_,
+html[data-theme="light"] .hljs-type.script_ {
+	color: #0000FF !important;
+}
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-title.script_,
+.hljs-title.namespace_ {
+	color: #00FFFF !important;
+}
+html[data-theme="light"] .hljs-title,
+html[data-theme="light"] .hljs-title.function_,
+html[data-theme="light"] .hljs-title.script_,
+html[data-theme="light"] .hljs-title.namespace_ {
+	color: #05789E !important;
+}
+
+.hljs-templating {
+	color: #DBF92C !important;
+}
+html[data-theme="light"] .hljs-templating {
+	color: #BBD915 !important;
+}
+
+.hljs-hidden {
+	display: none;
+}
+
+.hljs-alert {
+	border-bottom: 2px dotted;
+	display: inline-block;
+	position: relative;
+	margin-bottom: 2px;
+}
+.hljs-alert::after {
+	content: '';
+	width: 100%;
+	border-bottom: 2px dotted;
+	position: absolute;
+	left: -2px;
+	display: block;
+	height: 4px;
+}
+
+.hljs-alert.warn_,
+.hljs-alert.warn_::after {
+	border-color: #F2EA0C;
+}
+.hljs-alert.error_,
+.hljs-alert.error_::after {
+	border-color: #FF0000;
+}
+
+html[data-theme="light"] .hljs-alert.warn_,
+html[data-theme="light"] .hljs-alert.warn_::after {
+	border-color: #CBC742;
+}
+html[data-theme="light"] .hljs-alert.error_,
+html[data-theme="light"] .hljs-alert.error_::after {
+	border-color: #FF7777;
+}

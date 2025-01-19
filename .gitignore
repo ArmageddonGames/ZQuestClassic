@@ -149,4 +149,5 @@ web/playground/zscript.mjs
 api_server/secrets.sh
 
 docs-www/source/zscript
+docs-www/source/_static/highlight-11.11.1.min.js
 .sentry-native
