@@ -295,9 +295,7 @@ void ObjectTemplate::call_dlg(optional<int> start_val)
 	{
 		HANDLE_CLOSE_ZQDLG();
 		if(exiting_program) break;
-		rest(20);
 		bool redraw = false, resel = false;
-		redraw = do_tick();
 		auto osel = sel;
 		auto osel2 = sel2;
 		if(mouse_z)
@@ -404,7 +402,25 @@ void ObjectTemplate::call_dlg(optional<int> start_val)
 					copyind.reset();
 					break;
 				case KEY_V:
-					if(try_paste())
+					if(CHECK_CTRL_CMD)
+					{
+						if(try_adv_paste())
+							redraw = true;
+					}
+					else if(try_paste())
+						redraw = true;
+					break;
+				case KEY_S:
+					if(try_swap())
+						redraw = true;
+					break;
+				case KEY_I:
+					if(CHECK_SHIFT)
+					{
+						if(try_remove())
+							redraw = true;
+					}
+					else if(try_insert())
 						redraw = true;
 					break;
 				case KEY_DEL:
@@ -528,6 +544,8 @@ void ObjectTemplate::call_dlg(optional<int> start_val)
 			redraw = true;
 		if(sel != osel || sel2 != osel2)
 			redraw = true;
+		if(do_tick())
+			redraw = true;
 		
 		if(redraw)
 			gui_redraw();
@@ -593,10 +611,32 @@ bool ObjectTemplate::try_paste()
 			});
 		}
 		saved = false;
-		if(!CHECK_CTRL_CMD)
-			copyind.reset();
+		copyind.reset();
 		return true;
 	}
+	return false;
+}
+bool ObjectTemplate::try_swap()
+{
+	if(copyind)
+	{
+		clear_backup();
+		auto [c1,c2] = *copyind;
+		for_area(c1,c2,sel,[&](int d, int s){
+			backup(d);
+			backup(s);
+		});
+		for_area(c1,c2,sel,[&](int d, int s){
+			do_swap(d,s);
+		});
+		saved = false;
+		copyind.reset();
+		return true;
+	}
+	return false;
+}
+bool ObjectTemplate::try_adv_paste()
+{
 	return false;
 }
 void ObjectTemplate::try_edit()
@@ -627,6 +667,58 @@ bool ObjectTemplate::try_delete()
 			backup(s);
 			do_delete(s);
 		});
+		
+		saved = false;
+		return true;
+	}
+	return false;
+}
+bool ObjectTemplate::try_insert()
+{
+	string toclear = sel2 ? fmt::format("Are you sure you want to insert {} {}s?", abs(*sel2-sel), name())
+		: fmt::format("Are you sure you want to insert 1 {}?", name());;
+	bool did = false;
+	AlertDialog(fmt::format("Insert {}s", name()),
+		toclear,
+		[&](bool ret,bool)
+		{
+			if(ret)
+				did = true;
+		}).show();
+	if(did)
+	{
+		//!TODO INSERT CODE
+		// clear_backup();
+		// for_area(sel,sel2,[&](int s){
+			// backup(s);
+			// do_delete(s);
+		// });
+		
+		saved = false;
+		return true;
+	}
+	return false;
+}
+bool ObjectTemplate::try_remove()
+{
+	string toclear = sel2 ? fmt::format("Are you sure you want to remove {} {}s?", abs(*sel2-sel), name())
+		: fmt::format("Are you sure you want to remove 1 {}?", name());;
+	bool did = false;
+	AlertDialog(fmt::format("Remove {}s", name()),
+		toclear,
+		[&](bool ret,bool)
+		{
+			if(ret)
+				did = true;
+		}).show();
+	if(did)
+	{
+		//!TODO REMOVE CODE
+		// clear_backup();
+		// for_area(sel,sel2,[&](int s){
+			// backup(s);
+			// do_delete(s);
+		// });
 		
 		saved = false;
 		return true;
@@ -816,6 +908,214 @@ void ObjectTemplate::cb_do_rclick(uint indx)
 }
 
 //
+// Combo Pages
+//
+int32_t onComboLocationReport();
+
+ComboPageObj ComboPageObj::inst;
+bool ComboPageObj::try_adv_paste()
+{
+	if(!copyind) return false;
+	static bitstring pasteflags;
+	static const vector<CheckListInfo> advp_names =
+	{
+		{ "Tile" },
+		{ "CSet2" },
+		{ "Solidity" },
+		{ "Animation" },
+		{ "Type" },
+		{ "Inherent Flag" },
+		{ "Attribytes" },
+		{ "Attrishorts" },
+		{ "Attributes" },
+		{ "Flags", "The 16 Flags on the 'Flags' tab" },
+		{ "Gen. Flags", "The 2 'General Flags' on the 'Flags' tab" },
+		{ "Label" },
+		{ "Script" },
+		{ "Effect" },
+		{ "Triggers Tab" },
+		{ "Lifting Tab" },
+		{ "Gen: Movespeed", "The Movespeed related values from the 'General' tab" },
+		{ "Gen: SFX", "The SFX related values from the 'General' tab" },
+		{ "Gen: Sprites", "The Sprites related values from the 'General' tab" },
+	};
+	if(!call_checklist_dialog("Advanced Paste",advp_names,pasteflags))
+		return false;
+	clear_backup();
+	auto [c1,c2] = *copyind;
+	if(CHECK_SHIFT)
+	{
+		for_area(sel,sel2,[&](int s){
+			backup(s);
+			do_adv_paste(s,copyind->first,pasteflags);
+		});
+	}
+	else
+	{
+		for_area(c1,c2,sel,[&](int d, int s){
+			backup(d);
+			do_adv_paste(d,s,pasteflags);
+		});
+	}
+	saved = false;
+	if(pasteflags.get(CMB_ADVP_TILE) || pasteflags.get(CMB_ADVP_ANIM)) //reset animations if needed
+	{
+		setup_combo_animations();
+		setup_combo_animations2();
+	}
+	return true;
+}
+void ComboPageObj::do_draw(BITMAP* dest, int x, int y, int w, int h, int index) const
+{
+	newcombo const& cmb = combobuf[index];
+	if(cmb.is_blank())
+	{
+		draw_null(dest,x,y,w,h);
+		return;
+	}
+	int32_t cid = index; int8_t cs = CSet;
+	if(w == h && !(w%16))
+		put_combo(dest,x,y,cid,cs,0,0,w/16);
+	else
+	{
+		BITMAP* tmpbmp = create_bitmap_ex(8,16,16);
+		put_combo(tmpbmp,0,0,cid,cs,0,0,1);
+		stretch_blit(tmpbmp, dest, 0, 0, 16, 16, x, y, w, h);
+		destroy_bitmap(tmpbmp);
+	}
+}
+void ComboPageObj::do_copy(int dest, int src) const
+{
+	combobuf[dest] = combobuf[src];
+}
+void ComboPageObj::do_swap(int dest, int src) const
+{
+	zc_swap(combobuf[dest], combobuf[src]);
+}
+void ComboPageObj::do_adv_paste(int dest, int src, bitstring const& flags) const
+{
+	combobuf[dest].advpaste(combobuf[src], flags);
+}
+bool call_combo_editor(int32_t index);
+void ComboPageObj::do_edit(int index)
+{
+	call_combo_editor(index);
+}
+void ComboPageObj::do_delete(int index)
+{
+	combobuf[index].clear();
+}
+size_t ComboPageObj::size() const
+{
+	return MAXCOMBOS;
+}
+
+bool ComboPageObj::do_rclick(int indx)
+{
+	bool ret = false;
+	NewMenu rcmenu
+	{
+		{ "&Copy", [&](){try_copy();} },
+		{ "Paste", "&v", [&](){ret = try_paste();}, nullopt, !copyind },
+		{ "&Adv. Paste", [&](){ret = try_adv_paste();}, nullopt, !copyind },
+		{ "&Swap", [&](){ret = try_swap();}, nullopt, !copyind},
+		{ "&Delete", [&](){ret = try_delete();} },
+		{ "" },
+		{ "&Edit", [&](){try_edit(); ret = true;} },
+		{ "&Insert", [&](){ret = try_insert();} },
+		{ "&Remove", "Shift+I", [&](){ret = try_remove();} },
+		{ "" },
+		{ "&Locations", [&](){
+			auto tmp = Combo;
+			Combo = indx;
+			onComboLocationReport();
+			Combo = tmp;
+		} },
+	};
+	rcmenu.pop(window_mouse_x(),window_mouse_y());
+	return ret;
+}
+bool ComboPageObj::do_tick()
+{
+	if(get_cb(CMBPG_CB_ANIM))
+	{
+		animate_combos();
+		return true;
+	}
+	else
+	{
+		reset_combo_animations();
+		reset_combo_animations2();
+	}
+	return false;
+}
+void ComboPageObj::postinit()
+{
+	buttons.emplace_back("Done", [&](){return 1;});
+	buttons.emplace_back("&Edit", [&](){try_edit(); return 0;});
+}
+
+bool ComboPageObj::disabled_cb(uint indx) const
+{
+	switch(indx)
+	{
+		case CMBPG_CB_ANIM:
+			return false;
+	}
+	return ObjectTemplate::disabled_cb(indx);
+}
+optional<string> ComboPageObj::cb_get_name(uint indx) const
+{
+	switch(indx)
+	{
+		case CMBPG_CB_ANIM:
+			return "Animate";
+	}
+	return ObjectTemplate::cb_get_name(indx);
+}
+optional<string> ComboPageObj::cb_get_cfg(uint indx) const
+{
+	switch(indx)
+	{
+		case CMBPG_CB_ANIM:
+			return "combopage_animate";
+	}
+	return ObjectTemplate::cb_get_cfg(indx);
+}
+optional<bool> ComboPageObj::cb_get_default(uint indx) const
+{
+	switch(indx)
+	{
+		case CMBPG_CB_ANIM:
+			return true;
+	}
+	return ObjectTemplate::cb_get_default(indx);
+}
+
+static map<int,newcombo> backup_cmb;
+void ComboPageObj::clear_backup() const
+{
+	backup_cmb.clear();
+}
+void ComboPageObj::backup(int index) const
+{
+	backup_cmb[index] = combobuf[index];
+}
+void ComboPageObj::restore_backup() const
+{
+	if(backup_cmb.empty())
+		return;
+	saved = false;
+	map<int,newcombo> tmp;
+	for(auto [ind,cmb] : backup_cmb)
+	{
+		tmp[ind] = combobuf[ind];
+		combobuf[ind] = cmb;
+	}
+	backup_cmb = tmp; //undo again to redo
+}
+
+//
 // Combo Pool Pages
 //
 ComboPoolPageObj ComboPoolPageObj::inst;
@@ -844,6 +1144,10 @@ void ComboPoolPageObj::do_copy(int dest, int src) const
 {
 	combo_pools[dest] = combo_pools[src];
 }
+void ComboPoolPageObj::do_swap(int dest, int src) const
+{
+	zc_swap(combo_pools[dest], combo_pools[src]);
+}
 void call_cpool_dlg(int32_t index);
 void ComboPoolPageObj::do_edit(int index)
 {
@@ -865,6 +1169,7 @@ bool ComboPoolPageObj::do_rclick(int indx)
 	{
 		{ "&Copy", [&](){try_copy();} },
 		{ "Paste", "&v", [&](){ret = try_paste();}, nullopt, !copyind },
+		{ "&Swap", [&](){ret = try_swap();}, !copyind},
 		{ "&Edit", [&](){try_edit(); ret = true;} },
 		{ "&Delete", [&](){ret = try_delete();} },
 	};
@@ -990,6 +1295,10 @@ void AutoComboPageObj::do_copy(int dest, int src) const
 {
 	combo_autos[dest] = combo_autos[src];
 }
+void AutoComboPageObj::do_swap(int dest, int src) const
+{
+	zc_swap(combo_autos[dest], combo_autos[src]);
+}
 void call_autocombo_dlg(int32_t index);
 void AutoComboPageObj::do_edit(int index)
 {
@@ -1011,6 +1320,7 @@ bool AutoComboPageObj::do_rclick(int indx)
 	{
 		{ "&Copy", [&](){try_copy();} },
 		{ "Paste", "&v", [&](){ret = try_paste();}, nullopt, !copyind },
+		{ "&Swap", [&](){ret = try_swap();}, !copyind},
 		{ "&Edit", [&](){try_edit(); ret = true;} },
 		{ "&Delete", [&](){ret = try_delete();} },
 	};
@@ -1077,6 +1387,10 @@ void AliasPageObj::do_copy(int dest, int src) const
 {
 	combo_aliases[dest] = combo_aliases[src];
 }
+void AliasPageObj::do_swap(int dest, int src) const
+{
+	zc_swap(combo_aliases[dest], combo_aliases[src]);
+}
 void call_calias_dlg(int index);
 void AliasPageObj::do_edit(int index)
 {
@@ -1098,6 +1412,7 @@ bool AliasPageObj::do_rclick(int indx)
 	{
 		{ "&Copy", [&](){try_copy();} },
 		{ "Paste", "&v", [&](){ret = try_paste();}, nullopt, !copyind },
+		{ "&Swap", [&](){ret = try_swap();}, !copyind},
 		{ "&Edit", [&](){try_edit(); ret = true;} },
 		{ "&Delete", [&](){ret = try_delete();} },
 	};
@@ -1142,6 +1457,15 @@ void AliasPageObj::restore_backup() const
 //
 // Callers
 //
+void call_cmb_pages(optional<int> val)
+{
+	reset_combo_animations();
+	reset_combo_animations2();
+	ComboPageObj::get().call_dlg(val);
+	setup_combo_animations();
+	setup_combo_animations2();
+}
+
 void call_cpool_pages(optional<int> val)
 {
 	ComboPoolPageObj::get().call_dlg(val);

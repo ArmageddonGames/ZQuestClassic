@@ -5,6 +5,7 @@
 #include "base/containers.h"
 struct mapscr;
 
+void call_cmb_pages(optional<int> val = nullopt);
 void call_cpool_pages(optional<int> val = nullopt);
 void call_autoc_pages(optional<int> val = nullopt);
 void call_alias_pages(optional<int> val = nullopt);

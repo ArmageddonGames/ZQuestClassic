@@ -69,8 +69,11 @@ protected:
 	void show_help() const;
 	void try_copy();
 	bool try_paste();
+	bool try_swap();
 	void try_edit();
 	bool try_delete();
+	bool try_insert();
+	bool try_remove();
 public:
 	void call_dlg(optional<int> start_val = nullopt);
 	
@@ -80,8 +83,11 @@ public:
 	void draw_null(BITMAP* dest, int x, int y, int w, int h) const;
 public:
 	//Abstraction
+	virtual bool try_adv_paste();
 	virtual void do_draw(BITMAP* dest, int x, int y, int w, int h, int index) const = 0;
 	virtual void do_copy(int dest, int src) const = 0;
+	virtual void do_swap(int dest, int src) const = 0;
+	virtual void do_adv_paste(int dest, int src, bitstring const& flags) const {};
 	virtual void do_edit(int index) = 0;
 	virtual void do_delete(int index) = 0;
 	virtual size_t size() const = 0;
@@ -105,6 +111,42 @@ public:
 	virtual string custom_info() const {return "";}
 };
 
+#define CMBPG_CB_ANIM OBJPG_CB_NUM_GLOBAL
+#define CMBPG_NUM_CB  1
+class ComboPageObj : public ObjectTemplate
+{
+	ComboPageObj() = default;
+	static ComboPageObj inst;
+public:
+	static ComboPageObj& get() {return inst;}
+	virtual bool try_adv_paste() override;
+	virtual void do_draw(BITMAP* dest, int x, int y, int w, int h, int index) const override;
+	virtual void do_copy(int dest, int src) const override;
+	virtual void do_swap(int dest, int src) const override;
+	virtual void do_adv_paste(int dest, int src, bitstring const& flags) const override;
+	virtual void do_edit(int index) override;
+	virtual void do_delete(int index) override;
+	virtual size_t size() const override;
+	
+	virtual bool do_rclick(int indx) override;
+	virtual bool do_tick() override;
+	virtual void postinit() override;
+	
+	virtual bool disabled_cb(uint indx) const override;
+	virtual optional<string> cb_get_name(uint indx) const override;
+	virtual optional<string> cb_get_cfg(uint indx) const override;
+	virtual optional<bool> cb_get_default(uint indx) const override;
+	// virtual void cb_do_rclick(uint indx) override;
+	
+	virtual void clear_backup() const override;
+	virtual void backup(int index) const override;
+	virtual void restore_backup() const override;
+	
+	virtual string name() const override {return "Combo";}
+	virtual string cfgname() const override {return "cmb";}
+	// virtual string custom_info() const {return "";}
+};
+
 #define CPOOLPG_CB_CYCLE OBJPG_CB_NUM_GLOBAL
 #define CPOOLPG_NUM_CB 1
 class ComboPoolPageObj : public ObjectTemplate
@@ -117,6 +159,7 @@ public:
 	
 	virtual void do_draw(BITMAP* dest, int x, int y, int w, int h, int index) const override;
 	virtual void do_copy(int dest, int src) const override;
+	virtual void do_swap(int dest, int src) const override;
 	virtual void do_edit(int index) override;
 	virtual void do_delete(int index) override;
 	virtual size_t size() const override;
@@ -148,6 +191,7 @@ public:
 	static AutoComboPageObj& get() {return inst;}
 	virtual void do_draw(BITMAP* dest, int x, int y, int w, int h, int index) const override;
 	virtual void do_copy(int dest, int src) const override;
+	virtual void do_swap(int dest, int src) const override;
 	virtual void do_edit(int index) override;
 	virtual void do_delete(int index) override;
 	virtual size_t size() const override;
@@ -179,6 +223,7 @@ public:
 	static AliasPageObj& get() {return inst;}
 	virtual void do_draw(BITMAP* dest, int x, int y, int w, int h, int index) const override;
 	virtual void do_copy(int dest, int src) const override;
+	virtual void do_swap(int dest, int src) const override;
 	virtual void do_edit(int index) override;
 	virtual void do_delete(int index) override;
 	virtual size_t size() const override;

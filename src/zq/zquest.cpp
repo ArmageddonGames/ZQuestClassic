@@ -9576,7 +9576,8 @@ void on_cpane_page()
 	switch(draw_mode)
 	{
 		case dm_normal:
-			combo_screen(Combo>>8,Combo);
+			call_cmb_pages(Combo);
+			//combo_screen(Combo>>8,Combo); //!TODO trim no longer used code
 			break;
 		case dm_alias:
 			call_alias_pages(combo_apos);
