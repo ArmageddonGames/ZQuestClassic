@@ -82,6 +82,7 @@ private:
 	
 	size_t maxChildIndex() const
 	{
+		if (children.empty()) return 0;
 		return children.rbegin()->first;
 	}
 	size_t get_index(size_t row, size_t col) const;

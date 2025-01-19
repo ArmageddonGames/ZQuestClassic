@@ -181,6 +181,8 @@ int wrap(int x,int low,int high);
 #define NUM_BOTTLE_TYPES           64
 #define NUM_BOTTLE_SHOPS           256
 
+#define MAX_COUNTER_VAL            65535
+
 #define QSTPWD_LEN                 256
 
 enum controls //Args for 'getInput()'
@@ -343,6 +345,87 @@ enum class ScriptType {
 	// - ScriptType get_script_type(string const& name)
 	First = Global,
 	Last = EngineSubscreen,
+};
+
+enum
+{
+	edefBRANG, edefBOMB, edefSBOMB, edefARROW, edefFIRE, //04
+	edefWAND, edefMAGIC, edefHOOKSHOT, edefHAMMER, edefSWORD, //09
+	edefBEAM, edefREFBEAM, edefREFMAGIC, edefREFBALL, edefREFROCK, //14
+	edefSTOMP, edefBYRNA, edefSCRIPT, edefLAST250, edefQUAKE, //19
+	edefSCRIPT01, edefSCRIPT02, edefSCRIPT03, edefSCRIPT04, edefSCRIPT05, //24
+	edefSCRIPT06, edefSCRIPT07, edefSCRIPT08, edefSCRIPT09, edefSCRIPT10, //29
+	edefICE, edefBAIT, edefWIND, edefSPARKLE, edefSONIC, //34
+	edefWhistle, edefSwitchHook, edefTHROWN, edefREFARROW, edefREFFIRE, //39
+	edefREFFIRE2, //x40
+	edefLAST255 //41
+	/*
+	edef42,	edefETHER, 	edefBOMBOS,	edefPOT,	edefTHROWNROCK,	//46
+	edefELECTRIC,	edefSHIELD,	edefTROWEL,	edefSPINATTK,	edefZ3SWORD,	//51
+	edefLASWORD,	//x52
+	edefLASTEND  //53*/
+    // Reserved for future use.
+	 //edefSCRIPT used to be unused edefSPIN
+};
+#define edefLAST 19 //2.50.x last defense, used for filepack loading.
+#define edefSCRIPTDEFS_MAX 9 //for 2.future compatibility
+enum //Old 2.future compat rubbish for quest loading. -Z
+{
+	scriptDEF1, scriptDEF2, scriptDEF3, scriptDEF4, scriptDEF5, scriptDEF6, scriptDEF7,
+	scriptDEF8, scriptDEF9, scriptDEF10, scriptDEFLAST
+};
+
+enum
+{
+    qe_OK, qe_notfound, qe_invalid, qe_version, qe_obsolete,
+    qe_missing, qe_internal, qe_pwd, qe_match, qe_minver,
+    qe_nomem, qe_debug, qe_cancel, qe_silenterr, qe_no_qst
+};
+
+
+// weapon types in game engine
+enum
+{
+    // 0
+    wNone,wSword,wBeam,wBrang,
+    wBomb,wSBomb,wLitBomb,wLitSBomb,
+    // 8
+    wArrow,wFire,wWhistle,wBait,
+    wWand,wMagic,wCatching,wWind,
+    // 16
+    wRefMagic,wRefFireball,wRefRock, wHammer,
+    wHookshot, wHSHandle, wHSChain, wSSparkle,
+    // 24
+    wFSparkle, wSmack, wPhantom, wCByrna,
+	//28
+    wRefBeam, wStomp,
+	//30
+    lwMax,
+    // Dummy weapons - must be between lwMax and wEnemyWeapons!
+	//31
+    wScript1, wScript2, wScript3, wScript4,
+	//35
+    wScript5, wScript6, wScript7, wScript8,
+	//39
+    wScript9, wScript10, wIce, wFlame, //ice rod, fire rod
+    wSound, // -Z: sound + defence split == digdogger, sound + one hit kill == pols voice -Z
+	wThrown, wPot, //Thrown pot or rock -Z //Just gonna use a single 'wThrown' -Em
+	wLit, //Lightning or Electric -Z
+	wBombos, wEther, wQuake,// -Z
+	wSword180, wSwordLA,
+	//52
+	wBugNet, wRefArrow, wRefFire, wRefFire2,
+    // Enemy weapons
+    wEnemyWeapons=128,
+    //129
+    ewFireball,ewArrow,ewBrang,ewSword,
+    ewRock,ewMagic,ewBomb,ewSBomb,
+    //137
+    ewLitBomb,ewLitSBomb,ewFireTrail,ewFlame,
+    ewWind,ewFlame2,ewFlame2Trail,
+    //145
+    ewIce,ewFireball2,
+    wMax
 };
 
 // directions

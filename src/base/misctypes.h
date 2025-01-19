@@ -5,6 +5,8 @@
 
 #include "base/ints.h"
 #include "base/general.h"
+#include "base/containers.h"
+struct PACKFILE;
 
 enum {dt_pass=0, dt_lock, dt_shut, dt_boss, dt_olck, dt_osht, dt_obos, dt_wall, dt_bomb, dt_walk, dt_max};
 enum {df_walktrans=0};
@@ -159,6 +161,61 @@ struct palcycle
 	byte first,count,speed;
 };
 
+enum
+{
+	STATUS_JINX_MELEE,
+	STATUS_JINX_ITEM,
+	STATUS_JINX_SHIELD,
+	STATUS_STUN,
+	STATUS_BUNNY,
+	NUM_ENGINE_STATUSES,
+	NUM_STATUSES = 256
+};
+struct EntityStatus
+{
+	// Damage or Healing over time
+	int32_t damage;
+	word damage_rate = 59;
+	bool damage_iframes = false;
+	bool ignore_iframes = true;
+	
+	// A sprite OR tile to overlay (or 'under'lay)
+	// EX: Static effect for electrified, flame effect for burning
+	uint8_t visual_sprite;
+	int32_t visual_tile;
+	byte visual_cset;
+	zfix visual_x, visual_y;
+	byte visual_tilewidth = 1, visual_tileheight = 1;
+	bool visual_relative = true;
+	bool visual_under;
+	
+	// hide the enemy/hero sprite
+	bool sprite_hide;
+	// A tile modifier to the sprite's tile
+	int32_t sprite_tile_mod;
+	// If non-zero, mask out the entire sprite with this color
+	byte sprite_mask_color;
+	
+	// Which status effects are cured by this effect
+	bool cures[NUM_STATUSES];
+	
+	// Changes to defenses of the affected enemy/hero
+	bounded_map<word, int16_t> defenses {wMax, -1};
+	
+	// Basic engine effects
+	bool jinx_melee, jinx_item, jinx_shield;
+	bool stun, bunny;
+	
+	bool is_empty() const;
+	
+	void clear();
+	
+	int32_t read(PACKFILE *f, word s_version);
+	int32_t write(PACKFILE *f);
+	
+	EntityStatus& operator=(EntityStatus const& other) = default;
+	bool operator==(EntityStatus const& other) const = default;
+};
 
 enum miscsprite
 {
@@ -205,6 +262,11 @@ struct miscQdata
 	bottleshoptype bottle_shop_types[NUM_BOTTLE_SHOPS];
 	
 	byte miscsfx[sfxMAX];
+	
+	std::string status_names[NUM_STATUSES];
+	EntityStatus status_effects[NUM_STATUSES];
+	
+	miscQdata& operator=(miscQdata const& other) = default;
 };
 
 extern std::array<DoorComboSet, MAXDOORCOMBOSETS> DoorComboSets;

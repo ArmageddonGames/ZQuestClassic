@@ -18,12 +18,13 @@ namespace GUI::ZCListData
 	GUI::ListData mapflag(int32_t numericalFlags, bool numbered = false, bool skipNone = false);
 	GUI::ListData counters(bool numbered = false, bool skipNone = false);
 	GUI::ListData miscsprites(bool skipNone = true, bool inclNegSpecialVals = false, bool numbered = true);
+	GUI::ListData statusnames(bool skipNone = true, bool numbered = true);
 	GUI::ListData bottletype();
 	GUI::ListData dmaps(bool numbered = false);
 	GUI::ListData lweaptypes(bool numbered = false);
 	GUI::ListData eweaptypes(bool numbered = false);
 	GUI::ListData weaptypes(bool numbered = false);
-	GUI::ListData defenses(byte first, byte last, bool enemy);
+	GUI::ListData defenses();
 	GUI::ListData sfxnames(bool numbered = false);
 	GUI::ListData midinames(bool numbered = false, bool incl_engine = false);
 	GUI::ListData lpals();

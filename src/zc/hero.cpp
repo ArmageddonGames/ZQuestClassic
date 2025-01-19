@@ -238,7 +238,7 @@ void HeroClass::snap_platform()
 
 bool usingActiveShield(int32_t itmid)
 {
-	if(Hero.shieldjinxclk) return false;
+	if(Hero.status.jinx_shield) return false;
 	switch(Hero.action) //filter allowed actions
 	{
 		case none: case walking: case rafting:
@@ -259,7 +259,7 @@ bool usingActiveShield(int32_t itmid)
 }
 int32_t getCurrentShield(bool requireActive)
 {
-	if(Hero.shieldjinxclk) return -1;
+	if(Hero.status.jinx_shield) return -1;
 	if(Hero.active_shield_id > -1 && usingActiveShield(Hero.active_shield_id))
 		return Hero.active_shield_id;
 	if(!requireActive) return current_item_id(itype_shield,false,true);
@@ -559,22 +559,22 @@ void HeroClass::setDrunkClock(int32_t newdrunkclk)
     drunkclk=newdrunkclk;
 }
 
-int32_t HeroClass::StunClock()
+int32_t HeroClass::getStunClock()
 {
-    return lstunclock;
+    return status.status_timers[STATUS_STUN];
 }
 void HeroClass::setStunClock(int32_t v)
 {
-    lstunclock=v;
+    status.status_timers[STATUS_STUN] = v;
 }
 
-int32_t HeroClass::BunnyClock()
+int32_t HeroClass::getBunnyClock()
 {
-    return lbunnyclock;
+    return status.status_timers[STATUS_BUNNY];
 }
 void HeroClass::setBunnyClock(int32_t v)
 {
-    lbunnyclock=v;
+    status.status_timers[STATUS_BUNNY] = v;
 }
 
 HeroClass::HeroClass() : sprite()
@@ -723,15 +723,12 @@ void HeroClass::resetflags(bool all)
     inlikelike=blowcnt=whirlwind=specialcave=hclk=fairyclk=refill_why=didstuff=0;
 	usecounts.clear();
     
-	if(swordclk>0 || all)
-	{
-		swordclk=0;
-		verifyAWpn();
-	}
-    if(itemclk>0 || all)
-        itemclk=0;
-    if(shieldjinxclk>0 || all)
-        shieldjinxclk=0;
+	if(getSwordClk()>0 || all)
+		setSwordClk(0);
+    if(getItemClk()>0 || all)
+        setItemClk(0);
+    if(getShieldClk()>0 || all)
+        setShieldClk(0);
         
     if(all)
     {
@@ -1251,28 +1248,28 @@ void HeroClass::setCharging(int32_t new_charging)
 }
 int32_t  HeroClass::getSwordClk()
 {
-    return swordclk;
+    return status.status_timers[STATUS_JINX_MELEE];
 }
 int32_t  HeroClass::getItemClk()
 {
-    return itemclk;
+    return status.status_timers[STATUS_JINX_ITEM];
 }
 int32_t  HeroClass::getShieldClk()
 {
-	return shieldjinxclk;
+	return status.status_timers[STATUS_JINX_SHIELD];
 }
 void HeroClass::setSwordClk(int32_t newclk)
 {
-    swordclk=newclk;
+    status.status_timers[STATUS_JINX_MELEE] = newclk;
 	verifyAWpn();
 }
 void HeroClass::setItemClk(int32_t newclk)
 {
-    itemclk=newclk;
+    status.status_timers[STATUS_JINX_ITEM] = newclk;
 }
 void HeroClass::setShieldClk(int32_t newclk)
 {
-	shieldjinxclk=newclk;
+	status.status_timers[STATUS_JINX_SHIELD] = newclk;
 }
 // TODO remove, no longer needed.
 zfix  HeroClass::getModifiedX()
@@ -1634,6 +1631,7 @@ void HeroClass::init()
 		delete lift_wpn;
 		lift_wpn = nullptr;
 	}
+	status.reset();
 	clear_platform_ffc();
 	liftclk = 0;
 	tliftclk = 0;
@@ -1718,7 +1716,6 @@ void HeroClass::init()
     hopdir=-1;
     conveyor_flags=0;
     drunkclk=0;
-    lstunclock = 0;
 	is_conveyor_stunned=0;
     convey_forcex=convey_forcey=0;
     drawstyle=3;
@@ -1743,7 +1740,6 @@ void HeroClass::init()
 	switchblock_offset = false;
 	extra_jump_count = 0;
 	hoverflags = 0;
-    lbunnyclock = 0;
 	lamp_paid = false;
     
     for(int32_t i=0; i<32; i++) miscellaneous[i] = 0;
@@ -3190,8 +3186,8 @@ herodraw_end:
 
 void HeroClass::masked_draw(BITMAP* dest)
 {
-	// The first sprite::draw in this function uses sprite_flicker_color
-	// This is intended to be the player, handle this if this changes. -Moosh
+	sprite_mask_color = status.mask_color;
+	sprite_push_flicker(); //store the sprite_flicker_color and etc, meant for the player sprite
 	zfix lz, lfz;
 	if(lift_wpn)
 	{
@@ -3208,7 +3204,20 @@ void HeroClass::masked_draw(BITMAP* dest)
 		{
 			yofs -= (playing_field_offset+16);
 			xofs -= 16;
-			sprite::draw(sub);
+			for(auto [idx,spr] : status.underlay.inner())
+			{
+				if(!spr) continue;
+				spr->draw(sub);
+			}
+			sprite_pop_flicker();
+			if(status.main_spr_hidden)
+				sprite_clear_flicker();
+			else sprite::draw(sub);
+			for(auto [idx,spr] : status.overlay.inner())
+			{
+				if(!spr) continue;
+				spr->draw(sub);
+			}
 			if(lift_wpn)
 			{
 				handle_lift(false);
@@ -3227,7 +3236,20 @@ void HeroClass::masked_draw(BITMAP* dest)
 	}
 	else
 	{
-		sprite::draw(dest);
+		for(auto [idx,spr] : status.underlay.inner())
+		{
+			if(!spr) continue;
+			spr->draw(dest);
+		}
+		sprite_pop_flicker();
+		if(status.main_spr_hidden)
+			sprite_clear_flicker();
+		else sprite::draw(dest);
+		for(auto [idx,spr] : status.overlay.inner())
+		{
+			if(!spr) continue;
+			spr->draw(dest);
+		}
 		if(lift_wpn)
 		{
 			handle_lift(false);
@@ -5653,7 +5675,7 @@ void HeroClass::check_wand_block(weapon *w)
 // 1 Effects, weapon is not ignored or removed
 int32_t HeroClass::defend(weapon *w)
 {
-	int32_t def = conv_edef_unblockable(defence[w->id], w->unblockable);
+	int32_t def = conv_edef_unblockable(status.get_defense(w->id, defence[w->id]), w->unblockable);
 	switch(def)
 	{
 		case edNORMAL: return 1;
@@ -7606,40 +7628,40 @@ int32_t HeroClass::hithero(int32_t hit2, int32_t force_hdir)
 			{
 				case e7tTEMPJINX:
 					if(dm8&e8tSWORD)
-						if(swordclk>=0 && !(sworddivisor==0))
-							swordclk=int32_t(150/sworddivisor);
+						if(getSwordClk()>=0 && !(sworddivisor==0))
+							setSwordClk(int32_t(150/sworddivisor));
 
 					if(dm8&e8tITEM)
-						if(itemclk>=0 && !(itemdivisor==0))
-							itemclk=int32_t(150/itemdivisor);
+						if(getItemClk()>=0 && !(itemdivisor==0))
+							setItemClk(int32_t(150/itemdivisor));
 
 					if(dm8&e8tSHIELD)
-						if (shieldjinxclk >= 0 && !(shielddivisor==0))
-							shieldjinxclk=int32_t(150/shielddivisor);
+						if (getShieldClk() >= 0 && !(shielddivisor==0))
+							setShieldClk(int32_t(150/shielddivisor));
 							
 					break;
 				
 				case e7tPERMJINX:
 					if (dm8&e8tSWORD)
-						if(sworddivisor) swordclk=(itemid >-1 && itemsbuf[itemid].flags & item_flag1)? int32_t(150/sworddivisor) : -1;
+						if(sworddivisor) setSwordClk((itemid >-1 && itemsbuf[itemid].flags & item_flag1)? int32_t(150/sworddivisor) : -1);
 						
 					if (dm8&e8tITEM)
-						if(itemdivisor) itemclk=(itemid >-1 && itemsbuf[itemid].flags & item_flag1)? int32_t(150/itemdivisor) : -1;
+						if(itemdivisor) setItemClk((itemid >-1 && itemsbuf[itemid].flags & item_flag1)? int32_t(150/itemdivisor) : -1);
 					
 					if (dm8&e8tSHIELD)
-						if(shielddivisor) shieldjinxclk=(itemid >-1 && itemsbuf[itemid].flags & item_flag1)? int32_t(150/shielddivisor) : -1;
+						if(shielddivisor) setShieldClk((itemid >-1 && itemsbuf[itemid].flags & item_flag1)? int32_t(150/shielddivisor) : -1);
 
 					break;
 				
 				case e7tUNJINX:
 					if (dm8&e8tSWORD)
-						swordclk=0;
+						setSwordClk(0);
 						
 					if (dm8&e8tITEM)
-						itemclk=0;
+						setItemClk(0);
 
 					if (dm8&e8tSHIELD)
-						shieldjinxclk=0;
+						setShieldClk(0);
 
 					break;
 				
@@ -7976,6 +7998,11 @@ bool HeroClass::animate(int32_t)
 heroanimate_skip_liftwpn:;
 	}
 	
+	{ //handle statuses
+		using namespace std::placeholders;
+		status.run_frame(std::bind(&HeroClass::update_status, this, _1, _2, _3, _4), this);
+	}
+
 	if(cheats_execute_goto)
 	{
 		didpit=true;
@@ -8754,7 +8781,7 @@ heroanimate_skip_liftwpn:;
 		--drunkclk;
 	}
 	
-	if(lstunclock > 0)
+	if(status.stun)
 	{
 		// also cancel Hero's attack
 		attackclk = 0;
@@ -8765,35 +8792,31 @@ heroanimate_skip_liftwpn:;
 			//action=freeze; //setting this makes the player invincible while stunned -V
 			FFCore.setHeroAction(stunned);
 		}
-		--lstunclock;
 	}
+	
 	//if the stun action is still set in FFCore, but he isn't stunned, then the timer reached 0
 	//, so we unfreeze him here, and return him to the action that he had when he was stunned. 
-	if ( FFCore.getHeroAction() == stunned && !lstunclock )
+	if ( FFCore.getHeroAction() == stunned && !status.stun )
 	{
 		action=tempaction; FFCore.setHeroAction(tempaction);
 	}
 	
-	if( lbunnyclock > 0 )
-	{
-		--lbunnyclock;
-	}
 	if(DMaps[currdmap].flags&dmfBUNNYIFNOPEARL)
 	{
 		int32_t itemid = current_item_id(itype_pearl);
 		if(itemid > -1)
 		{
-			if(lbunnyclock == -1) //cure dmap-caused bunny effect
-				lbunnyclock = 0;
+			if(getBunnyClock() == -1) //cure dmap-caused bunny effect
+				setBunnyClock(0);
 		}
-		else if(lbunnyclock > -1) //No pearl, force into bunny mode
+		else if(getBunnyClock() > -1) //No pearl, force into bunny mode
 		{
-			lbunnyclock = -1;
+			setBunnyClock(-1);
 		}
 	}
-	else if(lbunnyclock == -1) //dmap-caused bunny effect
+	else if(getBunnyClock() == -1) //dmap-caused bunny effect
 	{
-		lbunnyclock = 0;
+		setBunnyClock(0);
 	}
 
 	bool is_broken_behavior = replay_is_active() && replay_get_meta_str("sav") == "link_to_the_zelda_2_of_3.sav";
@@ -9486,13 +9509,12 @@ heroanimate_skip_liftwpn:;
 					}
 					if(bt->flags & BTFLAG_CURESWJINX)
 					{
-						swordclk = 0;
-						verifyAWpn();
+						setSwordClk(0);
 					}
 					if(bt->flags & BTFLAG_CUREITJINX)
-						itemclk = 0;
+						setItemClk(0);
 					if(bt->flags & BTFLAG_CURESHJINX)
-						shieldjinxclk = 0;
+						setShieldClk(0);
 					if(word max = std::max(toFill[0], std::max(toFill[1], toFill[2])))
 					{
 						int32_t itemid = find_bottle_for_slot(slot,true);
@@ -9555,7 +9577,6 @@ heroanimate_skip_liftwpn:;
 				{
 					dying_flags = 0;
 					drunkclk=0;
-					lstunclock = 0;
 					is_conveyor_stunned = 0;
 					FFCore.setHeroAction(dying);
 					FFCore.deallocateAllScriptOwned(ScriptType::Global, GLOBAL_SCRIPT_GAME);
@@ -9599,16 +9620,6 @@ heroanimate_skip_liftwpn:;
 		}
 	}
 	else last_hurrah=false;
-	
-	if(swordclk>0)
-	{
-		--swordclk;
-		if(!swordclk) verifyAWpn();
-	}
-	if(itemclk>0)
-		--itemclk;
-	if(shieldjinxclk>0)
-		--shieldjinxclk;
 		
 	if(inwallm)
 	{
@@ -10307,7 +10318,7 @@ heroanimate_skip_liftwpn:;
 		
 		if(pushing>=24) dtype=dWALK;
 		
-		if(isdungeon() && action!=freeze && action != sideswimfreeze && loaded_guys && !inlikelike && !diveclk && action!=rafting && !lstunclock && !is_conveyor_stunned)
+		if(isdungeon() && action!=freeze && action != sideswimfreeze && loaded_guys && !inlikelike && !diveclk && action!=rafting && !status.stun && !is_conveyor_stunned)
 		{
 			if(((dtype==dBOMBED)?DrunkUp():dir==up) && ((diagonalMovement||NO_GRIDLOCK)?x.getInt()>112&&x.getInt()<128:x.getInt()==120) && y<=32 && tmpscr->door[0]==dtype)
 			{
@@ -11321,7 +11332,7 @@ void HeroClass::handle_lift(bool dec)
 bool HeroClass::can_lift(int32_t gloveid)
 {
 	if(unsigned(gloveid) >= MAXITEMS) return false;
-	if(lstunclock) return false;
+	if(status.stun) return false;
 	if(!checkitem_jinx(gloveid)) return false;
 	itemdata const& glove = itemsbuf[gloveid];
 	switch(action)
@@ -11673,20 +11684,19 @@ bool HeroClass::startwpn(int32_t itemid)
 					run = ((bt->counter[0] > -1 && !toFill[0]) || (bt->counter[1] > -1 && !toFill[1]) || (bt->counter[2] > -1 && !toFill[2]));
 				else
 				{
-					if((bt->flags & BTFLAG_CURESWJINX) && swordclk)
+					if((bt->flags & BTFLAG_CURESWJINX) && getSwordClk())
 						run = true;
-					else if((bt->flags & BTFLAG_CUREITJINX) && itemclk)
+					else if((bt->flags & BTFLAG_CUREITJINX) && getItemClk())
 						run = true;
 				}
 				if(run || (bt->flags&BTFLAG_ALLOWIFFULL))
 				{
 					if(bt->flags & BTFLAG_CURESWJINX)
 					{
-						swordclk = 0;
-						verifyAWpn();
+						setSwordClk(0);
 					}
 					if(bt->flags & BTFLAG_CUREITJINX)
-						itemclk = 0;
+						setItemClk(0);
 					if(!paidmagic)
 						paymagiccost(itemid);
 					stop_sfx(QMisc.miscsfx[sfxLOWHEART]); //stop heart beep!
@@ -12662,10 +12672,9 @@ bool HeroClass::startwpn(int32_t itemid)
 			
 			if(itm.flags & item_flag1) //Cure sword jinx
 			{
-				if(swordclk)
+				if(getSwordClk())
 					did_something = true;
-				swordclk = 0;
-				verifyAWpn();
+				setSwordClk(0);
 			}
 			for(auto q = 0; q < 5; ++q)
 			{
@@ -13106,7 +13115,7 @@ bool HeroClass::can_attack()
 		return false;
 	int32_t currentSwordOrWand = (itemsbuf[dowpn].family == itype_wand || itemsbuf[dowpn].family == itype_sword)?dowpn:-1;
     if(action==hopping || action==swimming || action==freeze || action==sideswimfreeze
-		|| lstunclock > 0 || is_conveyor_stunned || spins>0 || usingActiveShield()
+		|| status.stun || is_conveyor_stunned || spins>0 || usingActiveShield()
 		|| ((action==attacking||action==sideswimattacking)
 			&& ((attack!=wSword && attack!=wWand) || !(itemsbuf[currentSwordOrWand].flags & item_flag5))
 			&& charging!=0))
@@ -14423,7 +14432,7 @@ void HeroClass::mod_steps(std::vector<zfix*>& v)
 
 void HeroClass::moveheroOld()
 {
-	if(lstunclock || is_conveyor_stunned) return;
+	if(status.stun || is_conveyor_stunned) return;
 	int32_t xoff=x.getInt()&7;
 	int32_t yoff=y.getInt()&7;
 	if(NO_GRIDLOCK)
@@ -18834,7 +18843,7 @@ bool HeroClass::can_moveDir(int dir, zfix px, bool kb, bool ign_sv, bool shove)
 
 bool HeroClass::premove()
 {
-	if(lstunclock) return false;
+	if(status.stun) return false;
 	if(is_conveyor_stunned) return (convey_forcex || convey_forcey);
 	int32_t xoff=x.getInt()&7;
 	int32_t yoff=y.getInt()&7;
@@ -19562,7 +19571,7 @@ newmove_slide:
 void HeroClass::get_move(int movedir, zfix& dx, zfix& dy, int32_t& facedir)
 {
 	dx = 0; dy = 0;
-    if(inlikelike || lstunclock > 0 || is_conveyor_stunned || movedir < 0)
+    if(inlikelike || status.stun || is_conveyor_stunned || movedir < 0)
         return;
 	
 	zfix base_movepix(zfix(steprate) / 100);
@@ -19734,7 +19743,7 @@ void HeroClass::moveOld(int32_t d2)
 {
     static bool totalskip = false;
     
-    if( inlikelike || lstunclock > 0 || is_conveyor_stunned)
+    if( inlikelike || status.stun || is_conveyor_stunned)
         return;
 	
     int32_t dx=0,dy=0;
@@ -20035,7 +20044,7 @@ void HeroClass::moveOld(int32_t d2)
 }
 void HeroClass::moveOld2(int32_t d2, int32_t forceRate)
 {
-    if( inlikelike || lstunclock > 0 || is_conveyor_stunned)
+    if( inlikelike || status.stun || is_conveyor_stunned)
         return;
 	
 	if(!get_qr(qr_NEW_HERO_MOVEMENT) && !IsSideSwim())
@@ -29532,7 +29541,7 @@ int32_t lwpn_dp(int32_t index)
 
 bool checkbunny(int32_t itemid)
 {
-	return !Hero.BunnyClock() || (itemid > 0 && itemsbuf[itemid].flags&item_bunny_enabled);
+	return !Hero.status.bunny || (itemid > 0 && itemsbuf[itemid].flags&item_bunny_enabled);
 }
 
 bool usesSwordJinx(int32_t itemid)
@@ -29546,18 +29555,19 @@ bool checkitem_jinx(int32_t itemid)
 {
 	itemdata const& it = itemsbuf[itemid];
 	if(it.flags & item_jinx_immune) return true;
-	if (it.family == itype_shield){
-		if(HeroShieldClk() != 0) return false;
+	if (it.family == itype_shield)
+	{
+		if(Hero.status.jinx_shield) return false;
 		if(it.flags & !item_flag9) //Active Shields should also check sword/item jinx flags
 		{
-			if (usesSwordJinx(itemid)) return HeroSwordClk() == 0;
-			return HeroItemClk() == 0;
+			if (usesSwordJinx(itemid)) return !Hero.status.jinx_melee;
+			return !Hero.status.jinx_item;
 		}
 		return true;
 
 	}
-	if(usesSwordJinx(itemid)) return HeroSwordClk() == 0;
-	return HeroItemClk() == 0;
+	if(usesSwordJinx(itemid)) return !Hero.status.jinx_melee;
+	return !Hero.status.jinx_item;
 }
 
 void stopCaneOfByrna()
@@ -30200,18 +30210,18 @@ void getitem(int32_t id, bool nosound, bool doRunPassive)
 		{
 			if(idat.flags & item_flag1)
 			{
-				if(HeroSwordClk()==-1) setSwordClk(150);  // Let's not bother applying the divisor.
+				if(Hero.getSwordClk()==-1) Hero.setSwordClk(150);  // Let's not bother applying the divisor.
 				
-				if(HeroItemClk()==-1) setItemClk(150);  // Let's not bother applying the divisor.
+				if(Hero.getItemClk()==-1) Hero.setItemClk(150);  // Let's not bother applying the divisor.
 
-				if(HeroItemClk()== 1) setShieldClk(150);  // Let's not bother applying the divisor.
+				if(Hero.getShieldClk()== 1) Hero.setShieldClk(150);  // Let's not bother applying the divisor.
 			}
 			
 			if(idat.power==0)
 			{
-				setSwordClk(0);
-				setItemClk(0);
-				setShieldClk(0);
+				Hero.setSwordClk(0);
+				Hero.setItemClk(0);
+				Hero.setShieldClk(0);
 			}
 			
 			break;
@@ -30908,22 +30918,22 @@ void HeroClass::StartRefill(int32_t refillWhat)
 		{
 			if(itemsbuf[refill_why].family==itype_potion)
 			{
-				if(itemsbuf[refill_why].flags & item_flag3){swordclk=0;verifyAWpn();}
-				if(itemsbuf[refill_why].flags & item_flag4)itemclk=0;
-				if(itemsbuf[refill_why].flags & item_flag5)shieldjinxclk=0;
+				if(itemsbuf[refill_why].flags & item_flag3) setSwordClk(0);
+				if(itemsbuf[refill_why].flags & item_flag4) setItemClk(0);
+				if(itemsbuf[refill_why].flags & item_flag5) setShieldClk(0);
 			}
 			else if(itemsbuf[refill_why].family==itype_triforcepiece)
 			{
-				if(itemsbuf[refill_why].flags & item_flag3){swordclk=0;verifyAWpn();}
-				if(itemsbuf[refill_why].flags & item_flag4)itemclk=0;
-				if(itemsbuf[refill_why].flags & item_flag5)shieldjinxclk=0;
+				if(itemsbuf[refill_why].flags & item_flag3) setSwordClk(0);
+				if(itemsbuf[refill_why].flags & item_flag4) setItemClk(0);
+				if(itemsbuf[refill_why].flags & item_flag5) setShieldClk(0);
 			}
 		}
 		else if(refill_why==REFILL_FAIRY)
 		{
-			if(!get_qr(qr_NONBUBBLEFAIRIES)){swordclk=0;verifyAWpn();}
-			if(get_qr(qr_ITEMBUBBLE))itemclk=0;
-			if(get_qr(qr_SHIELDBUBBLE))shieldjinxclk=0;
+			if(!get_qr(qr_NONBUBBLEFAIRIES)) setSwordClk(0);
+			if(get_qr(qr_ITEMBUBBLE)) setItemClk(0);
+			if(get_qr(qr_SHIELDBUBBLE)) setShieldClk(0);
 		}
 	}
 }
@@ -30950,23 +30960,20 @@ void HeroClass::Start250Refill(int32_t refillWhat)
 		{
 			if((itemsbuf[refill_why].family==itype_potion)&&(!get_qr(qr_NONBUBBLEMEDICINE)))
 			{
-				swordclk=0;
-				verifyAWpn();
-				if(get_qr(qr_ITEMBUBBLE)) itemclk=0;
+				setSwordClk(0);
+				if(get_qr(qr_ITEMBUBBLE)) setItemClk(0);
 			}
 
 			if((itemsbuf[refill_why].family==itype_triforcepiece)&&(!get_qr(qr_NONBUBBLETRIFORCE)))
 			{
-				swordclk=0;
-				verifyAWpn();
-				if(get_qr(qr_ITEMBUBBLE)) itemclk=0;
+				setSwordClk(0);
+				if(get_qr(qr_ITEMBUBBLE)) setItemClk(0);
 			}
 		}
 		else if((refill_why==REFILL_FAIRY)&&(!get_qr(qr_NONBUBBLEFAIRIES)))
 		{
-			swordclk=0;
-			verifyAWpn();
-			if(get_qr(qr_ITEMBUBBLE)) itemclk=0;
+			setSwordClk(0);
+			if(get_qr(qr_ITEMBUBBLE)) setItemClk(0);
 		}
 	}
 }
@@ -32857,7 +32864,7 @@ bool HeroClass::CanSideSwim()
 
 int32_t HeroClass::getTileModifier()
 {
-	return item_tile_mod() + bunny_tile_mod();
+	return item_tile_mod() + bunny_tile_mod() + status.sum_tile_mod;
 }
 void HeroClass::setImmortal(int32_t nimmortal)
 {
@@ -32875,3 +32882,27 @@ bool HeroClass::is_unpushable() const
 {
 	return toogam;
 }
+
+void HeroClass::update_status(EntityStatus const& stat,
+	word clk, int32_t dur, word indx)
+{
+	// Each status 'stat' passed in, is active
+	// if(dur == 0) // the status just ended
+	do // Damage setting ticking
+	{
+		// damage_rate+1 means 0 = every frame, instead of 0 = mod by 0 error
+		if(stat.damage && !(clk % (stat.damage_rate+1)))
+		{
+			if(stat.damage > 0)
+			{
+				if(superman || (hclk && !stat.ignore_iframes))
+					break;
+				//!TODO_STATUS generic event for being hit here?
+				doHit(-1, stat.damage_iframes ? 48 : 0);
+			}
+			game->change_life(-stat.damage);
+		}
+	}
+	while(false);
+}
+

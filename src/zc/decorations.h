@@ -20,12 +20,24 @@ public:
 class comboSprite : public decoration
 {
 public:
-	int32_t tframes, spd;
 	comboSprite(zfix X,zfix Y,int32_t Id,int32_t Clk, int32_t wpnSpr=0);
 	virtual bool animate(int32_t index);
 	virtual void draw(BITMAP *dest);
 	virtual void draw2(BITMAP *dest);
 	virtual void realdraw(BITMAP *dest, int32_t draw_what);
+};
+
+class statusSprite : public decoration
+{
+public:
+	sprite* target;
+	int32_t plain_tile;
+	byte plain_cs;
+	
+	statusSprite(zfix X,zfix Y, int32_t spr, int32_t tile, int32_t cset);
+	virtual bool animate(int32_t index) override;
+	virtual void draw(BITMAP *dest) override;
+	virtual bool is_drawn_with_offset() override;
 };
 
 class dBushLeaves : public decoration

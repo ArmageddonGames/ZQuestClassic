@@ -2058,12 +2058,12 @@ int _c_item_id_internal(int itemtype, bool checkmagic, bool jinx_check, bool che
 	if(jinx_check)
 	{
 		//special case for shields...
-		if (itemtype == itype_shield && !HeroShieldClk())
+		if (itemtype == itype_shield && !Hero.status.jinx_shield)
 			jinx_check = false;
-		else if(!(HeroSwordClk() || HeroItemClk()))
+		else if(!(Hero.status.jinx_melee|| Hero.status.jinx_item))
 			jinx_check = false; //not jinxed
 	}
-	if(!Hero.BunnyClock() || itemtype == itype_pearl) // bunny_check does not apply
+	if(!Hero.status.bunny || itemtype == itype_pearl) // bunny_check does not apply
 		check_bunny = false;
 	if(itemtype == itype_ring) checkmagic = true;
 	if (!jinx_check && !check_bunny
@@ -2086,7 +2086,7 @@ int _c_item_id_internal(int itemtype, bool checkmagic, bool jinx_check, bool che
 			if(checkmagic && itemtype != itype_magicring)
 				if(!checkmagiccost(i))
 					continue;
-			if(jinx_check && (usesSwordJinx(i) ? HeroSwordClk() : HeroItemClk()))
+			if(jinx_check && (usesSwordJinx(i) ? Hero.status.jinx_melee : Hero.status.jinx_item))
 				if(!(itemsbuf[i].flags & item_jinx_immune))
 					continue;
 			if(check_bunny && !checkbunny(i))
@@ -2147,7 +2147,7 @@ int current_item_id(int itype, bool checkmagic, bool jinx_check, bool check_bunn
 	if(!jinx_check) //If not already a jinx-immune-only check...
 	{
 		//And the player IS jinxed...
-		if(HeroIsJinxed())
+		if(Hero.status.is_jinxed())
 		{
 			//Then do a jinx-immune-only check here
 			auto ret2 = _c_item_id_internal(itype,checkmagic,true,check_bunny);
@@ -2198,7 +2198,7 @@ int32_t item_tile_mod()
 {
 	tilemod_cache_state_t state = {
 		.valid = true,
-		.bunny_clock = Hero.BunnyClock() != 0,
+		.bunny_clock = Hero.status.bunny,
 		.superman = Hero.superman,
 		.shield = Hero.active_shield_id,
 	};
@@ -2353,7 +2353,7 @@ int32_t item_tile_mod()
 
 int32_t bunny_tile_mod()
 {
-	if(Hero.BunnyClock())
+	if(Hero.status.bunny)
 	{
 		return game->get_bunny_ltm();
 	}

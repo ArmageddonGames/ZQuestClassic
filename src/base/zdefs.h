@@ -137,7 +137,7 @@ enum {ENC_METHOD_192B104=0, ENC_METHOD_192B105, ENC_METHOD_192B185, ENC_METHOD_2
 #define V_HEADER           9
 #define V_RULES           17
 #define V_STRINGS         10
-#define V_MISC            16
+#define V_MISC            17
 #define V_TILES            3 //2 is a int32_t, max 214500 tiles (ZScript upper limit)
 #define V_COMBOS          50
 #define V_CSETS            6 //palette data
@@ -622,7 +622,7 @@ enum
 {
 	dBUSHLEAVES, dFLOWERCLIPPINGS, dGRASSCLIPPINGS, dHAMMERSMACK,
 	dTALLGRASS, dRIPPLES, dDIVINEPROTECTIONSHIELD, dHOVER, dCOMBOSPRITE,
-	dCUSTOMWALK,
+	dCUSTOMWALK, dSTATUSSPRITE,
 	dMAXDECORATIONS
 };
 
@@ -737,51 +737,6 @@ enum
 
 
 #define NUM_HIT_TYPES_USED 17
-
-// weapon types in game engine
-enum
-{
-    // 0
-    wNone,wSword,wBeam,wBrang,
-    wBomb,wSBomb,wLitBomb,wLitSBomb,
-    // 8
-    wArrow,wFire,wWhistle,wBait,
-    wWand,wMagic,wCatching,wWind,
-    // 16
-    wRefMagic,wRefFireball,wRefRock, wHammer,
-    wHookshot, wHSHandle, wHSChain, wSSparkle,
-    // 24
-    wFSparkle, wSmack, wPhantom, wCByrna,
-	//28
-    wRefBeam, wStomp,
-	//30
-    lwMax,
-    // Dummy weapons - must be between lwMax and wEnemyWeapons!
-	//31
-    wScript1, wScript2, wScript3, wScript4,
-	//35
-    wScript5, wScript6, wScript7, wScript8,
-	//39
-    wScript9, wScript10, wIce, wFlame, //ice rod, fire rod
-    wSound, // -Z: sound + defence split == digdogger, sound + one hit kill == pols voice -Z
-	wThrown, wPot, //Thrown pot or rock -Z //Just gonna use a single 'wThrown' -Em
-	wLit, //Lightning or Electric -Z
-	wBombos, wEther, wQuake,// -Z
-	wSword180, wSwordLA,
-	//52
-	wBugNet, wRefArrow, wRefFire, wRefFire2,
-    // Enemy weapons
-    wEnemyWeapons=128,
-    //129
-    ewFireball,ewArrow,ewBrang,ewSword,
-    ewRock,ewMagic,ewBomb,ewSBomb,
-    //137
-    ewLitBomb,ewLitSBomb,ewFireTrail,ewFlame,
-    ewWind,ewFlame2,ewFlame2Trail,
-    //145
-    ewIce,ewFireball2,
-    wMax
-};
 
 enum defWpnSprite
 {
@@ -1048,43 +1003,6 @@ enum {  e9tMOLDORM=1, e9tVLANMOLA, e9tVMOLDORM, e9tZ3MOLDORM, //restricted to wa
 	e9tBIGTAIL //doesn't segment, only tail is vulnerable
      };
 */
-
-          //Preparation for new defences. -Z
-     
-     
-enum
-{
-	edefBRANG, edefBOMB, edefSBOMB, edefARROW, edefFIRE, //04
-	edefWAND, edefMAGIC, edefHOOKSHOT, edefHAMMER, edefSWORD, //09
-	edefBEAM, edefREFBEAM, edefREFMAGIC, edefREFBALL, edefREFROCK, //14
-	edefSTOMP, edefBYRNA, edefSCRIPT, edefLAST250, edefQUAKE, //19
-	edefSCRIPT01, edefSCRIPT02, edefSCRIPT03, edefSCRIPT04, edefSCRIPT05, //24
-	edefSCRIPT06, edefSCRIPT07, edefSCRIPT08, edefSCRIPT09, edefSCRIPT10, //29
-	edefICE, edefBAIT, edefWIND, edefSPARKLE, edefSONIC, //34
-	edefWhistle, edefSwitchHook, edefTHROWN, edefREFARROW, edefREFFIRE, //39
-	edefREFFIRE2, //x40
-	edefLAST255 //41
-	/*
-	edef42,	edefETHER, 	edefBOMBOS,	edefPOT,	edefTHROWNROCK,	//46
-	edefELECTRIC,	edefSHIELD,	edefTROWEL,	edefSPINATTK,	edefZ3SWORD,	//51
-	edefLASWORD,	//x52
-	edefLASTEND  //53*/
-    // Reserved for future use.
-	 //edefSCRIPT used to be unused edefSPIN
-
-}; 
-
-#define edefLAST 19 
-#define edefSCRIPTDEFS_MAX 9 //for 2.future compatibility
-
-//Old 2.future compat rubbish for quest loading. -Z
-enum
-{
-	scriptDEF1, scriptDEF2, scriptDEF3, scriptDEF4, scriptDEF5, scriptDEF6, scriptDEF7,
-	scriptDEF8, scriptDEF9, scriptDEF10, scriptDEFLAST
-};
-
-//2.50.x last defense, used for filepack loading. 
 
 // New defence outcomes. 
 enum

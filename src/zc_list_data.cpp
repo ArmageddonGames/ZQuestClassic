@@ -501,6 +501,32 @@ GUI::ListData GUI::ZCListData::miscsprites(bool skipNone, bool inclNegSpecialVal
 	return ls;
 }
 
+GUI::ListData GUI::ZCListData::statusnames(bool skipNone, bool numbered)
+{
+	std::map<std::string, int32_t> ids;
+	std::set<std::string> statnames;
+	
+	for(int q = 0; q < NUM_STATUSES; ++q)
+	{
+		std::string name = QMisc.status_names[q];
+		
+		if(numbered)
+			name = fmt::format("{} ({:03})", name, q);
+		
+		ids[name] = q;
+		statnames.insert(name);
+	}
+	
+	GUI::ListData ls;
+	if(!skipNone)
+		ls.add("(None)", -1);
+	for(auto it = statnames.begin(); it != statnames.end(); ++it)
+	{
+		ls.add(*it, ids[*it]);
+	}
+	return ls;
+}
+
 GUI::ListData GUI::ZCListData::bottletype()
 {
 	GUI::ListData ls;
@@ -653,13 +679,25 @@ static string DefenseToWeaponName(byte def)
 	}
 }
 
-GUI::ListData GUI::ZCListData::defenses(byte first, byte last, bool enemy)
+GUI::ListData GUI::ZCListData::defenses()
 {
 	map<std::string, int32_t> vals;
 
 	GUI::ListData ls;
-	for (int32_t q = first; q < last; ++q)
+	for (int32_t q = 0; q < edefLAST255; ++q)
 	{
+		switch(q)
+		{
+			case edefSCRIPT:
+			case edefLAST250:
+			case edefQUAKE:
+			case edefICE:
+			case edefBAIT:
+			case edefWIND:
+			case edefSPARKLE:
+			case edefSONIC:
+				continue; // not implemented
+		}
 		std::string name = DefenseToWeaponName(q);
 		ls.add(name, q);
 	}

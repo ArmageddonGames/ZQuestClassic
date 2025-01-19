@@ -5,6 +5,7 @@ set(ZELDA_CORE_SOURCES
 # Add or remove files here
 ################################
 src/sprite.cpp
+src/status_fx.cpp
 src/zscriptversion.cpp
 src/zc/ffscript.cpp
 src/zc/script_debug.cpp

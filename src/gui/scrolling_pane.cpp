@@ -248,9 +248,7 @@ void ScrollingPane::applyDisabled(bool dis)
 	if(alDialog) alDialog.applyDisabled(dis);
 	if(content)
 	{
-		START_CLIP(alDialog);
 		content->applyDisabled(dis);
-		END_CLIP();
 	}
 }
 

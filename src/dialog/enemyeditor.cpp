@@ -54,12 +54,7 @@ EnemyEditorDialog::EnemyEditorDialog(guydata const& ref, int32_t index) :
 	list_dropsets(GUI::ZCListData::dropsets(false)),
 	list_sprites(GUI::ZCListData::miscsprites()),
 	list_eweaptype(GUI::ZCListData::eweaptypes()),
-	list_defenses(GUI::ZCListData::defenses(edefBRANG, edefLAST255, true).filter(
-		[&](GUI::ListItem& itm)
-		{
-			if ((itm.value < edefSCRIPT || itm.value > edefSONIC)) return true;
-			else return false;
-		}) + GUI::ZCListData::defenses(edefSCRIPT01, edefSCRIPT10 + 1, true)),
+	list_defenses(GUI::ZCListData::defenses()),
 	list_deftypes(GUI::ZCListData::deftypes())
 {}
 

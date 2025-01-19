@@ -32,6 +32,30 @@ extern void debugging_box(int32_t x1, int32_t y1, int32_t x2, int32_t y2);
 static std::map<int32_t, sprite*> all_sprites;
 byte sprite_flicker_color = 0;
 byte sprite_flicker_transp_passes = 0;
+byte sprite_mask_color = 0;
+std::vector<std::tuple<byte,byte,byte>> flicker_storage;
+void sprite_push_flicker()
+{
+	flicker_storage.emplace_back(sprite_flicker_color,
+		sprite_flicker_transp_passes, sprite_mask_color);
+	sprite_clear_flicker();
+}
+void sprite_pop_flicker()
+{
+	auto [sfc, sftp, smc] = flicker_storage.back();
+	
+	sprite_flicker_color = sfc;
+	sprite_flicker_transp_passes = sftp;
+	sprite_mask_color = smc;
+	
+	flicker_storage.pop_back();
+}
+void sprite_clear_flicker()
+{
+	sprite_flicker_color = 0;
+	sprite_flicker_transp_passes = 0;
+	sprite_mask_color = 0;
+}
 
 #define degtoFix(d)     ((d)*0.7111111111111)
 #define radtoFix(d)     ((d)*40.743665431525)
@@ -1008,7 +1032,14 @@ void doSpriteDraw(int32_t drawstyle, BITMAP* dest, BITMAP* src, int32_t x, int32
 	else draw_sprite(dest, src, x, y);
 }
 
-#define SPRITE_MONOCOLOR(bmp) monocolor(bmp, sprite_flicker_color, sprite_flicker_transp_passes)
+#define SPRITE_MONOCOLOR(bmp) \
+do \
+{ \
+	if(sprite_mask_color) \
+		monocolor(bmp, sprite_mask_color, 0); \
+	if(sprite_flicker_color) \
+		monocolor(bmp, sprite_flicker_color, sprite_flicker_transp_passes); \
+} while(false)
 
 void sprite::draw(BITMAP* dest)
 {
@@ -1055,6 +1086,7 @@ void sprite::draw(BITMAP* dest)
 	if(id<0)
 	{
 		yofs = tyoffs;
+		sprite_clear_flicker();
 		return;
 	}
 	int32_t e = extend>=3 ? 3 : extend;
@@ -1081,8 +1113,7 @@ void sprite::draw(BITMAP* dest)
 				overtile16(temp2,TILEBOUND((scripttile > -1) ? scripttile : tile),0,16,cs,((scriptflip > -1) ? scriptflip : flip));
 
 				//Recolor for flicker animations
-				if (sprite_flicker_color)
-					SPRITE_MONOCOLOR(temp2);
+				SPRITE_MONOCOLOR(temp2);
 
 				masked_blit(temp2, temp, 0, 0, 0, 0, 16, 32);
 
@@ -1127,8 +1158,7 @@ void sprite::draw(BITMAP* dest)
 				overtile16(temp3,TILEBOUND(((scripttile > -1) ? scripttile : tile)+( ( scriptflip > -1 ) ? ( scriptflip ? -1 : 1 ) : ( flip?-1:1 ) )),32,16,cs,((scriptflip > -1) ? scriptflip : flip));
 				
 				//Recolor for flicker animations
-				if (sprite_flicker_color)
-					SPRITE_MONOCOLOR(temp3);
+				SPRITE_MONOCOLOR(temp3);
 
 				masked_blit(temp3, temp, 0, 0, 0, 0, 32, 32);
 
@@ -1184,8 +1214,7 @@ void sprite::draw(BITMAP* dest)
 						}
 
 						//Recolor for flicker animations
-						if (sprite_flicker_color)
-							SPRITE_MONOCOLOR(sprBMP);
+						SPRITE_MONOCOLOR(sprBMP);
 
 						if ( rotation )
 						{
@@ -1231,8 +1260,7 @@ void sprite::draw(BITMAP* dest)
 						}
 
 						//Recolor for flicker animations
-						if (sprite_flicker_color)
-							SPRITE_MONOCOLOR(sprBMP);
+						SPRITE_MONOCOLOR(sprBMP);
 
 						if ( rotation )
 						{
@@ -1277,8 +1305,7 @@ void sprite::draw(BITMAP* dest)
 						}
 
 						//Recolor for flicker animations
-						if (sprite_flicker_color)
-							SPRITE_MONOCOLOR(sprBMP);
+						SPRITE_MONOCOLOR(sprBMP);
 
 						if ( rotation )
 						{
@@ -1324,8 +1351,7 @@ void sprite::draw(BITMAP* dest)
 						}
 
 						//Recolor for flicker animations
-						if (sprite_flicker_color)
-							SPRITE_MONOCOLOR(sprBMP);
+						SPRITE_MONOCOLOR(sprBMP);
 
 						//rotate_scaled_sprite(sprBMP2, sprBMP, 0, 0, 0,ftofix(new_scale));
 						if ( rotation )
@@ -1363,8 +1389,7 @@ void sprite::draw(BITMAP* dest)
 				overtile16(sprBMP,TILEBOUND(scripttile > -1 ? scripttile : tile),0,0,cs,((scriptflip > -1) ? scriptflip : flip));
 				
 				//Recolor for flicker animations
-				if (sprite_flicker_color)
-					SPRITE_MONOCOLOR(sprBMP);
+				SPRITE_MONOCOLOR(sprBMP);
 
 				if ( rotation )
 				{
@@ -1493,8 +1518,7 @@ void sprite::draw(BITMAP* dest)
 	
 	yofs = tyoffs;
 
-	sprite_flicker_color = 0;
-	sprite_flicker_transp_passes = 0;
+	sprite_clear_flicker();
 }
 
 void sprite::draw_hitbox()
@@ -1533,10 +1557,9 @@ void sprite::drawzcboss(BITMAP* dest)
 		sprite::draw(dest);
 		return; //don't run the rest, use the old code
 	}
-	if (sprite_flicker_color)
+	if (sprite_flicker_color || sprite_mask_color)
 	{
-		sprite_flicker_color = 0;
-		sprite_flicker_transp_passes = 0;
+		sprite_clear_flicker();
 		return;
 	}
 
