@@ -87,6 +87,10 @@ bool annot_type_check(uint expected, AnnotData const& data)
 		+" expects a "+annot_tys[expected]+", not a "+annot_tys[data.type]);
 	return false;
 }
+void annot_incompatible(string const& key1, string const& key2)
+{
+	annot_errstr(fmt::format("ERROR: Annotation '@{}' not compatible with '@{}'", key1, key2));
+}
 void handle_annotations(ASTAnnotationList* list, std::function<bool(AnnotData&)> fn)
 {
 	owning_vector<ASTAnnotation>& set = list->set;
@@ -1816,8 +1820,23 @@ Annotated_Enum:
 			auto& key = data.key;
 			if(key == "Increment")
 			{
-				if(annot_type_check(ANNTY_INT, data))
+				if(en->getBitMode() != ASTDataEnum::BIT_NONE)
+					annot_incompatible("Increment", "Bitflags");
+				else if(annot_type_check(ANNTY_INT, data))
 					en->increment_val = data.intval;
+				return true;
+			}
+			else if(key == "Bitflags")
+			{
+				if(en->increment_val)
+					annot_incompatible("Bitflags", "Increment");
+				else if(annot_type_check(ANNTY_STR, data))
+				{
+					if(data.strval == "int")
+						en->setBitMode(ASTDataEnum::BIT_INT);
+					else if(data.strval == "long")
+						en->setBitMode(ASTDataEnum::BIT_LONG);
+				}
 				return true;
 			}
 			return false;

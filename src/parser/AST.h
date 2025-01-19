@@ -1058,6 +1058,11 @@ namespace ZScript
 	class ASTDataEnum : public ASTDataDeclList
 	{
 	public:
+		enum BitMode
+		{
+			BIT_NONE, BIT_INT, BIT_LONG
+		};
+		
 		ASTDataEnum(LocationData const& location = LOC_NONE);
 		ASTDataEnum(ASTDataEnum const&);
 		ASTDataEnum* clone() const {return new ASTDataEnum(*this);}
@@ -1067,8 +1072,12 @@ namespace ZScript
 		void execute(ASTVisitor& visitor, void* param = NULL);
 		virtual bool isEnum() const {return true;}
 		
+		void setBitMode(BitMode m){bitmode = m;}
+		BitMode getBitMode() const {return bitmode;}
+		
 		optional<zfix> increment_val;
 	private:
+		BitMode bitmode = BIT_NONE;
 		int32_t nextVal;
 	};
 

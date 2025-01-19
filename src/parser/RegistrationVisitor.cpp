@@ -667,6 +667,16 @@ void RegistrationVisitor::caseDataEnum(ASTDataEnum& host, void* param)
 
 	//Handle initializer assignment
 	zfix value = 0;
+	auto bitmode = host.getBitMode();
+	switch(bitmode)
+	{
+		case ASTDataEnum::BIT_INT:
+			value = 1;
+			break;
+		case ASTDataEnum::BIT_LONG:
+			value = 0.0001_zf;
+			break;
+	}
 	bool is_first = true;
 	std::vector<ASTDataDecl*> decls = host.getDeclarations();
 	for(vector<ASTDataDecl*>::iterator it = decls.begin();
@@ -678,7 +688,11 @@ void RegistrationVisitor::caseDataEnum(ASTDataEnum& host, void* param)
 			visit(init);
 			if(!registered(init)) return;
 			if(std::optional<int32_t> v = init->getCompileTimeValue(this, scope))
+			{
 				value = zslongToFix(*v);
+				// Should we WARN here if 'bitmode' is on? This could break the doubling increment....
+				// Could maybe warn only if not assigned to an exact power of 2 (based on mode)?
+			}
 			else return;
 		}
 		else
@@ -687,6 +701,8 @@ void RegistrationVisitor::caseDataEnum(ASTDataEnum& host, void* param)
 			{
 				if(host.increment_val)
 					value += *host.increment_val;
+				else if(bitmode)
+					value *= 2;
 				else if(baseType->isLong())
 					value += 0.0001_zf;
 				else value += 1;
